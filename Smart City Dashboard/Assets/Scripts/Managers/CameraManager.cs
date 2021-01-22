@@ -35,7 +35,7 @@ public class CameraManager : MonoBehaviour
     public float Size { get => size; set => size = Mathf.Clamp(value, minSize, maxSize); }
 
     private int rotation;
-    public int Rotation { get => rotation; set => rotation = value ; }
+    public int Rotation { get => rotation; set => rotation = value; }
 
     private Vector3 trackedPosition;
     public Vector3 Position { get => transform.localPosition; set => trackedPosition = new Vector3(value.x, 0f, value.z); }

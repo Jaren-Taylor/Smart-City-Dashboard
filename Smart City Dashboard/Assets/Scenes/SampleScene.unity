@@ -422,14 +422,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69874533fda6a44a99e51b928fe658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 963194227}
-  defaultSize: 5
+  mainCamera: {fileID: 0}
+  defaultSize: 0
   defaultRotation: 0
   defaultPosition: {x: 0, y: 0}
   boundaryFraction: 0.2
   defaultPanSpeed: 20
   panZoomSenstivity: 4
-  zoomScale: 3
+  zoomScale: 0.1
 --- !u!135 &590735145
 SphereCollider:
   m_ObjectHideFlags: 0
