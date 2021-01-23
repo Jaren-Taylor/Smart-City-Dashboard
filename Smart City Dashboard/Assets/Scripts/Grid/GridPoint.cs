@@ -6,7 +6,7 @@ public class GridPoint : MonoBehaviour
 {
     public TileManager parent;
     public GameObject activeTile;
-    public GameObject[] adjacencyList = new GameObject[4];
+    public Vector2Int coords;
 
     private void Start()
     {
@@ -17,9 +17,9 @@ public class GridPoint : MonoBehaviour
     {
         if (activeTile == null)
         {
-            /*activeTile = Instantiate(tile, transform.position, transform.rotation);
+            activeTile = parent.WhatRoadTileAmI(coords);
             RoadTile script = activeTile.GetComponent<RoadTile>();
-            script.parent = this;*/
+            script.parent = this;
         }
     }
 }

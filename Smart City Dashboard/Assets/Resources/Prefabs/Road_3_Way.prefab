@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 308011633497659695}
   - component: {fileID: 4245862711074269106}
   - component: {fileID: 6751980825307966527}
+  - component: {fileID: 8090546222119623801}
+  - component: {fileID: 7064744470427433888}
   m_Layer: 0
   m_Name: Road_3_Way
   m_TagString: Untagged
@@ -81,3 +83,31 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8090546222119623801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8507796492700937160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f6212b1fdc97ed4f98653717a75673d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileType: 3
+  isPermanent: 0
+  parent: {fileID: 0}
+--- !u!65 &7064744470427433888
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8507796492700937160}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1.9999998, z: 0.09999993}
+  m_Center: {x: 0, y: 0, z: 0.050000023}

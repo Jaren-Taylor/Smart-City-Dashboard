@@ -5,8 +5,19 @@ using UnityEngine.EventSystems;
 
 public class RoadTile : MonoBehaviour
 {
+    public enum TileType { 
+        Road0Way = 0,
+        RoadEndCap = 1,
+        Road2Way = 2,
+        Road3Way = 3,
+        Road4Way = 4,
+        RoadCorner = 5
+    }
+    public TileType tileType;
     public bool isPermanent;
     public GridPoint parent;
+
+
     void Start()
     {
         isPermanent = false;
@@ -24,6 +35,7 @@ public class RoadTile : MonoBehaviour
 
     void OnMouseDown()
     {
+        Debug.Log(isPermanent);
         if (isPermanent) {
             Destroy2();
         } else {
