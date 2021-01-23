@@ -17,7 +17,6 @@ public class InputManager : MonoBehaviour
     {
         if(isMoving == true)
         {
-            Debug.Log(moveBy);
             OnCameraPan.Invoke(moveBy);
         }
     }
@@ -76,7 +75,6 @@ public class InputManager : MonoBehaviour
     public void OnZoom(CallbackContext context)
     {
         Vector2 zoom = context.ReadValue<Vector2>();
-        Debug.Log(zoom);
         OnCameraZoom?.Invoke(zoom.y / 3);
     }
 }
