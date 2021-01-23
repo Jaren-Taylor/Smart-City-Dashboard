@@ -22,7 +22,7 @@ public class RoadTile : MonoBehaviour
         }
     }
 
-    public void OnMouseDown()
+    void OnMouseDown()
     {
         if (isPermanent) {
             Destroy2();
@@ -32,7 +32,7 @@ public class RoadTile : MonoBehaviour
     }
 
     private void Destroy2() {
-        if (parent.activeTile != null) parent.activeTile = null;
+        if (parent != null) parent.activeTile = null;
         Destroy(gameObject);
     }
 }

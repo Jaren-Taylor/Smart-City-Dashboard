@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class GridPoint : MonoBehaviour
 {
-    public GameObject tile;
+    public TileManager parent;
     public GameObject activeTile;
+    public GameObject[] adjacencyList = new GameObject[4];
 
     private void Start()
     {
@@ -16,16 +17,9 @@ public class GridPoint : MonoBehaviour
     {
         if (activeTile == null)
         {
-            activeTile = Instantiate(tile, transform.position, transform.rotation);
+            /*activeTile = Instantiate(tile, transform.position, transform.rotation);
             RoadTile script = activeTile.GetComponent<RoadTile>();
-            script.parent = this;
+            script.parent = this;*/
         }
     }
-
-    /*    void OnMouseExit()
-        {
-            Debug.Log(activeTile.transform.parent != this);
-            if (activeTile != null && activeTile.transform.parent == this) Destroy(activeTile);
-            activeTile = null;
-        }*/
 }
