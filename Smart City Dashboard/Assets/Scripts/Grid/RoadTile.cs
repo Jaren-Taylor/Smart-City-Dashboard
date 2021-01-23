@@ -17,11 +17,10 @@ public class RoadTile : MonoBehaviour
     public bool isPermanent;
     public GridPoint parent;
 
-
     void Start()
     {
-        isPermanent = false;
-        parent = null;
+        if (!isPermanent) isPermanent = false;
+        if (parent == null) parent = null;
     }
 
     // Update is called once per frame
@@ -30,12 +29,12 @@ public class RoadTile : MonoBehaviour
         if (!isPermanent)
         {
             Destroy2();
+            parent.ChangeTile(parent.coords.x, parent.coords.y, TileManager.TileOrientation.center, true);
         }
     }
 
     void OnMouseDown()
     {
-        Debug.Log(isPermanent);
         if (isPermanent) {
             Destroy2();
         } else {
@@ -43,7 +42,7 @@ public class RoadTile : MonoBehaviour
         }
     }
 
-    private void Destroy2() {
+    public void Destroy2() {
         if (parent != null) parent.activeTile = null;
         Destroy(gameObject);
     }
