@@ -10,8 +10,12 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
+        
         inputManager.OnCameraPan += cameraManager.PanHandler;
-        inputManager.OnCameraPan += Test;
+
+        inputManager.OnCameraRotation += cameraManager.RotationHandler;
+
+        inputManager.OnCameraZoom += cameraManager.ZoomHandler;
     }
 
     // Update is called once per frame
@@ -19,8 +23,5 @@ public class GameManager : MonoBehaviour
     {
         
     }
-    void Test(Vector3 test)
-    {
-        Debug.Log(test);
-    }
+
 }
