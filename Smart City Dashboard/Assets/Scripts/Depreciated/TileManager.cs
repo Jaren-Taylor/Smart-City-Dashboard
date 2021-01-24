@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class TileManager : MonoBehaviour
 {
+    /*
     public GameObject gridPoint;
     public GameObject road0Way;
     public GameObject road2Way;
@@ -99,14 +101,7 @@ public class TileManager : MonoBehaviour
                 if (orientation == TileOrientation.center) tileGrid[x, y + 1].GetComponent<GridPoint>().ChangeTile(x, y + 1, TileOrientation.bottom, onlyNeighbors);
             }
         }
-        /*string debug = "\r\n";
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                debug += HasActiveTile(i, j)+"\t";
-            }
-            debug += "\r\n";
-        }
-        Debug.Log(debug);*/
+
         //Debug.Log(left+" "+right + " " +top + " " +bottom);
         // all this switch statement does it handle which way the tile should be rotated
         GameObject prefab = null;
@@ -173,5 +168,5 @@ public class TileManager : MonoBehaviour
     private bool HasActiveTile(int x, int y) {
         gridPoint = tileGrid[x, y];
         return gridPoint.GetComponent<GridPoint>().activeTile != null && gridPoint.GetComponent<GridPoint>().activeTile.GetComponent<RoadTile>().isPermanent;
-    }
+    }*/
 }

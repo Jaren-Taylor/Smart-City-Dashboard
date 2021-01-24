@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+
     public InputManager inputManager;
     public CameraManager cameraManager;
+    public GridManager gridManager;
 
     void Start()
     {
@@ -16,12 +18,14 @@ public class GameManager : MonoBehaviour
         inputManager.OnCameraRotation += cameraManager.RotationHandler;
 
         inputManager.OnCameraZoom += cameraManager.ZoomHandler;
+
+        inputManager.OnPlaceTile += gridManager.PlaceHandler;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //Debug.Log(inputManager.Cursor);
     }
 
 }

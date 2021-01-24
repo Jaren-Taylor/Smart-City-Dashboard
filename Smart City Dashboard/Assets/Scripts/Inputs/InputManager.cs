@@ -11,6 +11,10 @@ public class InputManager : MonoBehaviour
     public Action<Vector3> OnCameraPan;
     public Action<float> OnCameraRotation;
     public Action<float> OnCameraZoom;
+
+    public Action OnPlaceTile;
+    public Action OnEndPlaceTile;
+
     private bool isMoving = false;
     Vector3 moveBy;
     private void Update()
@@ -19,6 +23,12 @@ public class InputManager : MonoBehaviour
         {
             OnCameraPan.Invoke(moveBy);
         }
+    }
+
+    public void OnPlace(CallbackContext context)
+    {
+        if (context.started) OnPlaceTile?.Invoke();
+        else if (context.performed) OnEndPlaceTile?.Invoke();
     }
 
     public void OnMouseMovement(CallbackContext context)

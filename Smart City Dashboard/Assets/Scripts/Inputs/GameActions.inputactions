@@ -786,6 +786,14 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "PlaceTile",
+                    "type": "Button",
+                    "id": "fcb431d8-e460-4db3-a1a7-76e6ff7e83c2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -841,6 +849,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "CameraZoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "49bf8c0e-2f3a-4041-9dc8-7232b9843445",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "PlaceTile",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

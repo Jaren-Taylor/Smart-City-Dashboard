@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GridPoint : MonoBehaviour
-{
+{ 
+    /*
     public TileManager parent;
     public GameObject activeTile;
     public Vector2Int coords;
@@ -37,5 +38,5 @@ public class GridPoint : MonoBehaviour
             roadTileScript.parent = this;
             roadTileScript.isPermanent = wasPermanent;
         }
-    }
+    } */
 }
