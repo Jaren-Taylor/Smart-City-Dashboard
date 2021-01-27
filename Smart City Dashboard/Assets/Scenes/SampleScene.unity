@@ -430,7 +430,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 327049613}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.118581235, y: -5.714719, z: 2.3521023}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1464729509}
@@ -770,14 +770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7875689ab5869024282d35649c5f2222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  road0Way: {fileID: 5406547987389936183, guid: 80043f1a4bc2ed34f89745bedd0896a7, type: 3}
-  road2Way: {fileID: 6403417867541573558, guid: 98a85c11d90c5db43a9ff383abf2c3c7, type: 3}
-  road3Way: {fileID: 474707463298343668, guid: b0358eaaacdaa194b8555ad93996a1ee, type: 3}
-  road4Way: {fileID: 6521302655664732738, guid: 7e2a9a68195b7be47b7d364d527c7e8b, type: 3}
-  roadEndCap: {fileID: 2974101908951154191, guid: 86787224b293eb4479327b09a9f9cdb5, type: 3}
-  roadCorner: {fileID: 9089023922520128750, guid: cd3add84ee49995429557885957e6e3e, type: 3}
   gridSize: 100
-  ClickRecieved: 0
   groundMask:
     serializedVersion: 2
     m_Bits: 64

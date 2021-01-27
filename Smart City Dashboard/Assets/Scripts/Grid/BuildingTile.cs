@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingTile : Structure
+public class BuildingTile : Tile
 {
     public enum StructureType
     {
@@ -11,4 +11,9 @@ public class BuildingTile : Structure
     }
 
     public StructureType structure;
+
+    protected override bool CalculateAndSetModelFromNeighbors(NeighborInfo neighbors)
+    {
+        throw new System.NotImplementedException();
+    }
 }

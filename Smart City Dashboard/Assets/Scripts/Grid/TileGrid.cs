@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TileGrid 
 {
-    private TileType[,] grid;
+    private Tile[,] grid;
 
     public readonly int Width;
     public readonly int Height;
@@ -14,31 +14,36 @@ public class TileGrid
     {
         Width = width;
         Height = height;
-        grid = new TileType[width, height];
+        grid = new Tile[width, height];
     }
 
-    public TileType this[Vector2Int point]
+    public Tile this[Vector2Int point]
     {
         get => this[point.x, point.y];
         set => this[point.x, point.y] = value;
     }
 
-    public TileType this[int x, int y]
+    public Tile this[int x, int y]
     {
         get
         {
-            if (!InBounds(x,y)) return TileType.OffGrid;
+            if (!InBounds(x,y)) return null;
             else return grid[x, y];
         }
         set
         {
-            if (!InBounds(x, y)) throw new IndexOutOfRangeException($"Cannot assign {value} to outside of grid boundaries.");
-            if (value == TileType.OffGrid) throw new Exception("Cannot assign Off Grid type inside of grid boundaries");
+            if (!InBounds(x, y))
+            {
+                throw new IndexOutOfRangeException($"Cannot assign [{x}, {y}] to outside of grid boundaries.");
+            }
+            if (grid[x, y]?.ManagedExists() ?? false) grid[x, y].DeleteManaged();
             grid[x, y] = value;
         }
     }
 
     public bool InBounds(int x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
+
+    public NeighborInfo GetNeighbors(Vector2Int point) => GetNeighbors(point.x, point.y);
 
     public NeighborInfo GetNeighbors(int x, int y)
     {
@@ -49,16 +54,23 @@ public class TileGrid
             this[x, y+1]);//Bottom Tile
         return neighbors;
     }
+
+    public override string ToString()
+    {
+        string output = "Tilegrid Contents:\n";
+        for (int x = 0; x < Width; x++) for (int y = 0; y < Height; y++) if (grid[x,y] != null) output += grid[x, y].ToString() + " : [" + x + ", " + y + "]\t";
+        return output;
+    }
 }
 
 public struct NeighborInfo
 {
-    public readonly TileType left;
-    public readonly TileType right;
-    public readonly TileType top;
-    public readonly TileType bottom;
+    public readonly Tile left;
+    public readonly Tile right;
+    public readonly Tile top;
+    public readonly Tile bottom;
 
-    public NeighborInfo(TileType left, TileType right, TileType top, TileType bottom)
+    public NeighborInfo(Tile left, Tile right, Tile top, Tile bottom)
     {
         this.left = left;
         this.right = right;
@@ -67,10 +79,3 @@ public struct NeighborInfo
     }
 }
 
-public enum TileType
-{
-    Empty,
-    Road,
-    Structure,
-    OffGrid
-}

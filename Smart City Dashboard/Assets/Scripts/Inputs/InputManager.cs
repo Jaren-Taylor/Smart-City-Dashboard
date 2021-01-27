@@ -17,6 +17,7 @@ public class InputManager : MonoBehaviour
 
     private bool isMoving = false;
     Vector3 moveBy;
+
     private void Update()
     {
         if(isMoving == true)
@@ -78,7 +79,6 @@ public class InputManager : MonoBehaviour
     public void OnRotation(CallbackContext context)
     {
         float direciton = context.ReadValue<float>();
-        
         OnCameraRotation?.Invoke(direciton);
         
     }
