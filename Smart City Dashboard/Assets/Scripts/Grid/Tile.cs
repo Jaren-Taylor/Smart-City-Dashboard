@@ -10,6 +10,15 @@ public abstract class Tile
 
     public bool IsPermanent { get; private set; }
 
+    private bool isTransparent = true;
+    
+    public void SetTransparency(bool value)
+    {
+        if (value) managedObject.SetModelMaterial(GridManager.Instance.TransparentMaterial);
+        else managedObject.SetModelMaterial(GridManager.Instance.TileMaterial);
+        isTransparent = value;
+    }
+
     public Tile()
     {
         IsPermanent = false;
@@ -53,6 +62,7 @@ public abstract class Tile
             Quaternion.identity,
             GridManager.Instance?.transform);
         managedObject.name = managedObject.name.Replace("(Clone)", "");
+        SetTransparency(true);
         return CalculateAndSetModelFromNeighbors(neighbors);
     }
 

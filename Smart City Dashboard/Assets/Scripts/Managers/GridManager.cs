@@ -22,6 +22,9 @@ public class GridManager : MonoBehaviour
     private TileGrid grid;
     private Dictionary<Vector2Int, GameObject> activeStructures = new Dictionary<Vector2Int, GameObject>();
 
+    public Material TileMaterial;
+    public Material TransparentMaterial;
+
     public static GridManager Instance { get; private set; }
 
     public bool CursorEnabled { get => cursorEnabled; set => SetCursor(value); }
@@ -159,7 +162,11 @@ public class GridManager : MonoBehaviour
         return null;
     }
 
-    private void MakePermanent(Vector2Int point) => grid[point]?.MakePermanent();
+    private void MakePermanent(Vector2Int point)
+    {
+        grid[point]?.MakePermanent();
+        grid[point]?.SetTransparency(false);
+    }
 
     private void CreateTemporaryTile<T>(Vector2Int point) where T : Tile, new() => AddTileToGrid(point, new T());
 

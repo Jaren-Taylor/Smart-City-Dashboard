@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class ManagedGameObject : MonoBehaviour
 {
     public GameObject childModel = null;
 
+    private Material cachedMaterial = null;
     public bool ModelExists { get => childModel != null; }
 
     /// <summary>
@@ -18,6 +20,31 @@ public class ManagedGameObject : MonoBehaviour
             Destroy(child.gameObject);
         }
         Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Sets the model's material to whatever is passed. If no model is currenly held, will cache for later
+    /// </summary>
+    /// <param name="material"></param>
+    public void SetModelMaterial(Material material)
+    {
+        if (ModelExists)
+        {
+            if(cachedMaterial == null || cachedMaterial != material)
+            {
+                cachedMaterial = material;
+                ApplyCachedMaterial();
+            }
+        }
+        else cachedMaterial = material;
+    }
+
+    private void ApplyCachedMaterial()
+    {
+        MeshRenderer renderer = childModel.transform.GetComponentInChildren<MeshRenderer>();
+        Debug.Log(renderer);
+        Debug.Log(cachedMaterial);
+        if (renderer != null && cachedMaterial != null) renderer.material = cachedMaterial;
     }
 
 
@@ -41,6 +68,8 @@ public class ManagedGameObject : MonoBehaviour
         childModel.transform.rotation = rotation ?? Quaternion.identity;
         childModel.transform.localPosition = Vector3.zero;
         childModel.name = childModel.name.Replace("(Clone)", "");
+        ApplyCachedMaterial();
+        
     }
 
 
