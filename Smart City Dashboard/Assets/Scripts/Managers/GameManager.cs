@@ -20,6 +20,13 @@ public class GameManager : MonoBehaviour
         inputManager.OnCameraZoom += cameraManager.ZoomHandler;
 
         inputManager.OnPlaceTile += gridManager.PlaceHandler;
+
+        inputManager.OnNumberPressed += gridManager.StateNumberChangeHandler;
+    }
+
+    public void HandleLog(int numer)
+    {
+        Debug.Log(numer);
     }
 
     // Update is called once per frame

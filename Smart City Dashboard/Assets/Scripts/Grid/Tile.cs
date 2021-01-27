@@ -5,13 +5,31 @@ using UnityEngine;
 
 public abstract class Tile
 {
+    public enum Facing
+    {
+        Left,
+        Right,
+        Top,
+        Bottom
+    }
+
+    public readonly static Dictionary<Facing, Quaternion> FacingToQuaternion = new Dictionary<Facing, Quaternion>()
+    {
+        { Facing.Top, Quaternion.identity },
+        { Facing.Bottom, Quaternion.Euler(0, 180, 0) },
+        { Facing.Right, Quaternion.Euler(0, 90, 0) },
+        { Facing.Left, Quaternion.Euler(0, -90, 0) }
+    };
+
     private const string ManagedGameObjectLocation = "Prefabs/ManagedTile";
-    private ManagedGameObject managedObject = null; 
+    private ManagedGameObject managedObject = null;
 
     public bool IsPermanent { get; private set; }
 
     private bool isTransparent = true;
-    
+
+    private bool attachCalled = false;
+
     public void SetTransparency(bool value)
     {
         if (value) managedObject.SetModelMaterial(GridManager.Instance.TransparentMaterial);
@@ -36,6 +54,8 @@ public abstract class Tile
     /// </summary>
     /// <returns>True if GameObject model is instantiated.</returns>
     public bool ManagedExists() => managedObject != null;
+
+    public bool ModelExist() => (ManagedExists()) ? false : managedObject.ModelExists;
 
     /// <summary>
     /// Deletes managedObject along with it's children
@@ -79,15 +99,25 @@ public abstract class Tile
 
     }
 
+    public T AddComponent<T>() where T : Component => managedObject.AddComponent<T>();
+    public bool RemoveComponent<T>() where T : Component => managedObject.TryRemoveComponent<T>();
+    public bool TryGetComponent<T>(out T component) where T : Component 
+    {
+        component = GetComponent<T>();
+        return component != null;
+    }
+    public T GetComponent<T>() where T : Component => managedObject?.GetComponent<T>();
+
+
     /// <summary>
     /// Used by subcalsses to attach their tile model to the managed game object
     /// </summary>
     /// <param name="prefabLocation">Folder location to load resource from</param>
     /// <param name="rotation">Rotation to spawn model at</param>
-    protected void AttachModelToManaged(string prefabLocation, Quaternion rotation)
+    protected void AttachModelToManaged(string prefabLocation, Facing direction)
     {
         GameObject prefab = Resources.Load<GameObject>(prefabLocation);
-        managedObject.InstantiateModel(prefab, rotation);
+        managedObject.InstantiateModel(prefab, FacingToQuaternion[direction]);
     }
 
     /// <summary>

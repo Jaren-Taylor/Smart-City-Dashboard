@@ -26,6 +26,7 @@ public class RoadTile : Tile
     public TileType Type { get; private set; }
 
 
+
     protected override bool CalculateAndSetModelFromNeighbors(NeighborInfo neighbors)
     {
         int count = 0;
@@ -37,7 +38,7 @@ public class RoadTile : Tile
         if (neighbors.bottom is RoadTile) { count++; bottom = true; }
 
         // all this switch statement does it handle which way the tile should be rotated
-        Quaternion rotation = Quaternion.identity;
+        Facing rotation = Facing.Top;
         switch (count)
         {
             // 0 way
@@ -47,57 +48,57 @@ public class RoadTile : Tile
             // end cap
             case 1:
                 Type = TileType.RoadEndcap;
-                if (top)
+                if (right)
                 {
-                    rotation = Quaternion.Euler(0, 180, 0);
-                }
-                else if (right)
-                {
-                    rotation = Quaternion.Euler(0, 90, 0);
+                    rotation = Facing.Right;
                 }
                 else if (left)
                 {
-                    rotation = Quaternion.Euler(0, -90, 0);
+                    rotation = Facing.Left;
+                }
+                else if (bottom)
+                {
+                    rotation = Facing.Bottom;
                 }
                 break;
             // 2 way or corner
             case 2:
-                if (right && top || right && bottom || left && top || left && bottom)
+                if (top && bottom || left && right)
+                {
+                    Type = TileType.Road2Way;
+                    if (right) rotation = Facing.Right;
+                }
+                else
                 {
                     Type = TileType.RoadCorner;
                     if (right && top)
                     {
-                        rotation = Quaternion.Euler(0, 180, 0);
+                        rotation = Facing.Right;
+                    }
+                    else if (left && bottom)
+                    {
+                        rotation = Facing.Left;
                     }
                     else if (right && bottom)
                     {
-                        rotation = Quaternion.Euler(0, 90, 0);
+                        rotation = Facing.Bottom;
                     }
-                    else if (left && top)
-                    {
-                        rotation = Quaternion.Euler(0, -90, 0);
-                    }
-                }
-                else
-                {
-                    Type = TileType.Road2Way;
-                    if (right) rotation = Quaternion.Euler(0, 90, 0);
                 }
                 break;
             // 3 way
             case 3:
                 Type = TileType.Road3Way;
-                if (!bottom)
+                if (!left)
                 {
-                    rotation = Quaternion.Euler(0, 180, 0);
+                    rotation = Facing.Right;
                 }
                 else if (!right)
                 {
-                    rotation = Quaternion.Euler(0, -90, 0);
+                    rotation = Facing.Left;
                 }
-                else if (!left)
+                else if (!top)
                 {
-                    rotation = Quaternion.Euler(0, 90, 0);
+                    rotation = Facing.Bottom;
                 }
                 break;
             // 4 way

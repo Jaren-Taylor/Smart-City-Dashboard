@@ -42,11 +42,20 @@ public class ManagedGameObject : MonoBehaviour
     private void ApplyCachedMaterial()
     {
         MeshRenderer renderer = childModel.transform.GetComponentInChildren<MeshRenderer>();
-        Debug.Log(renderer);
-        Debug.Log(cachedMaterial);
         if (renderer != null && cachedMaterial != null) renderer.material = cachedMaterial;
     }
 
+    public T AddComponent<T>() where T : Component => childModel?.AddComponent<T>();
+    public bool TryRemoveComponent<T>() where T : Component
+    {
+        Component comp = childModel?.GetComponent<T>();
+        if (comp == null) return false;
+        else
+        {
+            Destroy(comp);
+            return true;
+        }
+    }
 
     /// <summary>
     /// Destroys instance of Model if it exists

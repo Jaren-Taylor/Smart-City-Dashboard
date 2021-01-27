@@ -27,6 +27,8 @@ public class GridManager : MonoBehaviour
 
     public static GridManager Instance { get; private set; }
 
+    private GridController GridSM;
+
     public bool CursorEnabled { get => cursorEnabled; set => SetCursor(value); }
 
     private void SetCursor(bool value)
@@ -51,6 +53,7 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GridSM = new GridController(new PlaceRoadState());
         if (Instance != null) Destroy(this);
         Instance = this;
         grid = new TileGrid(gridSize, gridSize);
@@ -122,6 +125,36 @@ public class GridManager : MonoBehaviour
         clickRecieved = true;
     }
 
+    private int state = 0;
+
+    public void StateNumberChangeHandler(int stateNum) => ChangeState(stateNum);
+
+    private void ChangeState(int state)
+    {
+        if(this.state != state)
+        {
+            IGridControlState newState;
+            this.state = state;
+            switch (state)
+            {
+                case 0:
+                    newState = new PlaceRoadState();
+                    break;
+                case 1:
+                    newState = new PlaceStructureState(BuildingTile.StructureType.House);
+                    break;
+                case 2:
+                    newState = new PlaceStructureState(BuildingTile.StructureType.TestStruct);
+                    break;
+                default:
+                    newState = new PlaceRoadState();
+                    this.state = 0;
+                    break;
+            }
+            GridSM.SetState(newState, Cursor);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -131,7 +164,7 @@ public class GridManager : MonoBehaviour
             HandleCursorMovement();
             if (clickRecieved)
             {
-                if (Cursor.HasValue) MakePermanent(Cursor.Value);
+                GridSM.OnMouseDown(Cursor);
             }
         }
         clickRecieved = false;
@@ -142,11 +175,7 @@ public class GridManager : MonoBehaviour
         Vector2Int? newCursor = GetMouseLocationOnGrid();
         if(newCursor != Cursor)
         {
-            if (Cursor != null) RemoveTileIfTemporary(Cursor.Value); //If the cursor was valid, removes temp tile at cursor
-            if (newCursor != null)
-            {
-                if(grid[newCursor.Value] == null) CreateTemporaryTile<RoadTile>(newCursor.Value); //If new position is on grid, creates temp tile at cursor
-            }
+            GridSM.MoveCursor(Cursor, newCursor);
             Cursor = newCursor;
         }
     }
@@ -162,13 +191,15 @@ public class GridManager : MonoBehaviour
         return null;
     }
 
-    private void MakePermanent(Vector2Int point)
+    public Tile GetTile(Vector2Int location) => grid[location];
+
+    public void MakePermanent(Vector2Int point)
     {
         grid[point]?.MakePermanent();
         grid[point]?.SetTransparency(false);
     }
 
-    private void CreateTemporaryTile<T>(Vector2Int point) where T : Tile, new() => AddTileToGrid(point, new T());
+    public void CreateTemporaryTile<T>(Vector2Int point) where T : Tile, new() => AddTileToGrid(point, new T());
 
     private void CreatePermanentTile<T>(Vector2Int point) where T : Tile, new()
     {
@@ -176,7 +207,7 @@ public class GridManager : MonoBehaviour
         MakePermanent(point);
     }
 
-    private void AddTileToGrid(Vector2Int point, Tile tile)
+    public void AddTileToGrid(Vector2Int point, Tile tile)
     {
         if (grid[point] != null) //If there is a tile at this location already, try to remove
         {
@@ -196,7 +227,7 @@ public class GridManager : MonoBehaviour
     /// </summary>
     /// <param name="point">Point on grid to remove</param>
     /// <returns>Returns true if a tile was deleted</returns>
-    private bool RemoveTileIfTemporary(Vector2Int point)
+    public bool RemoveTileIfTemporary(Vector2Int point)
     {
         if (grid[point]?.IsPermanent ?? true) return false; //Returns false when either the tile is permanent or it is null
         else if (ForceRemoveTileDirty(point))
@@ -222,14 +253,6 @@ public class GridManager : MonoBehaviour
 
     private void UpdateNeighbors(Vector2Int point)
     {
-        Vector2Int left = new Vector2Int(point.x - 1, point.y);
-        Vector2Int right = new Vector2Int(point.x + 1, point.y);
-        Vector2Int top = new Vector2Int(point.x, point.y - 1);
-        Vector2Int bottom = new Vector2Int(point.x, point.y + 1);
-
-        RecalculateTile(left);
-        RecalculateTile(right);
-        RecalculateTile(top);
-        RecalculateTile(bottom);
+        foreach (var direction in TileGrid.Directions) RecalculateTile(point + direction);
     }
 }

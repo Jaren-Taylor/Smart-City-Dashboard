@@ -12,6 +12,8 @@ public class InputManager : MonoBehaviour
     public Action<float> OnCameraRotation;
     public Action<float> OnCameraZoom;
 
+    public Action<int> OnNumberPressed;
+
     public Action OnPlaceTile;
     public Action OnEndPlaceTile;
 
@@ -86,5 +88,15 @@ public class InputManager : MonoBehaviour
     {
         Vector2 zoom = context.ReadValue<Vector2>();
         OnCameraZoom?.Invoke(zoom.y / 3);
+    }
+
+    public void OnNumberKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1)) OnNumberPressed?.Invoke(0);
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) OnNumberPressed?.Invoke(1);
+            else if (Input.GetKeyDown(KeyCode.Alpha3)) OnNumberPressed?.Invoke(2);
+        }
     }
 }

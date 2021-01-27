@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileGrid 
+public class TileGrid
 {
     private Tile[,] grid;
 
     public readonly int Width;
     public readonly int Height;
+
+    public static readonly Vector2Int[] Directions = { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
 
     public TileGrid(int width, int height)
     {
@@ -50,8 +52,8 @@ public class TileGrid
         NeighborInfo neighbors = new NeighborInfo(
             this[x-1, y], //Left Tile
             this[x+1, y], //Right Tile
-            this[x, y-1], //Top Tile
-            this[x, y+1]);//Bottom Tile
+            this[x, y+1], //Top Tile
+            this[x, y-1]);//Bottom Tile
         return neighbors;
     }
 
