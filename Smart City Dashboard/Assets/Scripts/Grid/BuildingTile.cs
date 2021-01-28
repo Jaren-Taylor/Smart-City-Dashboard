@@ -57,7 +57,7 @@ public class BuildingTile : Tile
             }
         }
         AttachModelToManaged(ModelLookup[structure], currentFacing);
-        return false;
+        return IsPermanent && !IsLocationValid;
     }
 
     private IEnumerable<Facing> GetValidDirections(NeighborInfo neighbors, StructureType structure)

@@ -144,7 +144,7 @@ public class GridManager : MonoBehaviour
                     newState = new PlaceStructureState(BuildingTile.StructureType.House);
                     break;
                 case 2:
-                    newState = new PlaceStructureState(BuildingTile.StructureType.TestStruct);
+                    newState = new RemoveTileState();
                     break;
                 default:
                     newState = new PlaceRoadState();
@@ -184,6 +184,8 @@ public class GridManager : MonoBehaviour
     
 
     public Tile GetTile(Vector2Int location) => grid[location];
+
+    public void SetTransparency(Vector2Int location, bool value) => grid[location]?.SetTransparency(value);
 
     public void MakePermanent(Vector2Int point)
     {
