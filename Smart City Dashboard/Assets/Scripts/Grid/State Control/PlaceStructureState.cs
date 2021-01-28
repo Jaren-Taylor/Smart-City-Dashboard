@@ -11,22 +11,22 @@ public class PlaceStructureState : IGridControlState
         Structure = structure;
     }
 
-    public void OnPop(Vector2Int? location)
+    public void OnPop(DigitalCursor location)
     {
         OnMouseExitTile(location);
     }
 
-    public void OnPush(Vector2Int? location)
+    public void OnPush(DigitalCursor location)
     {
         OnMouseEnterTile(location);
     }
 
-    public void OnMouseDown(Vector2Int? location)
+    public void OnMouseDown(DigitalCursor location)
     {
-        if (location != null)
+        if (location != null && location.OnGrid)
         {
-            Tile tile = GridManager.Instance.GetTile(location.Value);
-            if(isValidToPlace(tile)) GridManager.Instance.MakePermanent(location.Value);
+            Tile tile = GridManager.Instance.GetTile(location.Position);
+            if(isValidToPlace(tile)) GridManager.Instance.MakePermanent(location.Position);
         }
     }
 
@@ -37,14 +37,14 @@ public class PlaceStructureState : IGridControlState
             ((BuildingTile)tile).IsLocationValid;
     }
 
-    public void OnMouseEnterTile(Vector2Int? location)
+    public void OnMouseEnterTile(DigitalCursor location)
     {
-        if (location != null) GridManager.Instance.AddTileToGrid(location.Value, new BuildingTile(Structure));
+        if (location != null) GridManager.Instance.AddTileToGrid(location.Position, new BuildingTile(Structure, location.SubDirection));
     }
 
-    public void OnMouseExitTile(Vector2Int? location)
+    public void OnMouseExitTile(DigitalCursor location)
     {
-        if (location != null) GridManager.Instance.RemoveTileIfTemporary(location.Value);
+        if (location != null) GridManager.Instance.RemoveTileIfTemporary(location.Position);
     }
 
 

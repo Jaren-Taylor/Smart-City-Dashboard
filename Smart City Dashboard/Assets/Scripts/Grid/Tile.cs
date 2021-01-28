@@ -7,10 +7,31 @@ public abstract class Tile
 {
     public enum Facing
     {
-        Left,
-        Right,
-        Top,
-        Bottom
+        Left = 0,
+        Right = 1,
+        Top = 2,
+        Bottom = 3
+    }
+
+    public static readonly Vector2Int[] Directions = { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
+
+    public static Facing VectorToFacing(Vector2 delta)
+    {
+        Vector2 normalized = delta.normalized;
+        float bestDot = -1;
+        Facing bestFacing = Facing.Left;
+        for (int i = 0; i < 4; i++)
+        {
+            float dot = Vector2.Dot(normalized, Directions[i]);
+            if(dot > bestDot)
+            {
+                bestDot = dot;
+                bestFacing = (Facing)i;
+            }
+        }
+
+        return bestFacing;
+
     }
 
     public readonly static Dictionary<Facing, Quaternion> FacingToQuaternion = new Dictionary<Facing, Quaternion>()
@@ -27,8 +48,6 @@ public abstract class Tile
     public bool IsPermanent { get; private set; }
 
     private bool isTransparent = true;
-
-    private bool attachCalled = false;
 
     public void SetTransparency(bool value)
     {

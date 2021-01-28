@@ -10,7 +10,7 @@ public class GridManager : MonoBehaviour
     private const int minGridSize = 1;
     private const int maxGridSize = 100;
 
-    public Vector2Int? Cursor = null;
+    private DigitalCursor cursor = null;
 
     private bool cursorEnabled = true;
     private bool clickRecieved = false;
@@ -36,16 +36,16 @@ public class GridManager : MonoBehaviour
         if (value == cursorEnabled) return;
         if (value)
         {
-            Cursor = null;
+            cursor = null;
             cursorEnabled = true;
         } 
         else
         {
-            if (Cursor != null)
+            if (cursor != null)
             {
-                RemoveTileIfTemporary(Cursor.Value);
+                RemoveTileIfTemporary(cursor.Position);
                 cursorEnabled = false;
-                Cursor = null;
+                cursor = null;
             }
         }
     }
@@ -151,7 +151,7 @@ public class GridManager : MonoBehaviour
                     this.state = 0;
                     break;
             }
-            GridSM.SetState(newState, Cursor);
+            GridSM.SetState(newState, cursor);
         }
     }
 
@@ -164,7 +164,7 @@ public class GridManager : MonoBehaviour
             HandleCursorMovement();
             if (clickRecieved)
             {
-                GridSM.OnMouseDown(Cursor);
+                GridSM.OnMouseDown(cursor);
             }
         }
         clickRecieved = false;
@@ -172,24 +172,16 @@ public class GridManager : MonoBehaviour
 
     private void HandleCursorMovement()
     {
-        Vector2Int? newCursor = GetMouseLocationOnGrid();
-        if(newCursor != Cursor)
+        DigitalCursor newCursor = new DigitalCursor();
+        
+        if(newCursor.Position != cursor?.Position || newCursor.SubDirection != cursor?.SubDirection)
         {
-            GridSM.MoveCursor(Cursor, newCursor);
-            Cursor = newCursor;
+            GridSM.MoveCursor(cursor, newCursor);
+            cursor = newCursor;
         }
     }
 
-    private Vector2Int? GetMouseLocationOnGrid()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundMask))
-        {
-            Vector3Int rayPosition = Vector3Int.RoundToInt(hit.point); //Rounding -.5 to -1, which can cause OOB calls on grid. Intended it to be rounded to 0
-            return new Vector2Int(Math.Max(rayPosition.x, 0), Math.Max(rayPosition.z, 0)); //This is a really jank solution
-        }
-        return null;
-    }
+    
 
     public Tile GetTile(Vector2Int location) => grid[location];
 
@@ -215,11 +207,14 @@ public class GridManager : MonoBehaviour
         }
         //Tile location is ensured empty, can proceed to file location
         grid[point] = tile;
-        grid[point].CreateManaged(point, grid.GetNeighbors(point));
+        if (grid[point].CreateManaged(point, grid.GetNeighbors(point))) ForceRemoveTileDirty(point);
         UpdateNeighbors(point);
     }
 
-    private void RecalculateTile(Vector2Int point) => grid[point]?.RecalculateManaged(grid.GetNeighbors(point));
+    private void RecalculateTile(Vector2Int point) 
+    {
+        if (grid[point]?.RecalculateManaged(grid.GetNeighbors(point)) ?? false) RemoveTile(point);
+    }
 
 
     /// <summary>
@@ -231,6 +226,16 @@ public class GridManager : MonoBehaviour
     {
         if (grid[point]?.IsPermanent ?? true) return false; //Returns false when either the tile is permanent or it is null
         else if (ForceRemoveTileDirty(point))
+        {
+            UpdateNeighbors(point);
+            return true;
+        }
+        else return false;
+    }
+
+    public bool RemoveTile(Vector2Int point)
+    {
+        if (ForceRemoveTileDirty(point))
         {
             UpdateNeighbors(point);
             return true;
@@ -253,6 +258,6 @@ public class GridManager : MonoBehaviour
 
     private void UpdateNeighbors(Vector2Int point)
     {
-        foreach (var direction in TileGrid.Directions) RecalculateTile(point + direction);
+        foreach (var direction in Tile.Directions) RecalculateTile(point + direction);
     }
 }

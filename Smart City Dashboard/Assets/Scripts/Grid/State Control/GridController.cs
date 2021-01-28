@@ -8,19 +8,28 @@ public class GridController
 
     public GridController(IGridControlState initState) => activeState = initState;
 
-    public void SetState(IGridControlState newState, Vector2Int? mousePosition)
+    public void SetState(IGridControlState newState, DigitalCursor mousePosition)
     {
-        activeState?.OnPop(mousePosition);
-        activeState = newState;
-        activeState?.OnPush(mousePosition);
+        if (IsValid(mousePosition))
+        {
+            activeState?.OnPop(mousePosition);
+            activeState = newState;
+            activeState?.OnPush(mousePosition);
+        }
+        else activeState = newState;
     }
 
-    public void MoveCursor(Vector2Int? oldPosition, Vector2Int? newPosition)
+    public void MoveCursor(DigitalCursor oldPosition, DigitalCursor newPosition)
     {
         if (activeState == null) throw new System.Exception("State not set");
-        activeState.OnMouseExitTile(oldPosition);
-        activeState.OnMouseEnterTile(newPosition);
+        if(IsValid(oldPosition)) activeState.OnMouseExitTile(oldPosition);
+        if(IsValid(newPosition)) activeState.OnMouseEnterTile(newPosition);
     }
 
-    public void OnMouseDown(Vector2Int? mousePosition) => activeState?.OnMouseDown(mousePosition);
+    public void OnMouseDown(DigitalCursor mousePosition)
+    {
+        if(IsValid(mousePosition)) activeState?.OnMouseDown(mousePosition);
+    }
+
+    private bool IsValid(DigitalCursor cursor) => cursor?.OnGrid ?? false;
 }

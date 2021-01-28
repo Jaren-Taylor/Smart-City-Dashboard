@@ -17,25 +17,31 @@ public class BuildingTile : Tile
     }
 
     public readonly StructureType structure;
-    private Facing? currentFacing = null;
+    private Facing currentFacing;
     public bool IsLocationValid { get; private set; }
 
 
 
-    public BuildingTile(StructureType type)
+    public BuildingTile(StructureType type, Facing facing)
     {
         structure = type;
+        currentFacing = facing;
     }
 
     protected override bool CalculateAndSetModelFromNeighbors(NeighborInfo neighbors)
     {
         var validDirection = new List<Facing>(GetValidDirections(neighbors, structure));
-        if(currentFacing.HasValue && validDirection.Contains(currentFacing.Value))
+        if(validDirection.Contains(currentFacing))
         {
             if (ModelExist())
             {
                 IsLocationValid = true;
                 return false;
+            }
+            else
+            {
+                IsLocationValid = true;
+                //Use the current facing
             }
         }
         else
@@ -43,14 +49,14 @@ public class BuildingTile : Tile
             if (validDirection.Count == 0)
             {
                 IsLocationValid = false;
-                currentFacing = null;
+                currentFacing = Facing.Bottom;
             } else
             {
                 IsLocationValid = true;
                 currentFacing = validDirection[0];
             }
         }
-        AttachModelToManaged(ModelLookup[structure], (currentFacing.HasValue) ? currentFacing.Value : Facing.Top);
+        AttachModelToManaged(ModelLookup[structure], currentFacing);
         return false;
     }
 

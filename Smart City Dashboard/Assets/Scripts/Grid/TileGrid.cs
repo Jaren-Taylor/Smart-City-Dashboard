@@ -10,7 +10,7 @@ public class TileGrid
     public readonly int Width;
     public readonly int Height;
 
-    public static readonly Vector2Int[] Directions = { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
+   
 
     public TileGrid(int width, int height)
     {

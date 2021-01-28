@@ -5,30 +5,30 @@ using UnityEngine;
 public class PlaceRoadState : IGridControlState
 {
 
-    public void OnPop(Vector2Int? location)
+    public void OnPop(DigitalCursor location)
     {
         OnMouseExitTile(location);
     }
 
-    public void OnPush(Vector2Int? location)
+    public void OnPush(DigitalCursor location)
     {
         OnMouseEnterTile(location);
     }
-    public void OnMouseDown(Vector2Int? location)
+    public void OnMouseDown(DigitalCursor location)
     {
-        if (location != null && GridManager.Instance.GetTile(location.Value) is RoadTile)
+        if (location != null && GridManager.Instance.GetTile(location.Position) is RoadTile)
         {
-            GridManager.Instance.MakePermanent(location.Value);
+            GridManager.Instance.MakePermanent(location.Position);
         }
     }
 
-    public void OnMouseEnterTile(Vector2Int? location)
+    public void OnMouseEnterTile(DigitalCursor location)
     {
-        if (location != null) GridManager.Instance.CreateTemporaryTile<RoadTile>(location.Value);
+        if (location != null) GridManager.Instance.CreateTemporaryTile<RoadTile>(location.Position);
     }
 
-    public void OnMouseExitTile(Vector2Int? location)
+    public void OnMouseExitTile(DigitalCursor location)
     {
-        if (location != null) GridManager.Instance.RemoveTileIfTemporary(location.Value);
+        if (location != null) GridManager.Instance.RemoveTileIfTemporary(location.Position);
     }
 }
