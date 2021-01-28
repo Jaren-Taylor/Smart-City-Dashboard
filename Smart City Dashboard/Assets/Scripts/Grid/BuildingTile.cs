@@ -11,13 +11,15 @@ public class BuildingTile : Tile
     public static readonly Dictionary<StructureType, string> ModelLookup = new Dictionary<StructureType, string>()
     {
         { StructureType.House, "Prefabs/Structures/House" },
+        { StructureType.Office, "Prefabs/Structures/Office" },
         { StructureType.TestStruct, "Prefabs/Structures/TestStruct" }
     };
 
     public enum StructureType
     {
         House = 0,
-        TestStruct = 1
+        Office = 1,
+        TestStruct = 2
     }
 
     public readonly StructureType structure;
