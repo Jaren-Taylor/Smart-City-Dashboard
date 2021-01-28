@@ -1,0 +1,170 @@
+@startuml ClassDiagram
+class Config {
+ +boundaryFraction : float
+ +panSpeed : int 
+ +panZoomSensitivity : float
+ +zoomScale : float
+ +smoothTime : float 
+ +minSize : float 
+ +maxSize : float
+ +defaultSize : float
+}
+
+class GridPoint {
+ +TileManager : parent
+ +GameObject : activeTile
+ +Vector2Int : coords
+ -void Start() 
+ -void onMouseEnter() 
+ +void ChangeTile(int x, int y)
+}
+
+class TileManager {
+ +GameObject : gridPoint 
+ +GameObject : road0Way
+ +GameObject : road2Way
+ +GameObject : road3Way
+ +GameObject : road4Way
+ +GameObject : roadEndCap
+ +GameObject : roadCorner
+ +GameObject WhatRoadTileAmI(int x, int y)
+ -boolean HasActiveTile(int x, int y)
+}
+enum TileOrientation {
+    CENTER
+    LEFT
+    RIGHT
+    TOP
+    BOTTOM
+    NOTHING
+}
+
+
+class BuildingTile {
+ +StructureType structure
+}
+enum StructureType {
+    HOUSE
+    OFFICE
+}
+
+class RoadTile {
+ +RoadTile : Structure
+ +TileType : Type
+}
+enum TileType {
+    Road0Way
+    RoadEndCap
+    Road2Way
+    Road3Way
+    Road4Way
+    RoadCorner
+}
+
+class Structure {
+ +isPermanent : boolean
+ +void MakePermanent()
+}
+
+class TileGrid {
+ -TitleType : grid
+ +width: int
+ +height : int
+ +boolean InBounds(int x, int y)
+ +GetNeighbors(int x, int y)
+ +NeighborInfo()
+}
+enum TileType {
+    EMPTY
+    ROAD
+    STRUCTURE
+    OFFGRID
+}
+
+
+class InputManager {
+ +OnCameraPan : float
+ +OnCameraRoatation : float
+ +OnCameraZoom : float
+ +OnPlaceTile
+ +OnEndPlaceTile
+ -boolean isMoving()
+ -void Update()
+ +void OnPlace()
+ +void OnMouseMovement() 
+ +void OnRotation()
+ +void OnZoom()
+}
+
+class CameraManager {
+ +mainCamera
+ +defaultRotation : int
+ +defaultPosition : Vector2
+ -panVelocity : Vector3
+ -sizeVelocity : float
+ -size : float
+ +Size : float
+ -rotation : int
+ +Rotation : int
+ void ResetSize()
+ void ResetPosition()
+ void ResetRotation()
+ void ResetCamera()
+ void RotateLeft()
+ void RotateRight()
+ void Update()
+ void PanHandler()
+ void RotationHandler()
+ void ZoomHandler()
+}
+
+class GameManager {
+ +inputManager : string
+ +CameraManager : string
+ +GridManager : string
+ void Start()
+ void Update()
+}
+
+class GridManager {
+ +GameObject : gridPoint 
+ +GameObject : road0Way
+ +GameObject : road2Way
+ +GameObject : road3Way
+ +GameObject : road4Way
+ +GameObject : roadEndCap
+ +GameObject : roadCorner
+ +gridSize : int
+ -minGridSize : int 
+ -maxGridSize : int
+ -grid : TileGrid
+  void Start()
+  void Update()
+ -CreateGround()
+ -GenerateMesh()
+ -void PlaceHandler()
+ -void HandleCursorMovement()
+ -void MakePermanant()
+ -void TryCreateTemporaryRoad()
+ -void RemoveTileIfTemporary()
+ -GetMouseLocationOnGrid()
+ -void ReplaceTile()
+ -WhatBuildingTileAmI()
+ -void RecalculateTile()
+ +boolean RemoveTile()
+ +void UpdateNeighbors()
+ +WhatRoadTileAmI()
+}
+
+GameManager "1" --> "1"  CameraManager : contains
+GameManager "1" --> "1"  InputManager : contains
+GameManager "1" --> "1"  GridManager : contains
+TileManager --  TileOrientation 
+BuildingTile -- StructureType
+TileManager "1" --* "many" GridPoint : contains
+TileGrid -- TileType
+RoadTile -- TileType 
+RoadTile "many" *-- "1" Structure : has
+
+
+@enduml
