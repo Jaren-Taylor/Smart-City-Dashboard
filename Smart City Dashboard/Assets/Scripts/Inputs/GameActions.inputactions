@@ -794,6 +794,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "SetBuildState",
+                    "type": "Button",
+                    "id": "c051ed58-00e6-46b4-bd8d-2756ed338f3d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -860,6 +868,39 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "PlaceTile",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d6a5c8bd-5a96-4039-9ca7-8cd630ec8dce",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetBuildState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9b5af5cb-e5d8-4600-b7be-6144b2383131",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetBuildState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bbf6ea0c-25e1-4ef1-86b4-f397d422f260",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetBuildState",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

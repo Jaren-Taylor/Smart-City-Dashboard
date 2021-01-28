@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using static UnityEngine.InputSystem.InputAction;
 
+/// <summary>
+/// All input for the project should pass through here
+/// </summary>
 public class InputManager : MonoBehaviour
 {
     [SerializeField]
@@ -12,11 +15,14 @@ public class InputManager : MonoBehaviour
     public Action<float> OnCameraRotation;
     public Action<float> OnCameraZoom;
 
+    public Action<int> OnNumberPressed;
+
     public Action OnPlaceTile;
     public Action OnEndPlaceTile;
 
     private bool isMoving = false;
     Vector3 moveBy;
+
     private void Update()
     {
         if(isMoving == true)
@@ -78,7 +84,6 @@ public class InputManager : MonoBehaviour
     public void OnRotation(CallbackContext context)
     {
         float direciton = context.ReadValue<float>();
-        
         OnCameraRotation?.Invoke(direciton);
         
     }
@@ -86,5 +91,15 @@ public class InputManager : MonoBehaviour
     {
         Vector2 zoom = context.ReadValue<Vector2>();
         OnCameraZoom?.Invoke(zoom.y / 3);
+    }
+
+    public void OnNumberKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1)) OnNumberPressed?.Invoke(0);
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) OnNumberPressed?.Invoke(1);
+            else if (Input.GetKeyDown(KeyCode.Alpha3)) OnNumberPressed?.Invoke(2);
+        }
     }
 }

@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6414792702846372622}
-  - component: {fileID: 8123392807157458665}
   m_Layer: 0
   m_Name: Road_Endcap
   m_TagString: Untagged
@@ -32,20 +31,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8123392807157458665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2974101908951154191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f6212b1fdc97ed4f98653717a75673d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPermanent: 0
-  Type: 1
 --- !u!1 &7690759250355879679
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,7 +90,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 2a9ca990d3bed7e4ba323fb46ebb275e, type: 3}
+  - {fileID: 2100000, guid: edb32815f7d5d61419b7b11f774dc6cf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

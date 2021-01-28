@@ -5,30 +5,27 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    public GameObject road0Way;
-    public GameObject road2Way;
-    public GameObject road3Way;
-    public GameObject road4Way;
-    public GameObject roadEndCap;
-    public GameObject roadCorner;
-
-
-    [Range(minGridSize, maxGridSize)]
+    [Range(Config.maxSize, Config.maxSize)]
     public int gridSize;
-    private const int minGridSize = 1;
-    private const int maxGridSize = 100;
 
-    public Vector2Int? Cursor = null;
+    private DigitalCursor cursor = null;
 
-    private bool cursorEnabled = true;
-    private bool clickRecieved = false;
-
-    public LayerMask groundMask;
+    private bool cursorEnabled = true; //When false, cursor will not be shown
+    private bool clickRecieved = false; //When true, update function will pick this up and signal to its state controller
 
     private GameObject ground = null;
 
-    private TileGrid grid;
-    private Dictionary<Vector2Int, GameObject> activeStructures = new Dictionary<Vector2Int, GameObject>();
+    public LayerMask groundMask; // The mask used to find the ground plane
+
+    private int state = 0;
+
+    public Material TileMaterial;
+    public Material TransparentMaterial;
+
+    private TileGrid grid; // Data object that holds the information about all tiles
+    public static GridManager Instance { get; private set; } //Singleton pattern
+
+    private GridController GridSM; //Controls the state of build mode
 
     public bool CursorEnabled { get => cursorEnabled; set => SetCursor(value); }
 
@@ -37,16 +34,16 @@ public class GridManager : MonoBehaviour
         if (value == cursorEnabled) return;
         if (value)
         {
-            Cursor = null;
+            cursor = null;
             cursorEnabled = true;
         } 
         else
         {
-            if (Cursor != null)
+            if (cursor != null)
             {
-                RemoveTileIfTemporary(Cursor.Value);
+                RemoveTileIfTemporary(cursor.Position);
                 cursorEnabled = false;
-                Cursor = null;
+                cursor = null;
             }
         }
     }
@@ -54,15 +51,22 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GridSM = new GridController(new PlaceRoadState());
+        if (Instance != null) Destroy(this);
+        Instance = this;
         grid = new TileGrid(gridSize, gridSize);
         ground = CreateGround();
     }
 
+    /// <summary>
+    /// Creates the ground object and attaches it as a child
+    /// </summary>
+    /// <returns></returns>
     private GameObject CreateGround()
     {
         var blueprint = new GameObject("Ground")
         {
-            layer = LayerMask.NameToLayer("Grid"),
+            layer = LayerMask.NameToLayer("Grid")
         };  //Creates gameobject with name ground and assigns it to the grid layer
 
 
@@ -77,7 +81,7 @@ public class GridManager : MonoBehaviour
         meshCollider.sharedMesh = mesh;  //Adds mesh to collider
 
         blueprint.transform.position = new Vector3(-.5f, 0f, -.5f); //Grid is offset by (0.5, 0.5) to account for the tiles being centered
-
+        blueprint.transform.parent = this.transform;
         return blueprint;
     }
 
@@ -118,21 +122,54 @@ public class GridManager : MonoBehaviour
         return mesh;
     }
 
+    /// <summary>
+    /// When a place event occures this function handles it
+    /// </summary>
     internal void PlaceHandler()
     {
         clickRecieved = true;
     }
 
+
+
+    public void StateNumberChangeHandler(int stateNum) => ChangeState(stateNum);
+
+    private void ChangeState(int state)
+    {
+        if(this.state != state)
+        {
+            IGridControlState newState;
+            this.state = state;
+            switch (state)
+            {
+                case 0:
+                    newState = new PlaceRoadState();
+                    break;
+                case 1:
+                    newState = new PlaceStructureState(BuildingTile.StructureType.House);
+                    break;
+                case 2:
+                    newState = new RemoveTileState();
+                    break;
+                default:
+                    newState = new PlaceRoadState();
+                    this.state = 0;
+                    break;
+            }
+            GridSM.SetState(newState, cursor);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C)) CursorEnabled = !CursorEnabled;
+        if (Input.GetKeyDown(KeyCode.C)) CursorEnabled = !CursorEnabled; //If C pressed, cursor is disabled
         if (CursorEnabled)
         {
-            HandleCursorMovement();
+            HandleCursorMovement(); //Updates state with cursor movement
             if (clickRecieved)
             {
-                if (Cursor.HasValue) MakePermanant(Cursor.Value);
+                GridSM.OnMouseDown(cursor); //Sends down press event to state
             }
         }
         clickRecieved = false;
@@ -140,227 +177,138 @@ public class GridManager : MonoBehaviour
 
     private void HandleCursorMovement()
     {
-        Vector2Int? newCursor = GetMouseLocationOnGrid();
-        if(newCursor != Cursor)
+        DigitalCursor newCursor = new DigitalCursor();
+        
+        if(newCursor.Position != cursor?.Position || newCursor.SubDirection != cursor?.SubDirection)
         {
-            if (Cursor != null) RemoveTileIfTemporary(Cursor.Value); //If the cursor was valid, removes temp tile at cursor
-            if (newCursor != null)
-            {
-                TryCreateTemporaryRoad(newCursor.Value); //If new position is on grid, creates temp tile at cursor
-            }
-            Cursor = newCursor;
+            GridSM.MoveCursor(cursor, newCursor);
+            cursor = newCursor;
         }
-    }
-
-    private void MakePermanant(Vector2Int point) => GetStructure(point)?.MakePermanent();
-
-    private Structure GetStructure(Vector2Int point)
-    {
-        if (activeStructures.ContainsKey(point)) return activeStructures[point].GetComponent<Structure>();
-        else return null;
-    }
-
-
-    private void TryCreateTemporaryRoad(Vector2Int point)
-    {
-        CreateTile(point, TileType.Road,  true, false);
-        UpdateNeighbors(point);
-    }
-
-    private void RemoveTileIfTemporary(Vector2Int point)
-    {
-        if(RemoveTile(point,false)) UpdateNeighbors(point);
-    }
-
-    private Vector2Int? GetMouseLocationOnGrid()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundMask))
-        {
-            Vector3Int rayPosition = Vector3Int.RoundToInt(hit.point);
-            return new Vector2Int(rayPosition.x, rayPosition.z);
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// Creates tile at location, 
-    /// </summary>
-    /// <param name="point">Point on grid</param>
-    /// <param name="newType">Type of tile</param>
-    /// <param name="markTemporary">If true, will mark tile as temporary</param>
-    /// <param name="overrideLocation">If true, will replace tile at location</param>
-    public void CreateTile(Vector2Int point, TileType newType, bool markTemporary, bool replace)
-    {
-        TileType current = grid[point];
-        if (current == TileType.OffGrid) return;
-        if (replace) ReplaceTile(point, newType, markTemporary); //Override mode, so will replace tile regardless of what is there
-        else
-        {
-            if (current == TileType.Empty) ReplaceTile(point, newType, markTemporary); //Tile is empty, so create tile here
-            else return; //Tile will not be replaced because replace mode is off
-        }
-    }
-
-    private void ReplaceTile(Vector2Int point, TileType newType, bool markTemporary)
-    {
-        TileType current = grid[point];
-        if (current == TileType.OffGrid) return;
-        if (current != TileType.Empty)
-        {
-            RemoveTile(point, true);
-        }
-
-        grid[point] = newType;
-        switch (newType)
-        {
-            case TileType.Empty:
-                break;
-            case TileType.Road:
-                activeStructures[point] = WhatRoadTileAmI(point);
-                if (!markTemporary) MakePermanant(point);
-                break;
-            case TileType.Structure:
-                activeStructures[point] = WhatBuildingTileAmI(point);
-                if (!markTemporary) MakePermanant(point);
-                break;
-            default:
-                throw new NotImplementedException("No case had been added for creating new object");
-        }
-    }
-
-    private GameObject WhatBuildingTileAmI(Vector2Int point)
-    {
-        throw new NotImplementedException("This is a stub, add logic to position buildings when spawned here");
-        //Return a instantiated game object here with a Building Tile component
-    }
-
-    private void RecalculateTile(Vector2Int point)
-    {
-        TileType type = grid[point];
-        if (type == TileType.Empty || type == TileType.OffGrid) return;
-        ReplaceTile(point, type, !GetStructure(point).isPermanent);
-    }
-
-
-    /// <summary>
-    /// Removes tile from the grid based on if the tile if temporary.
-    /// </summary>
-    /// <param name="point">Point on grid to remove</param>
-    /// <param name="forceRemove">If true, will delete the tile regardless</param>
-    public bool RemoveTile(Vector2Int point, bool forceRemove)
-    {
-        switch (grid[point])
-        {
-            case TileType.Empty:
-            case TileType.OffGrid:
-                break;
-                //throw new System.Exception($"No tile to remove at point: {point}");
-            
-                //throw new System.IndexOutOfRangeException($"Point [{point}] outside of grid bounds");
-            case TileType.Road:
-            case TileType.Structure:
-                if (activeStructures.ContainsKey(point))
-                {
-                    if(forceRemove || !GetStructure(point).isPermanent)
-                    { 
-                        grid[point] = TileType.Empty;
-                        Destroy(activeStructures[point]);
-                        activeStructures.Remove(point);
-                        return true;
-                    }
-                }
-                break;
-        }
-        return false;
-    }
-
-    public void UpdateNeighbors(Vector2Int point)
-    {
-        Vector2Int left = new Vector2Int(point.x - 1, point.y);
-        Vector2Int right = new Vector2Int(point.x + 1, point.y);
-        Vector2Int top = new Vector2Int(point.x, point.y - 1);
-        Vector2Int bottom = new Vector2Int(point.x, point.y + 1);
-
-        RecalculateTile(left);
-        RecalculateTile(right);
-        RecalculateTile(top);
-        RecalculateTile(bottom);
     }
 
     
-    public GameObject WhatRoadTileAmI(Vector2Int point)
+    /// <summary>
+    /// Gets tile from location
+    /// </summary>
+    /// <param name="location"></param>
+    /// <returns></returns>
+    public Tile GetTile(Vector2Int location) => grid[location];
+
+
+    /// <summary>
+    /// Sets transparency of the tile at this location
+    /// </summary>
+    /// <param name="location"></param>
+    /// <param name="value"></param>
+    public void SetTransparency(Vector2Int location, bool value) => grid[location]?.SetTransparency(value);
+
+    /// <summary>
+    /// Makes the tile permanent at location
+    /// </summary>
+    /// <param name="point"></param>
+    public void MakePermanent(Vector2Int point)
     {
-        NeighborInfo neighbors = grid.GetNeighbors(point.x, point.y);
-        int count = 0;
-        bool left = false, right = false, top = false, bottom = false;
+        grid[point]?.MakePermanent();
+        grid[point]?.SetTransparency(false);
+    }
 
-        if (neighbors.left == TileType.Road)   { count++; left   = true; }
-        if (neighbors.right == TileType.Road)  { count++; right  = true; }
-        if (neighbors.top == TileType.Road)    { count++; top    = true; }
-        if (neighbors.bottom == TileType.Road) { count++; bottom = true; }
+    /// <summary>
+    /// Creates tile with default value for type. Calls to AddTileToGrid.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="point"></param>
+    public void CreateTemporaryTile<T>(Vector2Int point) where T : Tile, new() => AddTileToGrid(point, new T());
 
-        // all this switch statement does it handle which way the tile should be rotated
-        GameObject prefab = null;
-        Quaternion rotation = Quaternion.identity;
-        switch (count) {
-            // 0 way
-            case 0:
-                prefab = road0Way;
-                break;
-            // end cap
-            case 1:
-                prefab = roadEndCap;
-                if (top) {
-                    rotation = Quaternion.Euler(0, 180, 0);
-                }
-                else if (right) {
-                    rotation = Quaternion.Euler(0, 90, 0);
-                }
-                else if (left) {
-                    rotation = Quaternion.Euler(0, -90, 0);
-                }
-                break;
-            // 2 way or corner
-            case 2:
-                if (right && top || right && bottom || left && top || left && bottom) {
-                    prefab = roadCorner;
-                    if (right && top) {
-                        rotation = Quaternion.Euler(0, 180, 0);
-                    } else if (right && bottom) {
-                        rotation = Quaternion.Euler(0, 90, 0);
-                    } else if (left && top) {
-                        rotation = Quaternion.Euler(0, -90, 0);
-                    }
-                }
-                else { 
-                    prefab = road2Way;
-                    if (right) rotation = Quaternion.Euler(0, 90, 0);
-                }
-                break;
-            // 3 way
-            case 3:
-                prefab = road3Way;
-                if (!bottom) {
-                    rotation = Quaternion.Euler(0, 180, 0);
-                } else if (!right) {
-                    rotation = Quaternion.Euler(0, -90, 0);
-                } else if (!left) {
-                    rotation = Quaternion.Euler(0, 90, 0);
-                }
-                break;
-            // 4 way
-            case 4:
-                prefab = road4Way;
-                break;
+
+    /// <summary>
+    /// Creates tile with default value for types. And then makes permanent.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="point"></param>
+    private void CreatePermanentTile<T>(Vector2Int point) where T : Tile, new()
+    {
+        AddTileToGrid(point, default(T));
+        MakePermanent(point);
+    }
+
+    /// <summary>
+    /// Adds tile to grid at location. If it is occupied, trys to delete. Updates neighbors of change
+    /// </summary>
+    /// <param name="point"></param>
+    /// <param name="tile"></param>
+    public void AddTileToGrid(Vector2Int point, Tile tile)
+    {
+        if (grid[point] != null) //If there is a tile at this location already, try to remove
+        {
+            if (!RemoveTileIfTemporary(point)) return; //The tile could not be removed (is is permanent) so halting
         }
-        /*
-        if (onlyNeighbors && orientation == TileOrientation.center) {
-            return null;
-        } else {
-            return Instantiate(prefab, tileGrid[x, y].transform.position, rotation);
-        }*/
+        //Tile location is ensured empty, can proceed to file location
+        grid[point] = tile;
+        if (grid[point].CreateManaged(point, grid.GetNeighbors(point))) ForceRemoveTileDirty(point);
+        UpdateNeighbors(point);
+    }
 
-        return Instantiate(prefab, new Vector3(point.x, 0f, point.y), rotation, transform);
+    /// <summary>
+    /// Takes a tile that currently exists and ensures their model is correct for the current neighbor scenario.
+    /// </summary>
+    /// <param name="point"></param>
+    private void RecalculateTile(Vector2Int point) 
+    {
+        if (grid[point]?.RecalculateManaged(grid.GetNeighbors(point)) ?? false) RemoveTile(point);
+    }
+
+
+    /// <summary>
+    /// Removes tile from the grid based on if the tile if temporary. Updates Neighbors
+    /// </summary>
+    /// <param name="point">Point on grid to remove</param>
+    /// <returns>Returns true if a tile was deleted</returns>
+    public bool RemoveTileIfTemporary(Vector2Int point)
+    {
+        if (grid[point]?.IsPermanent ?? true) return false; //Returns false when either the tile is permanent or it is null
+        else if (ForceRemoveTileDirty(point))
+        {
+            UpdateNeighbors(point);
+            return true;
+        }
+        else return false;
+    }
+
+    /// <summary>
+    /// Removes tile and updates neighbors
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
+    public bool RemoveTile(Vector2Int point)
+    {
+        if (ForceRemoveTileDirty(point))
+        {
+            UpdateNeighbors(point);
+            return true;
+        }
+        else return false;
+    }
+
+
+    /// <summary>
+    /// Removes a tile, no matter its state. Does not notify neighbors
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
+    private bool ForceRemoveTileDirty(Vector2Int point)
+    {
+        grid[point]?.DeleteManaged();
+        grid[point] = null;
+        return true;
+    }
+
+
+    /// <summary>
+    /// Tell all neighbors of a point to update it's model
+    /// </summary>
+    /// <param name="point"></param>
+    private void UpdateNeighbors(Vector2Int point)
+    {
+        foreach (var direction in Tile.Directions) RecalculateTile(point + direction);
     }
 }
