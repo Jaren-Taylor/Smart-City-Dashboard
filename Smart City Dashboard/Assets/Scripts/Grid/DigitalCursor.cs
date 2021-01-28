@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Upon creation will get mouse cursor information.
+/// All fields are readonly and this structure should be discarded after use. 
+/// </summary>
 public class DigitalCursor
 {
     public readonly static int GroundMask = 1 << LayerMask.NameToLayer("Grid");

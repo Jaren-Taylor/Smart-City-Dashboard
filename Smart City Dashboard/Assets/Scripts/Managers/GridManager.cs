@@ -5,29 +5,27 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [Range(minGridSize, maxGridSize)]
+    [Range(Config.maxSize, Config.maxSize)]
     public int gridSize;
-    private const int minGridSize = 1;
-    private const int maxGridSize = 100;
 
     private DigitalCursor cursor = null;
 
-    private bool cursorEnabled = true;
-    private bool clickRecieved = false;
+    private bool cursorEnabled = true; //When false, cursor will not be shown
+    private bool clickRecieved = false; //When true, update function will pick this up and signal to its state controller
 
     private GameObject ground = null;
 
-    public LayerMask groundMask;
+    public LayerMask groundMask; // The mask used to find the ground plane
 
-    private TileGrid grid;
-    private Dictionary<Vector2Int, GameObject> activeStructures = new Dictionary<Vector2Int, GameObject>();
+    private int state = 0;
 
     public Material TileMaterial;
     public Material TransparentMaterial;
 
-    public static GridManager Instance { get; private set; }
+    private TileGrid grid; // Data object that holds the information about all tiles
+    public static GridManager Instance { get; private set; } //Singleton pattern
 
-    private GridController GridSM;
+    private GridController GridSM; //Controls the state of build mode
 
     public bool CursorEnabled { get => cursorEnabled; set => SetCursor(value); }
 
@@ -60,6 +58,10 @@ public class GridManager : MonoBehaviour
         ground = CreateGround();
     }
 
+    /// <summary>
+    /// Creates the ground object and attaches it as a child
+    /// </summary>
+    /// <returns></returns>
     private GameObject CreateGround()
     {
         var blueprint = new GameObject("Ground")
@@ -120,12 +122,15 @@ public class GridManager : MonoBehaviour
         return mesh;
     }
 
+    /// <summary>
+    /// When a place event occures this function handles it
+    /// </summary>
     internal void PlaceHandler()
     {
         clickRecieved = true;
     }
 
-    private int state = 0;
+
 
     public void StateNumberChangeHandler(int stateNum) => ChangeState(stateNum);
 
@@ -158,13 +163,13 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C)) CursorEnabled = !CursorEnabled;
+        if (Input.GetKeyDown(KeyCode.C)) CursorEnabled = !CursorEnabled; //If C pressed, cursor is disabled
         if (CursorEnabled)
         {
-            HandleCursorMovement();
+            HandleCursorMovement(); //Updates state with cursor movement
             if (clickRecieved)
             {
-                GridSM.OnMouseDown(cursor);
+                GridSM.OnMouseDown(cursor); //Sends down press event to state
             }
         }
         clickRecieved = false;
@@ -182,25 +187,55 @@ public class GridManager : MonoBehaviour
     }
 
     
-
+    /// <summary>
+    /// Gets tile from location
+    /// </summary>
+    /// <param name="location"></param>
+    /// <returns></returns>
     public Tile GetTile(Vector2Int location) => grid[location];
 
+
+    /// <summary>
+    /// Sets transparency of the tile at this location
+    /// </summary>
+    /// <param name="location"></param>
+    /// <param name="value"></param>
     public void SetTransparency(Vector2Int location, bool value) => grid[location]?.SetTransparency(value);
 
+    /// <summary>
+    /// Makes the tile permanent at location
+    /// </summary>
+    /// <param name="point"></param>
     public void MakePermanent(Vector2Int point)
     {
         grid[point]?.MakePermanent();
         grid[point]?.SetTransparency(false);
     }
 
+    /// <summary>
+    /// Creates tile with default value for type. Calls to AddTileToGrid.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="point"></param>
     public void CreateTemporaryTile<T>(Vector2Int point) where T : Tile, new() => AddTileToGrid(point, new T());
 
+
+    /// <summary>
+    /// Creates tile with default value for types. And then makes permanent.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="point"></param>
     private void CreatePermanentTile<T>(Vector2Int point) where T : Tile, new()
     {
         AddTileToGrid(point, default(T));
         MakePermanent(point);
     }
 
+    /// <summary>
+    /// Adds tile to grid at location. If it is occupied, trys to delete. Updates neighbors of change
+    /// </summary>
+    /// <param name="point"></param>
+    /// <param name="tile"></param>
     public void AddTileToGrid(Vector2Int point, Tile tile)
     {
         if (grid[point] != null) //If there is a tile at this location already, try to remove
@@ -213,6 +248,10 @@ public class GridManager : MonoBehaviour
         UpdateNeighbors(point);
     }
 
+    /// <summary>
+    /// Takes a tile that currently exists and ensures their model is correct for the current neighbor scenario.
+    /// </summary>
+    /// <param name="point"></param>
     private void RecalculateTile(Vector2Int point) 
     {
         if (grid[point]?.RecalculateManaged(grid.GetNeighbors(point)) ?? false) RemoveTile(point);
@@ -235,6 +274,11 @@ public class GridManager : MonoBehaviour
         else return false;
     }
 
+    /// <summary>
+    /// Removes tile and updates neighbors
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
     public bool RemoveTile(Vector2Int point)
     {
         if (ForceRemoveTileDirty(point))
@@ -247,7 +291,7 @@ public class GridManager : MonoBehaviour
 
 
     /// <summary>
-    /// Removes a tile, no matter its state
+    /// Removes a tile, no matter its state. Does not notify neighbors
     /// </summary>
     /// <param name="point"></param>
     /// <returns></returns>
@@ -258,6 +302,11 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
+
+    /// <summary>
+    /// Tell all neighbors of a point to update it's model
+    /// </summary>
+    /// <param name="point"></param>
     private void UpdateNeighbors(Vector2Int point)
     {
         foreach (var direction in Tile.Directions) RecalculateTile(point + direction);

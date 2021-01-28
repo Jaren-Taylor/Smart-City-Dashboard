@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using static UnityEngine.InputSystem.InputAction;
 
+/// <summary>
+/// All input for the project should pass through here
+/// </summary>
 public class InputManager : MonoBehaviour
 {
     [SerializeField]

@@ -2,8 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Places provided structure on the grid when clicking (only when in valid location) 
+/// </summary>
 public class PlaceStructureState : IGridControlState
 {
+    /// <summary>
+    /// Structure that will be placed
+    /// </summary>
     public readonly BuildingTile.StructureType Structure;
 
     public PlaceStructureState(BuildingTile.StructureType structure)
@@ -30,6 +37,11 @@ public class PlaceStructureState : IGridControlState
         }
     }
 
+    /// <summary>
+    /// Makes sure the structure can be set to permanent in it's current state
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <returns></returns>
     private bool isValidToPlace(Tile tile)
     {
         return tile is BuildingTile &&

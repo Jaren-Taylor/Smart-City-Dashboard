@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Data structure to manage placing buildings
+/// </summary>
 public class BuildingTile : Tile
 {
     public static readonly Dictionary<StructureType, string> ModelLookup = new Dictionary<StructureType, string>()
@@ -20,14 +24,18 @@ public class BuildingTile : Tile
     private Facing currentFacing;
     public bool IsLocationValid { get; private set; }
 
-
-
     public BuildingTile(StructureType type, Facing facing)
     {
         structure = type;
         currentFacing = facing;
     }
 
+    /// <summary>
+    /// Determines which directions are valid for this object to be placed. Then calls back to parent to create the file.
+    /// If this returns true, it needs to be garbage collected.
+    /// </summary>
+    /// <param name="neighbors"></param>
+    /// <returns></returns>
     protected override bool CalculateAndSetModelFromNeighbors(NeighborInfo neighbors)
     {
         var validDirection = new List<Facing>(GetValidDirections(neighbors, structure));
@@ -56,7 +64,7 @@ public class BuildingTile : Tile
                 currentFacing = validDirection[0];
             }
         }
-        AttachModelToManaged(ModelLookup[structure], currentFacing);
+        AttachModelToManaged(ModelLookup[structure], currentFacing); //Tells parent to construct the model in the orientation 
         return IsPermanent && !IsLocationValid;
     }
 

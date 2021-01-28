@@ -5,13 +5,16 @@ using UnityEngine;
 
 public class TileGrid
 {
+
+    /// <summary>
+    /// Holds all the tiles present on the map
+    /// </summary>
     private Tile[,] grid;
 
     public readonly int Width;
     public readonly int Height;
 
    
-
     public TileGrid(int width, int height)
     {
         Width = width;
@@ -19,12 +22,24 @@ public class TileGrid
         grid = new Tile[width, height];
     }
 
+
+    /// <summary>
+    /// Gets access to the tile as this position
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
     public Tile this[Vector2Int point]
     {
         get => this[point.x, point.y];
         set => this[point.x, point.y] = value;
     }
 
+    /// <summary>
+    /// Gets access to the tile as this position
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public Tile this[int x, int y]
     {
         get
@@ -43,10 +58,28 @@ public class TileGrid
         }
     }
 
+    /// <summary>
+    /// Checks if a point is in bounds given the current grid size
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public bool InBounds(int x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
 
+
+    /// <summary>
+    /// From a point, get information about the neighbors
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
     public NeighborInfo GetNeighbors(Vector2Int point) => GetNeighbors(point.x, point.y);
 
+    /// <summary>
+    /// From a point, get information about the neighbors
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public NeighborInfo GetNeighbors(int x, int y)
     {
         NeighborInfo neighbors = new NeighborInfo(
@@ -57,6 +90,10 @@ public class TileGrid
         return neighbors;
     }
 
+    /// <summary>
+    /// Formats the tilegrid for printing
+    /// </summary>
+    /// <returns></returns>
     public override string ToString()
     {
         string output = "Tilegrid Contents:\n";
@@ -65,6 +102,9 @@ public class TileGrid
     }
 }
 
+/// <summary>
+/// Struct to simply hold tiles. Represents the neighbors of a point
+/// </summary>
 public struct NeighborInfo
 {
     public readonly Tile left;

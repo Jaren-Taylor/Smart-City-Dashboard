@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Data structure to manage placed roads
+/// </summary>
 public class RoadTile : Tile
 {
     public static readonly Dictionary<TileType, string> ModelLookup = new Dictionary<TileType, string>()
@@ -107,7 +110,7 @@ public class RoadTile : Tile
                 break;
         }
         
-        AttachModelToManaged(ModelLookup[Type], rotation);
+        AttachModelToManaged(ModelLookup[Type], rotation); //Tells parent to construct the model in the orientation 
         return false;
     }
 }

@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Object that has fields that allows it's data to be easily managed. Used by Tiles to create a physical model in the scene.
+/// </summary>
 public class ManagedGameObject : MonoBehaviour
 {
     public GameObject childModel = null;
@@ -39,16 +42,31 @@ public class ManagedGameObject : MonoBehaviour
         else cachedMaterial = material;
     }
 
+    /// <summary>
+    /// Apply whatever material is current in cache to child model
+    /// </summary>
     private void ApplyCachedMaterial()
     {
         MeshRenderer renderer = childModel.transform.GetComponentInChildren<MeshRenderer>();
         if (renderer != null && cachedMaterial != null) renderer.material = cachedMaterial;
     }
 
-    public T AddComponent<T>() where T : Component => childModel?.AddComponent<T>();
+
+    /// <summary>
+    /// Add component to the object
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T AddComponent<T>() where T : Component => AddComponent<T>();
+
+    /// <summary>
+    /// Trys to remove component from object
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     public bool TryRemoveComponent<T>() where T : Component
     {
-        Component comp = childModel?.GetComponent<T>();
+        Component comp = GetComponent<T>();
         if (comp == null) return false;
         else
         {
