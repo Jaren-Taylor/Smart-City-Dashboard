@@ -1,0 +1,101 @@
+@startuml InputManager->Camera
+actor user as user
+boundary mouse as mouse
+boundary keyboard as keyboard 
+control InputManager as InputManager 
+control CameraManager as CameraManager 
+
+loop @60 frames/sec
+    InputManager -> InputManager:check for input
+
+        alt mouse input detected  
+        user -> mouse: touch initiated
+        mouse -> InputManager: MouseMovement Action 
+        InputManager -> InputManager: OnMouseMovement
+        note right: detects movement and sets the movement amount
+
+        user -> mouse: Hover
+        mouse -> InputManager: MouseMovement Action 
+        InputManager -> CameraManager: OnCameraPan
+        CameraManager--> CameraManager: PanHandler
+        
+        user -> keyboard: Left/Right Arrow Keys
+        keyboard -> InputManager: CameraRotation Action
+        InputManager -> CameraManager: OnRotation
+        CameraManager -> CameraManager: RotationHandler
+
+        user -> mouse: Scroll
+        mouse -> InputManager: CameraScroll Action
+        InputManager -> CameraManager: OnZoom
+        CameraManager -> CameraManager: ZoomHandler
+
+        end 
+    
+end
+@enduml
+
+@startuml GameManager-InputManager
+participant "Start()" as start 
+control GameManager as GameManager
+control GridManager as GridManager
+control InputManager as InputManager 
+control CameraManager as CameraManager 
+
+start -> GameManager: initiate Subscription process
+note left: Input Manager receives all input.
+GameManager -> GridManager:Subscribe
+GridManager --> GameManager: async Notification(s)
+GameManager -> InputManager: Subscribe
+InputManager --> GameManager: async Notification(s)
+GameManager -> CameraManager:Subscribe
+CameraManager --> GameManager: async Notification(s)
+
+
+
+@enduml
+
+@startuml GridManager Structure
+participant "Start()" as s
+actor user as u 
+boundary mouse as m 
+control GridManager as gm 
+control InputManager as im 
+control GameManager as gm2
+entity TileGrid as tg 
+
+s -> gm : createGround
+gm -> gm: GenerateMesh
+loop @60 FPS
+    u -> m: left click
+    m -> im: PlaceTile
+    im -> im: OnPlaceTile
+    im -> gm2: notification sent
+    gm2 -> gm: OnPlaceTile
+    gm -> gm: HandleCursorMovement
+
+    alt click received
+        gm -> gm: MakePermanent?
+        gm --> gm: MakePermanent
+
+    else temporary tile 
+        gm -> gm: RemoveIfTemporary
+    
+    end
+u -> m: left click
+    m -> im: PlaceTile
+    im -> im: OnPlaceTile
+    im -> gm2: notification sent
+    gm2 -> gm: OnPlaceTile
+    gm -> gm: HandleCursorMovement
+    gm -> gm: TryCreateTemporaryRoad
+    note right: if there is a tile near, get info and predict road shape
+    gm -> gm: UpdateNeighbors
+    gm -> gm: ReplaceTile
+    gm -> gm: WhatRoadTileAmI
+    gm -> tg: GetNeighbors
+    tg --> gm: neighbors
+    note right: Tile is now created and instantiated, with the grid updated to note it's existence for future use.
+
+end
+
+@enduml
