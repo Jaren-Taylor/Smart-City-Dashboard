@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 
+[DataContract]
 /// <summary>
 /// Data structure to manage placing buildings
 /// </summary>
@@ -22,14 +24,22 @@ public class BuildingTile : Tile
         TestStruct = 2
     }
 
+    [DataMember(Name="Structure")]
     public readonly StructureType structure;
+    [DataMember(Name="Facing")]
     private Facing currentFacing;
+    [DataMember(Name="IsLocationValid")]
     public bool IsLocationValid { get; private set; }
 
     public BuildingTile(StructureType type, Facing facing)
     {
         structure = type;
         currentFacing = facing;
+    }
+
+    public override string ToString()
+    {
+        return $"[{structure.ToString()}]: " +  base.ToString();
     }
 
     /// <summary>

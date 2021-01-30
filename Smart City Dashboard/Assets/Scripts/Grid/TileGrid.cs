@@ -1,17 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using UnityEngine;
 
+
+[DataContract]
 public class TileGrid
 {
 
+    [DataMember(Name="Grid")]
     /// <summary>
     /// Holds all the tiles present on the map
     /// </summary>
-    private Tile[,] grid;
+    private Dictionary<Vector2Int, Tile> grid;
 
+    [DataMember(Name="Width")]
     public readonly int Width;
+    [DataMember(Name="Height")]
     public readonly int Height;
 
    
@@ -19,7 +26,7 @@ public class TileGrid
     {
         Width = width;
         Height = height;
-        grid = new Tile[width, height];
+        grid = new Dictionary<Vector2Int, Tile>();//new Tile[width * height];
     }
 
 
@@ -45,7 +52,7 @@ public class TileGrid
         get
         {
             if (!InBounds(x,y)) return null;
-            else return grid[x, y];
+            else return SafeLookup(x, y);
         }
         set
         {
@@ -53,9 +60,28 @@ public class TileGrid
             {
                 throw new IndexOutOfRangeException($"Cannot assign [{x}, {y}] to outside of grid boundaries.");
             }
-            if (grid[x, y]?.ManagedExists() ?? false) grid[x, y].DeleteManaged();
-            grid[x, y] = value;
+            if (SafeLookup(x,y)?.ManagedExists() ?? false) SafeLookup(x, y).DeleteManaged();
+            if (value == null) grid.Remove(new Vector2Int(x, y));
+            else grid[new Vector2Int(x, y)] = value;
         }
+    }
+
+    private List<Vector2Int> GetLocations() => new List<Vector2Int>(grid.Keys);
+
+    private int XyToGrid(int x, int y) => x + y * Width;
+
+    private Tile SafeLookup(int x, int y) => grid.TryGetValue(new Vector2Int(x, y), out Tile output) ? output : null;
+
+    internal void RefreshGrid()
+    {
+        var TileLocations = GetLocations();
+
+        foreach (var location in TileLocations)
+        {
+            grid[location].CreateManaged(location, GetNeighbors(location));
+
+        }
+        //foreach (var buildingLocation in BuildingTiles)
     }
 
     /// <summary>
@@ -65,7 +91,6 @@ public class TileGrid
     /// <param name="y"></param>
     /// <returns></returns>
     public bool InBounds(int x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
-
 
     /// <summary>
     /// From a point, get information about the neighbors
@@ -97,7 +122,9 @@ public class TileGrid
     public override string ToString()
     {
         string output = "Tilegrid Contents:\n";
-        for (int x = 0; x < Width; x++) for (int y = 0; y < Height; y++) if (grid[x,y] != null) output += grid[x, y].ToString() + " : [" + x + ", " + y + "]\t";
+        foreach(KeyValuePair<Vector2Int, Tile> kvp in grid) output += $"[{kvp.Key}] : {kvp.Value}";
+
+        //for (int x = 0; x < Width; x++) for (int y = 0; y < Height; y++) if (grid[xyToGrid(x, y)] != null) output += grid[xyToGrid(x, y)].ToString() + " : [" + x + ", " + y + "]< >";
         return output;
     }
 }

@@ -63,4 +63,20 @@ public class GridController
     /// <param name="cursor"></param>
     /// <returns></returns>
     private bool IsValid(DigitalCursor cursor) => cursor?.OnGrid ?? false;
+
+    public void SuspendState(DigitalCursor mousePosition)
+    {
+        if (IsValid(mousePosition))
+        {
+            activeState?.OnPop(mousePosition);
+        }
+    }
+
+    public void ResumeState(DigitalCursor mousePosition)
+    {
+        if (IsValid(mousePosition))
+        {
+            activeState?.OnPush(mousePosition);
+        }
+    }
 }
