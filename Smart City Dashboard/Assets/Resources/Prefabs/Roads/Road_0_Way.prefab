@@ -126,7 +126,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7398234714620974105}
   m_Layer: 0
-  m_Name: Pedestrian Node 4
+  m_Name: Pedestrian Top Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -156,7 +156,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7000151228838632255}
   m_Layer: 0
-  m_Name: Pedestrian Node 1
+  m_Name: Pedestrian Bottom Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,7 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8416882015601703975}
   m_Layer: 0
-  m_Name: Pedestrian Node 2
+  m_Name: Pedestrian Bottom Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -216,7 +216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8875453942139820292}
   m_Layer: 0
-  m_Name: Pedestrian Node 3
+  m_Name: Pedestrian Top Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
