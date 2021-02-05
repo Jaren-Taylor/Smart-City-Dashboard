@@ -11,8 +11,7 @@ public abstract class Entity
     Vector2Int destinationPos;
 
     private ManagedGameObject managedObject;
-
-    public GameObject Bus_Base  = (GameObject) Resources.Load("Assets/Resources/Prefabs/Vehicles/Bus_Base", typeof(GameObject));
+    private const string ManagedGameObjectLocation = "Prefabs/ManagedTile";
 
     //public Vector2Int requestTilePos(Vector2Int tilePos)
     //{
@@ -40,9 +39,15 @@ public abstract class Entity
 
     public void InstantiateEntity(Vector2Int point)
     {
-       GameObject.Instantiate(
-            Bus_Base,
-            new Vector3(point.x + .25f, .1f, point.y + .25f),
+       managedObject = Object.Instantiate(
+            Resources.Load<ManagedGameObject>(ManagedGameObjectLocation),
+            new Vector3(point.x + .2f, .1f, point.y + .35f),
             Quaternion.identity);
+        AttachModelToManaged("Prefabs/Vehicles/Bus_Base");
+    }
+    protected void AttachModelToManaged(string prefabLocation)
+    {
+        GameObject prefab = Resources.Load<GameObject>(prefabLocation);
+        managedObject.InstantiateModel(prefab, Quaternion.Euler(-90, -90, -90));
     }
 }
