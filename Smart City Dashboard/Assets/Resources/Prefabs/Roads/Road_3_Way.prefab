@@ -49,7 +49,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3091158691788704430}
   m_Layer: 0
-  m_Name: Pedestrian 2
+  m_Name: Pedestrian Top Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4437134750199284343}
   m_Layer: 0
-  m_Name: Car 4
+  m_Name: Car Top Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -190,7 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3814018013917457102}
   m_Layer: 0
-  m_Name: Car 3
+  m_Name: Car Top Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -220,7 +220,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5785635569881759650}
   m_Layer: 0
-  m_Name: Car 2
+  m_Name: Car Bottom Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -249,9 +249,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5912777543177461059}
-  - component: {fileID: 3762528461123171275}
   m_Layer: 0
-  m_Name: Car 1
+  m_Name: Car Bottom Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -271,20 +270,6 @@ Transform:
   m_Father: {fileID: 248010663608771200}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3762528461123171275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7034441012618555293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9feb6dd44bc78d84ab40f5b143e2a0b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Car1: {fileID: 0}
-  Car4: {fileID: 0}
 --- !u!1 &7110007888976720722
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,7 +280,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1809091001594647683}
   m_Layer: 0
-  m_Name: Pedestrian 1
+  m_Name: Pedestrian Bottom Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -325,7 +310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2079057376004930534}
   m_Layer: 0
-  m_Name: Pedestrian 3
+  m_Name: Pedestrian Bottom Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,7 +340,7 @@ GameObject:
   m_Component:
   - component: {fileID: 460723859495406122}
   m_Layer: 0
-  m_Name: Pedestrian 4
+  m_Name: Pedestrian Top Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

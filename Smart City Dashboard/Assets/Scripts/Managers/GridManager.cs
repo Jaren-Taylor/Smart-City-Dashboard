@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -23,6 +24,7 @@ public class GridManager : MonoBehaviour
     public Material TileMaterial;
     public Material TransparentMaterial;
 
+    private Entity entity;
     private TileGrid grid; // Data object that holds the information about all tiles
     public static GridManager Instance { get; private set; } //Singleton pattern
 
@@ -203,6 +205,17 @@ public class GridManager : MonoBehaviour
             SaveGameManager.LoadFromFile = "save.xml";
             SceneManager.LoadScene(0);
             //SaveGameManager.LoadGame("save.xml");
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            List<Tuple<Vector2Int,Tile>> gel = grid.GetEntityLocations();
+            for (int size = 0; size < gel.Count; size++) Debug.Log(gel[size].Item2);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            entity = new VehicleEntity();
+            entity.InstantiateEntity(grid.GetEntityLocations()[0].Item1);
         }
 
 
