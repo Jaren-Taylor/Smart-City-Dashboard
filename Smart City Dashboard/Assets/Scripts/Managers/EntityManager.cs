@@ -7,6 +7,7 @@ public class EntityManager : MonoBehaviour
 {
     Vector2Int tileDestination;
     Vector2Int tilePosition;
+    float maxSpeed = .05f;
 
     float destinationTolerance = .5f;
     
@@ -35,15 +36,16 @@ public class EntityManager : MonoBehaviour
             SetNextDestinationNode();
             transform.LookAt(nodeDestination.transform.position);
         }
-        else if(nodeDestination == null)
+        else if(nodeDestination.next == null)
         {
+            //TODO: pool object instead of destroying
             Destroy(this);
         }
     }
 
     void MoveToNextNode()
     {
-        transform.position = Vector3.MoveTowards(transform.position, nodeDestination.transform.position, .01f);
+        transform.position = Vector3.MoveTowards(transform.position, nodeDestination.transform.position, maxSpeed);
     }
     void SetNextDestinationNode()
     {
