@@ -70,6 +70,18 @@ public class TileGrid
 
     private int XyToGrid(int x, int y) => x + y * Width;
 
+    public List<Tuple<Vector2Int,Tile>> GetEntityLocations()
+    {
+        List<Tuple<Vector2Int, Tile>> entityPoints = new List<Tuple<Vector2Int, Tile>>();
+        foreach (KeyValuePair<Vector2Int,Tile> entry in grid)
+        {
+            if((entry.Value.GetType() == typeof(BuildingTile)) && entry.Value.IsPermanent)
+            {
+                entityPoints.Add(Tuple.Create(entry.Key, entry.Value));
+            }
+        }
+        return entityPoints;
+    }
     private Tile SafeLookup(int x, int y) => grid.TryGetValue(new Vector2Int(x, y), out Tile output) ? output : null;
 
     internal void RefreshGrid()
