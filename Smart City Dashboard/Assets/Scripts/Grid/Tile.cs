@@ -14,7 +14,13 @@ public abstract class Tile
         Top = 2,
         Bottom = 3
     }
-
+    public static Facing OppositeDirection(Facing direction)
+    {
+        if (direction == Facing.Left) return Facing.Right;
+        else if (direction == Facing.Right) return Facing.Left;
+        else if (direction == Facing.Top) return Facing.Bottom;
+        else return Facing.Top;
+    }
     public static readonly Vector2Int[] Directions = { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
 
     public static Facing VectorToFacing(Vector2 delta)

@@ -22,14 +22,14 @@ public class GridManager : MonoBehaviour
     private int state = 0;
 
     public Material TileMaterial;
-    public Material TransparentMaterial;
+    public Material TransparentMaterial; 
 
     private Entity entity;
     private TileGrid grid; // Data object that holds the information about all tiles
     public static GridManager Instance { get; private set; } //Singleton pattern
 
     private GridController GridSM; //Controls the state of build mode
-
+    public GameObject NavPointPrefab;
     public bool CursorEnabled { get => cursorEnabled; set => SetCursor(value); }
 
     private void SetCursor(bool value)
@@ -216,6 +216,23 @@ public class GridManager : MonoBehaviour
         {
             entity = new VehicleEntity();
             entity.InstantiateEntity(grid.GetEntityLocations()[0].Item1);
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            GameObject path = new GameObject("Path Holder");
+
+            List<Vector2Int> points = Pathfinding.PathFromTo(grid, new Vector2Int(1, 1), new Vector2Int(5, 5));
+            points.Reverse();
+
+            List<GameObject> pointInstances = new List<GameObject>();
+
+            if (points.Count > 0) pointInstances.Add(Instantiate(NavPointPrefab, new Vector3(points[0].x, 0f, points[0].y), Quaternion.identity, path.transform));
+            for (int i = 1; i < points.Count; i++)
+            {
+                var navPt = Instantiate(NavPointPrefab, new Vector3(points[i].x, 0f, points[i].y), Quaternion.identity, path.transform);
+                navPt.GetComponent<NavPoint>().Connections.Add(new NavPointConnection(pointInstances[i - 1].GetComponent<NavPoint>(), NavPointConnection.ConnectionType.Directed));
+                pointInstances.Add(navPt);
+            }
         }
 
 
