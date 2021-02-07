@@ -21,6 +21,7 @@ public class TileGrid
     [DataMember(Name="Height")]
     public readonly int Height;
 
+    private List<Vector2Int> CachedDestinations = null;
    
     public TileGrid(int width, int height)
     {
@@ -60,7 +61,12 @@ public class TileGrid
             {
                 throw new IndexOutOfRangeException($"Cannot assign [{x}, {y}] to outside of grid boundaries.");
             }
-            if (SafeLookup(x,y)?.ManagedExists() ?? false) SafeLookup(x, y).DeleteManaged();
+
+            if (SafeLookup(x, y)?.ManagedExists() ?? false) {
+                if (SafeLookup(x, y) is BuildingTile) CachedDestinations = null;
+                SafeLookup(x, y).DeleteManaged();
+            }
+            if (value is BuildingTile) CachedDestinations = null;
             if (value == null) grid.Remove(new Vector2Int(x, y));
             else grid[new Vector2Int(x, y)] = value;
         }
@@ -70,18 +76,14 @@ public class TileGrid
 
     private int XyToGrid(int x, int y) => x + y * Width;
 
-    public List<Tuple<Vector2Int,Tile>> GetEntityLocations()
-    {
-        List<Tuple<Vector2Int, Tile>> entityPoints = new List<Tuple<Vector2Int, Tile>>();
-        foreach (KeyValuePair<Vector2Int,Tile> entry in grid)
-        {
-            if((entry.Value.GetType() == typeof(RoadTile)) && entry.Value.IsPermanent)
-            {
-                entityPoints.Add(Tuple.Create(entry.Key, entry.Value));
-            }
-        }
-        return entityPoints;
-    }
+    
+    /// <summary>
+    /// Checks to see if a 
+    /// </summary>
+    /// <returns></returns>
+    public List<Vector2Int> GetBuildingLoc() => CachedDestinations ??= grid.Where(x => ((x.Value is BuildingTile) && (x.Value.IsPermanent))).Select(x => x.Key).ToList();
+
+    
     private Tile SafeLookup(int x, int y) => grid.TryGetValue(new Vector2Int(x, y), out Tile output) ? output : null;
 
     internal void RefreshGrid()
@@ -101,7 +103,7 @@ public class TileGrid
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    /// <returns></returns>
+    /// <returns> bool </returns>
     public bool InBounds(int x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
 
     /// <summary>

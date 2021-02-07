@@ -208,14 +208,14 @@ public class GridManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            List<Tuple<Vector2Int,Tile>> gel = grid.GetEntityLocations();
-            for (int size = 0; size < gel.Count; size++) Debug.Log(gel[size].Item2);
+            List<Vector2Int> gel = grid.GetBuildingLoc();
+            for (int size = 0; size < gel.Count; size++) Debug.Log(gel[size]);
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
             entity = new VehicleEntity();
-            Vector3 position = entity.InstantiateEntity(grid.GetEntityLocations()[0].Item1);
+            Vector3 position = entity.InstantiateEntity(grid.GetBuildingLoc()[0]);
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
