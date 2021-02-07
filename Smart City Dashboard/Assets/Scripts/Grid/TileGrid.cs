@@ -75,7 +75,7 @@ public class TileGrid
         List<Tuple<Vector2Int, Tile>> entityPoints = new List<Tuple<Vector2Int, Tile>>();
         foreach (KeyValuePair<Vector2Int,Tile> entry in grid)
         {
-            if((entry.Value.GetType() == typeof(BuildingTile)) && entry.Value.IsPermanent)
+            if((entry.Value.GetType() == typeof(RoadTile)) && entry.Value.IsPermanent)
             {
                 entityPoints.Add(Tuple.Create(entry.Key, entry.Value));
             }

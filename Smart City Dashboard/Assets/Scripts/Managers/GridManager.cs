@@ -215,7 +215,7 @@ public class GridManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             entity = new VehicleEntity();
-            entity.InstantiateEntity(grid.GetEntityLocations()[0].Item1);
+            Vector3 position = entity.InstantiateEntity(grid.GetEntityLocations()[0].Item1);
         }
         if (Input.GetKeyDown(KeyCode.O))
         {

@@ -6,6 +6,7 @@ using UnityEngine;
 [DataContract]
 public class VehicleEntity : Entity
 {
+    public Vector3 position;
     public enum VehicleType{
         Car,
         Bus,
@@ -22,6 +23,10 @@ public class VehicleEntity : Entity
 
     [DataMember(Name = "Type")]
     public VehicleType Type { get; private set; }
+    public VehicleEntity(Vector3 position)
+    {
+        this.position = position;
+    }
 
 
     public override string ToString()
