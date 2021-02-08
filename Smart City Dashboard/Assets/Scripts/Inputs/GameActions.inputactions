@@ -802,6 +802,22 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Escape",
+                    "type": "Button",
+                    "id": "741b8dc4-4384-4854-8fe3-5c9afb76a233",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "ToggleBuildCursor",
+                    "type": "Button",
+                    "id": "128e7097-f266-4242-a397-99897bf779ef",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -901,6 +917,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "SetBuildState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a332412c-290d-4e8f-82ad-2f457ac01299",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "726de568-6907-4ccb-931d-cc0eadc25049",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ToggleBuildCursor",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

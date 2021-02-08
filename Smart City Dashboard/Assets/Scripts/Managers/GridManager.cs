@@ -29,6 +29,9 @@ public class GridManager : MonoBehaviour
 
     public bool CursorEnabled { get => cursorEnabled; set => SetCursor(value); }
 
+    // Used as an event handler
+    public void ToggleCursor() { SetCursor(!cursorEnabled); }
+
     private void SetCursor(bool value)
     {
         if (value == cursorEnabled) return;
@@ -130,8 +133,6 @@ public class GridManager : MonoBehaviour
         clickRecieved = true;
     }
 
-
-
     public void StateNumberChangeHandler(int stateNum) => ChangeState(stateNum);
 
     private void ChangeState(int state)
@@ -163,7 +164,7 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C)) CursorEnabled = !CursorEnabled; //If C pressed, cursor is disabled
+        // if (Input.GetKeyDown(KeyCode.C)) CursorEnabled = !CursorEnabled; //If C pressed, cursor is disabled
         if (CursorEnabled)
         {
             HandleCursorMovement(); //Updates state with cursor movement

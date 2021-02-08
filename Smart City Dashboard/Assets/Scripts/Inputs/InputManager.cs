@@ -15,19 +15,23 @@ public class InputManager : MonoBehaviour
     public Action<float> OnCameraRotation;
     public Action<float> OnCameraZoom;
 
+    // Keyboard Actions
     public Action<int> OnNumberPressed;
+    public Action OnEscapePressed;
+    public Action OnCPressed;
 
     public Action OnPlaceTile;
     public Action OnEndPlaceTile;
 
     private bool isMoving = false;
+    public bool isUIActive = false;
     Vector3 moveBy;
 
     private void Update()
     {
         if(isMoving == true)
         {
-            OnCameraPan.Invoke(moveBy);
+            if (!isUIActive) OnCameraPan.Invoke(moveBy);
         }
     }
 
@@ -100,6 +104,23 @@ public class InputManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha1)) OnNumberPressed?.Invoke(0);
             else if (Input.GetKeyDown(KeyCode.Alpha2)) OnNumberPressed?.Invoke(1);
             else if (Input.GetKeyDown(KeyCode.Alpha3)) OnNumberPressed?.Invoke(2);
+        }
+    }
+
+    public void OnEscapeKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnEscapePressed?.Invoke();
+            isUIActive = !isUIActive;
+        }
+    }
+
+    public void OnCKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnCPressed?.Invoke();
         }
     }
 }
