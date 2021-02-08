@@ -1,0 +1,29 @@
+@startuml
+abstract class Tile {
+    + {static} VectorToFacing(delta:Vector2) : Facing
+    + IsPermanent : bool <<get>>
+    + SetTransparency(value:bool) : void
+    + Tile()
+    + <<override>> ToString() : string
+    + MakePermanent() : void
+    + ManagedExists() : bool
+    + ModelExist() : bool
+    + DeleteManaged() : void
+    + CreateManaged(point:Vector2Int, neighbors:NeighborInfo) : bool
+    + RecalculateManaged(neighbors:NeighborInfo) : bool
+    + AddComponent() : T
+    + RemoveComponent() : bool
+    + TryGetComponent(component:T) : bool
+    + GetComponent() : T
+}
+enum Facing {
+    Left= 0,
+    Right= 1,
+    Top= 2,
+    Bottom= 3,
+}
+class "Dictionary`2"<T1,T2> {
+}
+Tile o-> "FacingToQuaternion<Facing,Quaternion>" "Dictionary`2"
+Tile +-- Facing
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+class GridManager {
+    + gridSize : int
+    + CursorEnabled : bool <<get>> <<set>>
+    Awake() : void
+    Start() : void
+    + StateNumberChangeHandler(stateNum:int) : void
+    Update() : void
+    + GetTile(location:Vector2Int) : Tile
+    + SetTransparency(location:Vector2Int, value:bool) : void
+    + MakePermanent(point:Vector2Int) : void
+    + CreateTemporaryTile(point:Vector2Int) : void
+    + AddTileToGrid(point:Vector2Int, tile:Tile) : void
+    + RemoveTileIfTemporary(point:Vector2Int) : bool
+    + RemoveTile(point:Vector2Int) : bool
+}
+MonoBehaviour <|-- GridManager
+GridManager --> "groundMask" LayerMask
+GridManager --> "TileMaterial" Material
+GridManager --> "TransparentMaterial" Material
+GridManager --> "Instance" GridManager
+@enduml

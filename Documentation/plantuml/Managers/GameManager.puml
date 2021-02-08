@@ -1,0 +1,11 @@
+@startuml
+class GameManager {
+    Start() : void
+    + HandleLog(numer:int) : void
+    Update() : void
+}
+MonoBehaviour <|-- GameManager
+GameManager --> "inputManager" InputManager
+GameManager --> "cameraManager" CameraManager
+GameManager --> "gridManager" GridManager
+@enduml

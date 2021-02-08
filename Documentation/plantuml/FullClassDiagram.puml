@@ -1,0 +1,119 @@
+@startuml
+class Config <<static>> {
+    + boundaryFraction : float
+    + panSpeed : int
+    + panZoomSenstivity : float
+    + zoomScale : float
+    + smoothTime : float
+    + minSize : float
+    + maxSize : float
+    + defaultSize : float
+}
+
+class TileGrid {
+    - grid : Dict<Vector2Int, Tile>
+    + <<readonly>> Width : int
+    + <<readonly>> Height : int
+    + operator[](point:Vector2Int) : Tile
+    + operator[](x:int, y:int) : Tile
+    + TileGrid(width:int, height:int)
+    + InBounds(x:int, y:int) : bool
+    + GetNeighbors(point:Vector2Int) : NeighborInfo
+    + GetNeighbors(x:int, y:int) : NeighborInfo
+}
+class NeighborInfo <<struct>> {
+    + left : Tile
+    + right : Tile
+    + top : Tile
+    + bototm : Tile
+    + NeighborInfo(left:Tile, right:Tile, top:Tile, bottom:Tile)
+}
+
+abstract class Tile {
+    - managedObject : ManagedGameObject
+    + IsPermanent : bool <<get>>
+    + SetTransparency(value:bool) : void
+    + Tile()
+    + MakePermanent() : void
+    + ManagedExists() : bool
+    + ModelExist() : bool
+    + DeleteManaged() : void
+    + CreateManaged(point:Vector2Int, neighbors:NeighborInfo) : bool
+    + RecalculateManaged(neighbors:NeighborInfo) : bool
+    + AddComponent() : T
+    + RemoveComponent() : bool
+    + TryGetComponent(component:T) : bool
+    + GetComponent() : T
+    # <i>CalculateAndSetModelFromNeighbors<i>(neighbors : NeighborInfo)
+}
+enum Facing {
+    Left = 0
+    Right = 1
+    Top = 2
+    Bottom = 3
+}
+
+class BuildingTile {
+    - currentFacing : Facing
+    + IsLocationValid : bool <<get>>
+    + BuildingTile(type:StructureType, facing:Facing)
+    # CalculateAndSetModelFromNeighbors(neighbors : NeighborInfo)
+}
+
+enum StructureType {
+    House = 0
+    Office = 1
+    TestStruct = 2
+}
+
+class RoadTile {
+    # CalculateAndSetModelFromNeighbors(neighbors : NeighborInfo)
+}
+enum TileType {
+    Road0Way = 0
+    RoadEndcap = 1
+    Road2Way = 2
+    Road3Way = 3
+    Road4Way = 4
+    RoadCorner = 5
+}
+
+class ManagedGameObject {
+    + ModelExists : bool <<get>>
+    + DestroyTree() : void
+    + SetModelMaterial(material:Material) : void
+    + AddComponent() : T
+    + TryRemoveComponent() : bool
+    + DestroyModel() : void
+    + InstantiateModel(modelPrefab:GameObject, rotation:Quaternion?) : void
+    + SwapModel(modelPrefab:GameObject, rotation:Quaternion?) : void
+}
+
+'Tile Grid connections
+TileGrid "1" o-- "many" Tile : contains 
+TileGrid +-- NeighborInfo
+TileGrid --> NeighborInfo : <<creates>>
+
+'Tile connections
+Tile +-- Facing
+
+'Building Tile connections
+Tile <|-- BuildingTile : is a
+BuildingTile "1" o-- "1" StructureType : contains
+BuildingTile "1" o-- "1" Facing : contains
+BuildingTile +-- StructureType
+
+'Road Tile connections
+Tile <|-- RoadTile : is a
+RoadTile "1" o-- "1" TileType : contains
+RoadTile +-- TileType
+
+'Managed Game Object connections
+Tile "1" o-- "0-1" ManagedGameObject : contains
+@enduml
+
+@startuml
+class Test {
+
+}
+@enduml

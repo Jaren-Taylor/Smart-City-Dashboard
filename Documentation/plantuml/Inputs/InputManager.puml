@@ -1,0 +1,19 @@
+@startuml
+class InputManager {
+    + OnPlace(context:CallbackContext) : void
+    + OnMouseMovement(context:CallbackContext) : void
+    + OnRotation(context:CallbackContext) : void
+    + OnZoom(context:CallbackContext) : void
+    + OnNumberKeyPressed(context:CallbackContext) : void
+}
+class "Action`1"<T> {
+}
+MonoBehaviour <|-- InputManager
+InputManager --> "OnCameraPan<Vector3>" "Action`1"
+InputManager --> "OnCameraRotation<float>" "Action`1"
+InputManager --> "OnCameraZoom<float>" "Action`1"
+InputManager --> "OnNumberPressed<int>" "Action`1"
+InputManager --> "OnPlaceTile" Action
+InputManager --> "OnEndPlaceTile" Action
+InputManager --> "moveBy" Vector3
+@enduml

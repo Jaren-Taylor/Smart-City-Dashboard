@@ -1,0 +1,14 @@
+@startuml
+class ManagedGameObject {
+    + ModelExists : bool <<get>>
+    + DestroyTree() : void
+    + SetModelMaterial(material:Material) : void
+    + AddComponent() : T
+    + TryRemoveComponent() : bool
+    + DestroyModel() : void
+    + InstantiateModel(modelPrefab:GameObject, rotation:Quaternion?) : void
+    + SwapModel(modelPrefab:GameObject, rotation:Quaternion?) : void
+}
+MonoBehaviour <|-- ManagedGameObject
+ManagedGameObject o-> "childModel" GameObject
+@enduml
