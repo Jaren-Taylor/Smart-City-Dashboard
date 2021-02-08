@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+
+[DataContract]
 /// <summary>
 /// Data structure to manage placed roads
 /// </summary>
@@ -26,9 +29,15 @@ public class RoadTile : Tile
         Road4Way = 4,
         RoadCorner = 5
     }
+
+    [DataMember(Name="Type")]
     public TileType Type { get; private set; }
 
 
+    public override string ToString()
+    {
+        return "[Road]: " + base.ToString();
+    }
 
     protected override bool CalculateAndSetModelFromNeighbors(NeighborInfo neighbors)
     {
