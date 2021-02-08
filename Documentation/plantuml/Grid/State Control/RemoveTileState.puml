@@ -1,0 +1,10 @@
+@startuml
+class RemoveTileState {
+    + OnPop(location:DigitalCursor) : void
+    + OnPush(location:DigitalCursor) : void
+    + OnMouseDown(location:DigitalCursor) : void
+    + OnMouseEnterTile(location:DigitalCursor) : void
+    + OnMouseExitTile(location:DigitalCursor) : void
+}
+IGridControlState <|-- RemoveTileState
+@enduml

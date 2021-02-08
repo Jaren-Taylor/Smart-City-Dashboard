@@ -1,0 +1,19 @@
+@startuml
+class CameraManager {
+    + defaultRotation : int
+    + Size : float <<get>> <<set>>
+    + Rotation : int <<get>> <<set>>
+    ResetSize() : void
+    ResetPosition() : void
+    ResetRotation() : void
+    ResetCamera() : void
+    Start() : void
+    RotateLeft() : void
+    RotateRight() : void
+    Update() : void
+}
+MonoBehaviour <|-- CameraManager
+CameraManager --> "mainCamera" Camera
+CameraManager --> "defaultPosition" Vector2
+CameraManager --> "Position" Vector3
+@enduml

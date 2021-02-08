@@ -1,0 +1,10 @@
+@startuml
+class GridController {
+    + GridController(initState:IGridControlState)
+    + SetState(newState:IGridControlState, mousePosition:DigitalCursor) : void
+    + MoveCursor(oldPosition:DigitalCursor, newPosition:DigitalCursor) : void
+    + OnMouseDown(mousePosition:DigitalCursor) : void
+    + SuspendState(mousePosition:DigitalCursor) : void
+    + ResumeState(mousePosition:DigitalCursor) : void
+}
+@enduml
