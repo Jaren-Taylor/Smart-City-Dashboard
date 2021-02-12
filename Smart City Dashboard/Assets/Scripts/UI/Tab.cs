@@ -19,13 +19,6 @@ public class Tab : MonoBehaviour
 
     public void Activate()
     {
-        Menu manager = transform.parent.gameObject.GetComponent<Menu>();
-        if (this != manager.activeTab)
-        {
-            manager.activeTab.DeActivate();
-            manager.activeTab = this;
-
-        }
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(true);

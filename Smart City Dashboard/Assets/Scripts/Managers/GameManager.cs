@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
     public InputManager inputManager;
     public CameraManager cameraManager;
     public GridManager gridManager;
-    public Menu menu;
+    public UIManager uiManager;
 
     void Start()
     {
@@ -32,11 +31,17 @@ public class GameManager : MonoBehaviour
 
         inputManager.OnCPressed += gridManager.ToggleCursor;
 
-        // Menu events
+        // UI events
 
-        inputManager.OnEscapePressed += menu.ToggleMenuHandler;
+        uiManager.OnUIToggle += inputManager.IsUIActive;
 
-        inputManager.OnNumberPressed += menu.ActivateTab;
+        inputManager.OnEscapePressed += uiManager.ToggleEscapeMenu;
+
+        inputManager.OnTildePressed += uiManager.ToggleTildeMenu;
+
+        inputManager.OnTabPressed += uiManager.SwitchTabs;
+
+        // inputManager.OnNumberPressed += menu.ActivateTab;
     }
 
     public void HandleLog(int numer)

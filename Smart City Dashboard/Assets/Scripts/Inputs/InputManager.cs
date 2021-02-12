@@ -18,13 +18,15 @@ public class InputManager : MonoBehaviour
     // Keyboard Actions
     public Action<int> OnNumberPressed;
     public Action OnEscapePressed;
+    public Action OnTildePressed;
     public Action OnCPressed;
+    public Action OnTabPressed;
 
     public Action OnPlaceTile;
     public Action OnEndPlaceTile;
 
     private bool isMoving = false;
-    public bool isUIActive = false;
+    private bool isUIActive = false;
     Vector3 moveBy;
 
     private void Update()
@@ -112,7 +114,14 @@ public class InputManager : MonoBehaviour
         if (context.started)
         {
             OnEscapePressed?.Invoke();
-            isUIActive = !isUIActive;
+        }
+    }
+
+    public void OnTildeKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnTildePressed?.Invoke();
         }
     }
 
@@ -123,4 +132,14 @@ public class InputManager : MonoBehaviour
             OnCPressed?.Invoke();
         }
     }
+    public void OnTabKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnTabPressed?.Invoke();
+        }
+    }
+
+    // Used as an event handler in Game manager. This way UI manager can talk to this manager
+    public void IsUIActive(bool active) { isUIActive = active; }
 }
