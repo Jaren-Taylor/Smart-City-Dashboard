@@ -8,7 +8,7 @@ public abstract class Sensor<T> : MonoBehaviour
 {
     private float totalTime = 0f;
     private float callDelay;
-
+    protected Rigidbody ownerRigidBody = null;
     [SerializeField]
     public int TargetCallsPerSecond
     {
@@ -24,6 +24,8 @@ public abstract class Sensor<T> : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        RegisterToManager(SensorManager.Instance);
+        TryGetComponent(out ownerRigidBody);
         ViewShape = GetComponent<Collider>();
         ViewShape.isTrigger = true;
         objectsInCollider = new HashSet<GameObject>();
@@ -51,8 +53,19 @@ public abstract class Sensor<T> : MonoBehaviour
         if (other.CompareTag("Entity") && objectsInCollider.Contains(other.gameObject)) objectsInCollider.Remove(other.gameObject);
     }
 
-    private void CollectAndSendData() => DataCollected?.Invoke(DetectEnvironment());
- 
+    private void OnDestroy()
+    {
+        DeregisterFromManager(SensorManager.Instance);
+    }
+
+    private void CollectAndSendData()
+    {
+        if(AreEntitiesInCollider())
+            DataCollected?.Invoke(DetectEnvironment());
+    }
+
+    private bool AreEntitiesInCollider() => objectsInCollider.Count > 0;
+
     private List<T> DetectEnvironment()
     {
         List<T> collectedData = new List<T>();
@@ -65,4 +78,6 @@ public abstract class Sensor<T> : MonoBehaviour
     }
 
     protected abstract T CollectData(GameObject sensedObject);
+    public abstract void RegisterToManager(SensorManager sensor);
+    public abstract void DeregisterFromManager(SensorManager sensor);
 }
