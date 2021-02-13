@@ -15,19 +15,25 @@ public class InputManager : MonoBehaviour
     public Action<float> OnCameraRotation;
     public Action<float> OnCameraZoom;
 
+    // Keyboard Actions
     public Action<int> OnNumberPressed;
+    public Action OnEscapePressed;
+    public Action OnTildePressed;
+    public Action OnCPressed;
+    public Action OnTabPressed;
 
     public Action OnPlaceTile;
     public Action OnEndPlaceTile;
 
     private bool isMoving = false;
+    private bool isUIActive = false;
     Vector3 moveBy;
 
     private void Update()
     {
         if(isMoving == true)
         {
-            OnCameraPan.Invoke(moveBy);
+            if (!isUIActive) OnCameraPan.Invoke(moveBy);
         }
     }
 
@@ -102,4 +108,38 @@ public class InputManager : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Alpha3)) OnNumberPressed?.Invoke(2);
         }
     }
+
+    public void OnEscapeKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnEscapePressed?.Invoke();
+        }
+    }
+
+    public void OnTildeKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnTildePressed?.Invoke();
+        }
+    }
+
+    public void OnCKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnCPressed?.Invoke();
+        }
+    }
+    public void OnTabKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnTabPressed?.Invoke();
+        }
+    }
+
+    // Used as an event handler in Game manager. This way UI manager can talk to this manager
+    public void IsUIActive(bool active) { isUIActive = active; }
 }
