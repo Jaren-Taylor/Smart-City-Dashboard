@@ -7,9 +7,16 @@ public class SensorManager : MonoBehaviour
     public HashSet<CameraSensor> CameraSet = new HashSet<CameraSensor>();
     public static SensorManager Instance { get; private set; }
 
+    private HeatMap heatMap;
+
     private void Awake()
     {
         ForceSingleInstance();
+    }
+
+    private void Start()
+    {
+        heatMap = new HeatMap(20, 20);
     }
 
     private void ForceSingleInstance()
