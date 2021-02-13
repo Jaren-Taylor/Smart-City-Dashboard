@@ -1,0 +1,18 @@
+@startuml
+class BuildingTile {
+    + IsLocationValid : bool <<get>>
+    + BuildingTile(type:StructureType, facing:Facing)
+    + <<override>> ToString() : string
+}
+class "Dictionary`2"<T1,T2> {
+}
+enum StructureType {
+    House= 0,
+    Office= 1,
+    TestStruct= 2,
+}
+Tile <|-- BuildingTile
+BuildingTile o-> "ModelLookup<StructureType,string>" "Dictionary`2"
+BuildingTile --> "structure" StructureType
+BuildingTile +-- StructureType
+@enduml

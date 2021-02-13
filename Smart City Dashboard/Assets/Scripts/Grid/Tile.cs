@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 
+[DataContract]
 public abstract class Tile
 {
     public enum Facing
@@ -45,8 +47,10 @@ public abstract class Tile
     private const string ManagedGameObjectLocation = "Prefabs/ManagedTile";
     private ManagedGameObject managedObject = null;
 
+    [DataMember(Name="IsPermanent")]
     public bool IsPermanent { get; private set; }
 
+    [DataMember(Name="IsTransparent")]
     private bool isTransparent = true;
 
     public void SetTransparency(bool value)
@@ -101,7 +105,7 @@ public abstract class Tile
             Quaternion.identity,
             GridManager.Instance?.transform);
         managedObject.name = managedObject.name.Replace("(Clone)", "");
-        SetTransparency(true);
+        SetTransparency(isTransparent);
         return CalculateAndSetModelFromNeighbors(neighbors);
     }
 

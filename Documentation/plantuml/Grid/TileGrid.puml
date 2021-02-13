@@ -1,0 +1,18 @@
+@startuml
+class TileGrid {
+    + <<readonly>> Width : int
+    + <<readonly>> Height : int
+    + TileGrid(width:int, height:int)
+    + InBounds(x:int, y:int) : bool
+    + GetNeighbors(point:Vector2Int) : NeighborInfo
+    + GetNeighbors(x:int, y:int) : NeighborInfo
+    + <<override>> ToString() : string
+}
+class NeighborInfo <<struct>> {
+    + NeighborInfo(left:Tile, right:Tile, top:Tile, bottom:Tile)
+}
+NeighborInfo --> "left" Tile
+NeighborInfo --> "right" Tile
+NeighborInfo --> "top" Tile
+NeighborInfo --> "bottom" Tile
+@enduml

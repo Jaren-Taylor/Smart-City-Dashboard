@@ -866,7 +866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7875689ab5869024282d35649c5f2222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: 100
+  gridSize: 30
   groundMask:
     serializedVersion: 2
     m_Bits: 64

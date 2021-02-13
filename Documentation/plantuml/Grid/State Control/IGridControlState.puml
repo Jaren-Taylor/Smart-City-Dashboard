@@ -1,0 +1,9 @@
+@startuml
+interface IGridControlState {
+    + OnPush(location:DigitalCursor) : void
+    + OnPop(location:DigitalCursor) : void
+    + OnMouseExitTile(location:DigitalCursor) : void
+    + OnMouseEnterTile(location:DigitalCursor) : void
+    + OnMouseDown(location:DigitalCursor) : void
+}
+@enduml

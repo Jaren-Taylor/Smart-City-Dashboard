@@ -1,0 +1,7 @@
+@startuml
+class UncollectedGarbageException {
+    + <<readonly>> Garbage : object
+    + UncollectedGarbageException(garbage:object, message:string)
+}
+Exception <|-- UncollectedGarbageException
+@enduml

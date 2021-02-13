@@ -1,0 +1,7 @@
+@startuml
+class SaveGameManager <<static>> {
+    + {static} LoadFromFile : string = ""
+    + {static} LoadGame(gameLocation:string) : TileGrid
+    + {static} SaveGame(gameLocation:string, saveData:TileGrid) : bool
+}
+@enduml

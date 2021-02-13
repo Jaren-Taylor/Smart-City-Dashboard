@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GridManager : MonoBehaviour
 {
-    [Range(Config.maxSize, Config.maxSize)]
+    [Range(5, 100)]
     public int gridSize;
 
     private DigitalCursor cursor = null;
@@ -51,14 +52,39 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    void Awake()
+    {
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        if (!TryLoadFile())
+        {
+            grid = new TileGrid(gridSize, gridSize);
+        }
+
         GridSM = new GridController(new PlaceRoadState());
         if (Instance != null) Destroy(this);
         Instance = this;
-        grid = new TileGrid(gridSize, gridSize);
+        
         ground = CreateGround();
+        
+        grid.RefreshGrid();
+    }
+
+    private bool TryLoadFile()
+    {
+        if (SaveGameManager.LoadFromFile != "")
+        {
+            grid = SaveGameManager.LoadGame(SaveGameManager.LoadFromFile);
+            if (grid == null) return false;
+            SaveGameManager.LoadFromFile = "";
+            gridSize = grid.Width;
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -164,7 +190,21 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.C)) CursorEnabled = !CursorEnabled; //If C pressed, cursor is disabled
+        if (Input.GetKeyDown(KeyCode.P)) Debug.Log(grid.ToString());
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            GridSM.SuspendState(cursor);
+            SaveGameManager.SaveGame("save.xml", grid);
+            GridSM.ResumeState(cursor);
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            SaveGameManager.LoadFromFile = "save.xml";
+            SceneManager.LoadScene(0);
+            //SaveGameManager.LoadGame("save.xml");
+        }
         if (CursorEnabled)
         {
             HandleCursorMovement(); //Updates state with cursor movement
