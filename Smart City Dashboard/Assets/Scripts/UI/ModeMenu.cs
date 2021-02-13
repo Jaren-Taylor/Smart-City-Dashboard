@@ -28,7 +28,6 @@ public class ModeMenu : Menu
         // move with respect to the menu's RectTransform width or height
         float yMove = isOnScreen ? -MenuBounds.rect.height : MenuBounds.rect.height;
         isOnScreen = !isOnScreen;
-        isActive = isOnScreen;
         // move the menu offscreen
         targetYPos += yMove;
     }

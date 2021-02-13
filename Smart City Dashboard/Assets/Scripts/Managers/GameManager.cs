@@ -33,15 +33,13 @@ public class GameManager : MonoBehaviour
 
         // UI events
 
-        uiManager.OnUIToggle += inputManager.IsUIActive;
+        inputManager.OnEscapePressed += uiManager.ToggleMenu;
 
-        inputManager.OnEscapePressed += uiManager.ToggleEscapeMenu;
-
-        inputManager.OnTildePressed += uiManager.ToggleTildeMenu;
+        inputManager.OnTildePressed += uiManager.ToggleMenu;
 
         inputManager.OnTabPressed += uiManager.SwitchTabs;
 
-        // inputManager.OnNumberPressed += menu.ActivateTab;
+        uiManager.OnUIToggle += inputManager.IsUIActive;
     }
 
     public void HandleLog(int numer)

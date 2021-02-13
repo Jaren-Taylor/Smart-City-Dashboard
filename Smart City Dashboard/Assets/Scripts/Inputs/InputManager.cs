@@ -17,8 +17,8 @@ public class InputManager : MonoBehaviour
 
     // Keyboard Actions
     public Action<int> OnNumberPressed;
-    public Action OnEscapePressed;
-    public Action OnTildePressed;
+    public Action<KeyCode> OnEscapePressed;
+    public Action<KeyCode> OnTildePressed;
     public Action OnCPressed;
     public Action OnTabPressed;
 
@@ -113,7 +113,7 @@ public class InputManager : MonoBehaviour
     {
         if (context.started)
         {
-            OnEscapePressed?.Invoke();
+            OnEscapePressed?.Invoke(KeyCode.Escape);
         }
     }
 
@@ -121,7 +121,7 @@ public class InputManager : MonoBehaviour
     {
         if (context.started)
         {
-            OnTildePressed?.Invoke();
+            OnTildePressed?.Invoke(KeyCode.BackQuote);
         }
     }
 
@@ -141,5 +141,7 @@ public class InputManager : MonoBehaviour
     }
 
     // Used as an event handler in Game manager. This way UI manager can talk to this manager
-    public void IsUIActive(bool active) { isUIActive = active; }
+    public void IsUIActive(bool active) { 
+        isUIActive = active; 
+    }
 }

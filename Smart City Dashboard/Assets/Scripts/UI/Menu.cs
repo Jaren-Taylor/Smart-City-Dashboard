@@ -5,8 +5,7 @@ public abstract class Menu : MonoBehaviour
     protected RectTransform MenuBounds;
     private int activeTab;
     [HideInInspector]
-    public bool isActive;
-    protected bool isOnScreen;
+    public bool isOnScreen;
 
     protected void Start()
     {
@@ -18,7 +17,7 @@ public abstract class Menu : MonoBehaviour
             transform.GetChild(i).gameObject.GetComponent<Tab>().DeActivate();
         }
         //
-        isActive = false;
+        isOnScreen = false;
     }
 
     public void SwitchTabs()
