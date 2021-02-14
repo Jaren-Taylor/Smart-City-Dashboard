@@ -7,7 +7,7 @@ public class ModeMenu : Menu
     private new void Start()
     {
         base.Start();
-        targetYPos = -gameObject.transform.position.y;
+        targetYPos = -menuBounds.rect.height; //-gameObject.transform.position.y;
     }
 
     private void Update()
@@ -26,7 +26,7 @@ public class ModeMenu : Menu
     public override void ToggleMenuHandler()
     {
         // move with respect to the menu's RectTransform width or height
-        float yMove = isOnScreen ? -MenuBounds.rect.height : MenuBounds.rect.height;
+        float yMove = isOnScreen ? -menuBounds.rect.height : menuBounds.rect.height;
         isOnScreen = !isOnScreen;
         // move the menu offscreen
         targetYPos += yMove;

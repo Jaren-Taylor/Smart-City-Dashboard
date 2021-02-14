@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Menu : MonoBehaviour
 {
-    protected RectTransform MenuBounds;
+    protected RectTransform menuBounds;
     private int activeTab;
     [HideInInspector]
     public bool isOnScreen;
@@ -10,7 +10,7 @@ public abstract class Menu : MonoBehaviour
     protected void Start()
     {
         // Assumed to be used in child classes for use in movement calculations
-        MenuBounds = gameObject.GetComponent<RectTransform>();
+        menuBounds = gameObject.GetComponent<RectTransform>();
         // Deactivate all but the first child tab
         for (int i = 1; i < transform.childCount; i++)
         {
