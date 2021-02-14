@@ -8,7 +8,7 @@ using static UnityEngine.InputSystem.InputAction;
 /// <summary>
 /// All input for the project should pass through here
 /// </summary>
-public class InputManager : MonoBehaviour
+public class InputManager : MonoBehaviour   
 {
     [SerializeField]
     public Action<Vector3> OnCameraPan;
