@@ -156,6 +156,129 @@ class GridManager {
  +WhatRoadTileAmI()
 }
 
+class EntityManager {
+-tileDestination : Vector2Int
+-tilePosition : Vector2Int
+-maxSpeed : float
+-destinationTolerance : float
+-Node : GameObject
+-nodeDestination : GameObject
+-NodeLevelPath : List
+-TileLevelPath : List
+void Start()
+void Update()
++void MoveToNextNode()
++void InstantiateTraversal()
+}
+
+abstract class Entity {
+-pos : Vector2Int
+-spawnPos : Vector2Int
+-destinationPos : Vector2Int
+-managedObject : ManagedGameObject
+-managedGameObjectLocation : string
++Entity()
++Vector3 InstantiateEntity()
++T AddComponent()
++bool RemoveComponent()
++bool TryGetComponent()
++T GetComponent()
+#void AttachModelToManaged
+}
+
+class VehicleEntity {
+{static} #ModelLookup : Dictionary
++Type : VehicleType
++VehicleEntity()
++String ToString()
+}
+enum VehicleType{
+    Car
+    Bus
+    Van
+    Bike
+}
+class NavPoint {
++Connections : List
+}
+
+class NavPointConnection{
+-target : NavPoint
+-type : ConnectionType
++NavPointConnection()
++NavPoint Target()
++ConnectionType Type()
+}
+enum ConnectionType {
+    Directed
+    Bidirectional
+}
+
+class Pathfinding {
+{static} +List PathFromTo()
+{static} -bool IsWalkableInDirection()
+}
+
+class PathNode {
++X : int
++Y : int
++Position : Vector2Int
++Cost : int
++Distance : int
++Parent : PathNode
++int GetDistance()
+-void SetDistance()
++Vector2Int GetPosition()
++void SetPosition()
+}
+
+class PathfindingNodeInterface {
+-ManagedNodeCollection : string
++ NodeCollection : NodeCollectionController
+void Start()
+}
+
+class NodeCollectionController {
+-NodeCollection : GameObject
+-void Awake()
++GameObject GetNode()
+-List FindPathToNextTile
+{static} -List NodeToVectorList()
+{static} -List GetWalkableNodes()
+}
+enum TargetUser {
+    Pedestrians
+    Vehicles
+}
+class Node {
++X : int
++y : int
++Occupied : bool
++Position :Vector3
++Target : Vector3
++Vector2Pos : Vector2Int
++Distance : int
++CostDistance : int
++Parent : Node
++void SetDistance()
++void SetVector2Int()
+}
+
+class NodeController {
+-capacity : Queue
+-neighbors : List
+-target : Tile
+-origin : Tile
+-currOccupant : Entity
+-Tile GetTile()
+-void SetTile()
+-Tile GetOrigin()
+-void SetOrigin()
+-Entity GetCurrOccupant()
+-void SetCurrentOccupant()
+-void ChangeEntity()
+}
+
 GameManager "1" --> "1"  CameraManager : contains
 GameManager "1" --> "1"  InputManager : contains
 GameManager "1" --> "1"  GridManager : contains
@@ -165,6 +288,8 @@ TileManager "1" --* "many" GridPoint : contains
 TileGrid -- TileType
 RoadTile -- TileType 
 RoadTile "many" *-- "1" Structure : has
-
-
+VehicleEntity <|-- Entity
+VehicleEntity -- VehicleType
+NavPointConnection -- ConnectionType
+NodeCollectionController -- TargetUser
 @enduml
