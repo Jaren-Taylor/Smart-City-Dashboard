@@ -53,4 +53,37 @@ public abstract class Entity
         GameObject prefab = Resources.Load<GameObject>(prefabLocation);
         managedObject.InstantiateModel(prefab, Quaternion.Euler(-90, -90, -90));
     }
+
+    /// <summary>
+    /// Add component to the object it is managing
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T AddComponent<T>() where T : Component => managedObject.AddComponent<T>();
+
+    /// <summary>
+    /// Removes component from the object it is managing
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public bool RemoveComponent<T>() where T : Component => managedObject.TryRemoveComponent<T>();
+
+    /// <summary>
+    /// Trys to remove component from the object it is managing
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="component"></param>
+    /// <returns></returns>
+    public bool TryGetComponent<T>(out T component) where T : Component
+    {
+        component = GetComponent<T>();
+        return component != null;
+    }
+
+    /// <summary>
+    /// Gets component from the object it is managing
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T GetComponent<T>() where T : Component => managedObject?.GetComponent<T>();
 }

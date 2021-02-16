@@ -1,63 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class EntityController : MonoBehaviour
 {
-    public bool isMoving;
-    public Vector3 nodeDestination;
-    public List<StepNode> mapping = new List<StepNode>();
-    public Dictionary<string, Dictionary<string,Vector3>> StepNodeLocations = new Dictionary<string, Dictionary<string,Vector3>>();
+    Vector2Int tileDestination;
+    Vector2Int tilePosition;
+    float maxSpeed = .5f;
 
-   
+    float destinationTolerance = .5f;
 
-    private void Awake()
+    GameObject Node;
+    GameObject nodeDestination;
+    List<Vector3> NodeLevelPath = new List<Vector3>();
+    List<Vector2Int> TileLevelPath = new List<Vector2Int>();
+
+
+   // void Start()
+  //  {
+        // we will need more of the entity management system built out to facilitate assigning spawn and despawn locations to entities before we can programmatically set it here.
+        //tileDestination = PathFindingManager.getDestination();
+        //nodeDestination = PathFindingManager.CalculatePath(tilePosition, tileDestination);
+
+    //}
+
+    //All of this will be broken until the path finding system is built.
+    //Abstraction required to make modular and fit both cars and pedestrians
+
+    /// <summary>
+    /// this will be encapsulated in a TileLevelPath check in the final build.
+    /// </summary>
+    void Update()
     {
-        nodeDestination = new Vector3(transform.position.x, transform.position.y, this.transform.position.z - .4f);
-    }
-    private void Update()
-    {
-        if (Vector3.Distance(transform.position, nodeDestination) > .00001)
+        if (NodeLevelPath.Any())
         {
-            Movement();
+            var i = 0;
+            var nextNode = NodeLevelPath[i];
+            // Destination tolerance does what exactly? - Jaren
+            if (Vector3.Distance(transform.position, nextNode) > destinationTolerance)
+            {
+                transform.LookAt(nextNode);
+                MoveToNextNode(nextNode);
+            }
         }
     }
 
-    private void initDict()
+    public void MoveToNextNode(Vector3 node)
     {
-        StepNodeLocations.Add("TWO_WAY", new Dictionary<string, Vector3>());
-        StepNodeLocations.Add("THREE_WAY", new Dictionary<string, Vector3>());
-        StepNodeLocations.Add("FOUR_WAY", new Dictionary<string, Vector3>());
-        StepNodeLocations.Add("CAR_LEFT", new Dictionary<string, Vector3>());
-
-        StepNodeLocations["TWO_WAY"].Add("CAR_RIGHT", new Vector3(.18f, .012f, .35f));
-        StepNodeLocations["TWO_WAY"].Add("CAR_LEFT", new Vector3(-.18f, .012f, -.35f));
-
-        StepNodeLocations["THREE_WAY"].Add("CAR_TOP_RIGHT", new Vector3(.2f, .012f, .185f));
-        StepNodeLocations["THREE_WAY"].Add("CAR_TOP_LEFT", new Vector3(-.2f, .012f, .185f));
-        StepNodeLocations["THREE_WAY"].Add("CAR_BOTTOM_LEFT", new Vector3(-.185f, .012f, -.2f));
-        StepNodeLocations["THREE_WAY"].Add("CAR_BOTTOM_RIGHT", new Vector3(.185f, .012f, -.2f));
-
-        StepNodeLocations["FOUR_WAY"].Add("CAR_TOP_RIGHT", new Vector3(.2f, .012f, .2f));
-        StepNodeLocations["FOUR_WAY"].Add("CAR_TOP_LEFT", new Vector3(-.2f, .012f, .2f));
-        StepNodeLocations["FOUR_WAY"].Add("CAR_BOTTOM_LEFT", new Vector3(-.2f, .012f, -.2f));
-        StepNodeLocations["FOUR_WAY"].Add("CAR_BOTTOM_RIGHT", new Vector3(.2f, .012f, -.2f));
-
-        StepNodeLocations["CORNER"].Add("CAR_BOTTOM_RIGHT", new Vector3(.2f, .012f, -.2f));
-        StepNodeLocations["CORNER"].Add("CAR_TOP_LEFT", new Vector3(-.2f, .012f, .2f));
-
-        //StepNodeLocations["FOUR_WAY"][CAR_TOP_LEFT] will return a vector 3.
+        transform.position = Vector3.MoveTowards(this.transform.position, node, maxSpeed);
     }
 
-    private void Movement()
+    public void InitiateTraversal(List<Vector3> directions)
     {
-        if (mapping.Count != 0 || mapping != null)
-        {
-            foreach (StepNode node in mapping)
-            {
-                this.transform.position = Vector3.MoveTowards(this.transform.position, node.pos, .0001f);
-            }
-        };
+        NodeLevelPath = directions;
     }
+   
+
 }
 

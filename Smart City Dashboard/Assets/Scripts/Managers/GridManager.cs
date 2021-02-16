@@ -22,9 +22,9 @@ public class GridManager : MonoBehaviour
     private int state = 0;
 
     public Material TileMaterial;
-    public Material TransparentMaterial; 
+    public Material TransparentMaterial;
 
-    private Entity entity;
+    public VehicleEntity entity;
     private TileGrid grid; // Data object that holds the information about all tiles
     public static GridManager Instance { get; private set; } //Singleton pattern
 
@@ -206,22 +206,29 @@ public class GridManager : MonoBehaviour
             SceneManager.LoadScene(0);
             //SaveGameManager.LoadGame("save.xml");
         }
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            List<Vector2Int> gel = grid.GetBuildingLoc();
-            for (int size = 0; size < gel.Count; size++) Debug.Log(gel[size]);
-        }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            Vector2Int tileLoc = grid.GetBuildingLoc()[0];
             entity = new VehicleEntity();
-            Vector3 position = entity.InstantiateEntity(grid.GetBuildingLoc()[0]);
+            Vector3 spawnLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetNode(0,0).transform.position;
+            // entity.InstantiateEntity(Vector2Int.RoundToInt(spawnLoc));
+            entity.InstantiateEntity(tileLoc);
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Vector2Int nextTileLoc = grid.GetBuildingLoc()[1];
+            Vector3 destinationLoc = grid[nextTileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetNode(2,0).transform.position;
+            entity.GetComponent<EntityController>().transform.LookAt(destinationLoc);
+            entity.GetComponent<EntityController>().MoveToNextNode(destinationLoc);
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
             GameObject path = new GameObject("Path Holder");
 
-            List<Vector2Int> points = Pathfinding.PathFromTo(grid, new Vector2Int(1, 1), new Vector2Int(5, 5));
+            List<Vector2Int> points = Pathfinding.PathFromTo(grid, new Vector2Int(1, 1), grid.GetBuildingLoc()[1]);
             points.Reverse();
 
             List<GameObject> pointInstances = new List<GameObject>();

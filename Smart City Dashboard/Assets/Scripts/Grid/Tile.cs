@@ -76,7 +76,14 @@ public abstract class Tile
         return base.ToString() + " (Perm: " + IsPermanent.ToString() + ")";
     }
 
-    public void MakePermanent() => IsPermanent = true;
+    public void MakePermanent()
+    {
+
+        if (!IsPermanent) { 
+            IsPermanent = true;
+            SpawnManagedNodes();
+        }
+    }
 
     /// <summary>
     /// Check if the structure has a GameObject model instantiated
@@ -112,7 +119,17 @@ public abstract class Tile
             GridManager.Instance?.transform);
         managedObject.name = managedObject.name.Replace("(Clone)", "");
         SetTransparency(isTransparent);
+        if (IsPermanent)
+        {
+            SpawnManagedNodes();  
+        }
         return CalculateAndSetModelFromNeighbors(neighbors);
+    }
+
+    private void SpawnManagedNodes()
+    {
+        if(!managedObject.TryGetComponent<PathfindingNodeInterface>(out _)) managedObject.AddComponent<PathfindingNodeInterface>();
+
     }
 
 

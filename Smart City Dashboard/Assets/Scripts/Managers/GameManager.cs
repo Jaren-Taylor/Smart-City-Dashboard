@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Confined;
+        /*Cursor.lockState = CursorLockMode.Confined*/;
         
         inputManager.OnCameraPan += cameraManager.PanHandler;
 

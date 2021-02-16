@@ -77,7 +77,7 @@ public static class Pathfinding
             }
         }
 
-        throw new System.Exception("No path found!");
+        throw new System.Exception("No tile-level path found!");
 
     }
 

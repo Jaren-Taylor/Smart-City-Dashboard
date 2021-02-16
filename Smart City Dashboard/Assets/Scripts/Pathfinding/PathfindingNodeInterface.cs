@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ManagedNode : MonoBehaviour
+public class PathfindingNodeInterface : MonoBehaviour
 {
     private string ManagedNodeCollection = "Prefabs/NodeCollection";
-    private NodeCollectionController NodeCollection;
-    // Start is called before the first frame update
+    public NodeCollectionController NodeCollection;
+
     void Start()
     {
         var prefab = Resources.Load<GameObject>(ManagedNodeCollection);
         NodeCollection = Instantiate(prefab, transform).GetComponent<NodeCollectionController>();
-
     }
-
-   
 }

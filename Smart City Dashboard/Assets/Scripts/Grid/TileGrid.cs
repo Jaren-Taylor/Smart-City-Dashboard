@@ -21,7 +21,7 @@ public class TileGrid
     [DataMember(Name="Height")]
     public readonly int Height;
 
-    private List<Vector2Int> CachedDestinations = null;
+    private List<Vector2Int> cachedDestinations = null;
    
     public TileGrid(int width, int height)
     {
@@ -63,10 +63,10 @@ public class TileGrid
             }
 
             if (SafeLookup(x, y)?.ManagedExists() ?? false) {
-                if (SafeLookup(x, y) is BuildingTile) CachedDestinations = null;
+                if (SafeLookup(x, y) is BuildingTile) cachedDestinations = null;
                 SafeLookup(x, y).DeleteManaged();
             }
-            if (value is BuildingTile) CachedDestinations = null;
+            if (value is BuildingTile) cachedDestinations = null;
             if (value == null) grid.Remove(new Vector2Int(x, y));
             else grid[new Vector2Int(x, y)] = value;
         }
@@ -81,9 +81,9 @@ public class TileGrid
     /// Checks to see if a 
     /// </summary>
     /// <returns></returns>
-    public List<Vector2Int> GetBuildingLoc() => CachedDestinations ??= grid.Where(x => ((x.Value is BuildingTile) && (x.Value.IsPermanent))).Select(x => x.Key).ToList();
+    public List<Vector2Int> GetBuildingLoc() => cachedDestinations ??= grid.Where(x => ((x.Value is BuildingTile) && (x.Value.IsPermanent))).Select(x => x.Key).ToList();
+    public List<Tile> GetBuildingLocTile() => grid.Where(x => ((x.Value is BuildingTile) && (x.Value.IsPermanent))).Select(x => x.Value).ToList();
 
-    
     private Tile SafeLookup(int x, int y) => grid.TryGetValue(new Vector2Int(x, y), out Tile output) ? output : null;
 
     internal void RefreshGrid()
