@@ -1,0 +1,11 @@
+@startuml
+class Menu {
+    # RectTransform menuBounds;
+    - int activeTab;
+    + bool isOnScreen;
+    # Start() : void
+    + SwitchTabs() : void
+    + {abstract} ToggleMenuHandler() : void
+}
+MonoBehaviour <|-- Menu
+@enduml

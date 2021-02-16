@@ -1,0 +1,63 @@
+@startuml
+class UIManager {
+    - Dictionary<KeyCode, Menu> keyToMenuDict
+    - List<Menu> menus
+    + Action<bool> OnUIToggle
+    + Menu EscapeMenu
+    + Menu TildeMenu
+    + Menu ActiveMenu
+    - Start() : void
+    + OnUIToggleHandler() : void
+    + IsUIActive() : void
+    + SwitchTabs() : void
+    + ToggleMenu(KeyCode key) : void
+    - TurnOffMenu(Menu menu) : void
+    - TurnOnMenu(Menu menu) : void
+}
+
+class DashboardController {
+    - DashboardMenu dashboardMenu
+    - HeatMap heatmap
+    - Start() : void
+    + CreateHeatMap() : void
+}
+
+class Menu {
+    # RectTransform menuBounds;
+    - int activeTab;
+    + bool isOnScreen;
+    # Start() : void
+    + SwitchTabs() : void
+    + {abstract} ToggleMenuHandler() : void
+}
+
+class ModeMenu {
+    - float targetYPos
+    - Start() : void
+    - Update() : void
+    + ToggleMenuHandler() : void
+}
+
+class DashboardMenu {
+    - float targetXPos
+    - Image heatmapImage
+    - HeatMap testMap
+    - Start() : void
+    - Update() : void
+    + ToggleMenuHandler() : void
+    + UpdateSpriteFromTexture(Texture2D texture) : void
+}
+
+class Tab {
+    + DeActivate() : void
+    + Activate() : void
+    - SetTransparency(float a) : void
+}
+
+UIManager --o Menu
+Menu <|-- DashboardMenu
+Menu <|-- ModeMenu
+DashboardController --> DashboardMenu
+DashboardMenu --> Tab
+ModeMenu --> Tab
+@enduml
