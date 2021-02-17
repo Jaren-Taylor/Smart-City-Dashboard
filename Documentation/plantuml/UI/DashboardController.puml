@@ -1,0 +1,9 @@
+@startuml
+class DashboardController {
+    - DashboardMenu dashboardMenu
+    - HeatMap heatmap
+    - Start() : void
+    + CreateHeatMap() : void
+}
+MonoBehaviour <|-- DashboardController
+@enduml

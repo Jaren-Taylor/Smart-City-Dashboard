@@ -57,7 +57,7 @@ public class ManagedGameObject : MonoBehaviour
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public T AddComponent<T>() where T : Component => AddComponent<T>();
+    public T AddComponent<T>() where T : Component => gameObject.AddComponent<T>();
 
     /// <summary>
     /// Trys to remove component from object

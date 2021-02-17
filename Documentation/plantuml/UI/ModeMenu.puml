@@ -1,0 +1,9 @@
+@startuml
+class ModeMenu {
+    - float targetYPos
+    - Start() : void
+    - Update() : void
+    + ToggleMenuHandler() : void
+}
+Menu <|-- ModeMenu
+@enduml

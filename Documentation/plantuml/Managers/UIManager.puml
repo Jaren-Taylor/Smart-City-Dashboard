@@ -1,0 +1,18 @@
+@startuml
+class UIManager {
+    - Dictionary<KeyCode, Menu> keyToMenuDict
+    - List<Menu> menus
+    + Action<bool> OnUIToggle
+    + Menu EscapeMenu
+    + Menu TildeMenu
+    + Menu ActiveMenu
+    - Start() : void
+    + OnUIToggleHandler() : void
+    + IsUIActive() : void
+    + SwitchTabs() : void
+    + ToggleMenu(KeyCode key) : void
+    - TurnOffMenu(Menu menu) : void
+    - TurnOnMenu(Menu menu) : void
+}
+MonoBehaviour <|-- UIManager
+@enduml
