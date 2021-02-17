@@ -23,7 +23,7 @@ public class NavPoint_DebugHandler : Editor
 
     public enum ArrowType { SingleEnded, DoubleEnded } 
 
-    private static void DrawDebugArrow(Vector3 from, Vector3 to, Color? color = null, ArrowType? type = null)
+    public static void DrawDebugArrow(Vector3 from, Vector3 to, Color? color = null, ArrowType? type = null)
     {
         float lineLength = Vector3.Distance(from, to);
         float radius = Mathf.Clamp(.05f * lineLength, .05f, .1f);

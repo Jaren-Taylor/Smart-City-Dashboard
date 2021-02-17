@@ -82,7 +82,7 @@ public class TileGrid
     /// </summary>
     /// <returns></returns>
     public List<Vector2Int> GetBuildingLoc() => cachedDestinations ??= grid.Where(x => ((x.Value is BuildingTile) && (x.Value.IsPermanent))).Select(x => x.Key).ToList();
-    public List<Tile> GetBuildingLocTile() => grid.Where(x => ((x.Value is BuildingTile) && (x.Value.IsPermanent))).Select(x => x.Value).ToList();
+    public List<Vector2Int> GetRoadTile() => grid.Where(x => ((x.Value is RoadTile) && (x.Value.IsPermanent))).Select(x => x.Key).ToList();
 
     private Tile SafeLookup(int x, int y) => grid.TryGetValue(new Vector2Int(x, y), out Tile output) ? output : null;
 

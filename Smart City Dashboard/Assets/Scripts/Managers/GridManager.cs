@@ -20,10 +20,12 @@ public class GridManager : MonoBehaviour
     public LayerMask groundMask; // The mask used to find the ground plane
 
     private int state = 0;
+    private NodeController EntityLoc;
 
     public Material TileMaterial;
     public Material TransparentMaterial;
 
+    private Vector2Int tileLoc;
     public VehicleEntity entity;
     private TileGrid grid; // Data object that holds the information about all tiles
     public static GridManager Instance { get; private set; } //Singleton pattern
@@ -209,21 +211,27 @@ public class GridManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Vector2Int tileLoc = grid.GetBuildingLoc()[0];
+            tileLoc= grid.GetRoadTile()[0];
             entity = new VehicleEntity();
-            Vector3 spawnLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetNode(0,0).transform.position;
-            // entity.InstantiateEntity(Vector2Int.RoundToInt(spawnLoc));
-            entity.InstantiateEntity(tileLoc);
+            EntityLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetInboundNode(NodeCollectionController.EnteringDirection.NorthBound);
+            entity.InstantiateEntity(EntityLoc.transform.position);
 
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X) && EntityLoc != null)
         {
-            Vector2Int nextTileLoc = grid.GetBuildingLoc()[1];
-            Vector3 destinationLoc = grid[nextTileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetNode(2,0).transform.position;
-            entity.GetComponent<EntityController>().transform.LookAt(destinationLoc);
-            entity.GetComponent<EntityController>().MoveToNextNode(destinationLoc);
+    
+            EntityLoc = EntityLoc.GetNodeByDirection(NodeCollectionController.ExitingDirection.WestBound);
+            if(EntityLoc == null)
+            {
+                tileLoc += Vector2Int.left;
+                 EntityLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetInboundNode(NodeCollectionController.EnteringDirection.WestBound);
+            }
+            
+            entity.GetComponent<EntityController>().transform.LookAt(EntityLoc.transform.position);
+            entity.GetComponent<EntityController>().MoveToNextNode(EntityLoc.transform.position);
         }
+
         if (Input.GetKeyDown(KeyCode.O))
         {
             GameObject path = new GameObject("Path Holder");
