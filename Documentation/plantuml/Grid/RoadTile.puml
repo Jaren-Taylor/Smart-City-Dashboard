@@ -1,0 +1,19 @@
+@startuml
+class RoadTile {
+    + <<override>> ToString() : string
+}
+class "Dictionary`2"<T1,T2> {
+}
+enum TileType {
+    Road0Way= 0,
+    RoadEndcap= 1,
+    Road2Way= 2,
+    Road3Way= 3,
+    Road4Way= 4,
+    RoadCorner= 5,
+}
+Tile <|-- RoadTile
+RoadTile o-> "ModelLookup<TileType,string>" "Dictionary`2"
+RoadTile --> "Type" TileType
+RoadTile +-- TileType
+@enduml

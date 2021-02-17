@@ -1,0 +1,9 @@
+@startuml
+class DigitalCursor {
+    + <<readonly>> {static} GroundMask : int
+    + <<readonly>> OnGrid : bool = false
+    + DigitalCursor()
+}
+DigitalCursor o-> "HitPosition" Vector2
+DigitalCursor o-> "Position" Vector2Int
+@enduml

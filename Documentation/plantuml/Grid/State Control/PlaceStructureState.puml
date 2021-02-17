@@ -1,0 +1,11 @@
+@startuml
+class PlaceStructureState {
+    + PlaceStructureState(structure:BuildingTile.StructureType)
+    + OnPop(location:DigitalCursor) : void
+    + OnPush(location:DigitalCursor) : void
+    + OnMouseDown(location:DigitalCursor) : void
+    + OnMouseEnterTile(location:DigitalCursor) : void
+    + OnMouseExitTile(location:DigitalCursor) : void
+}
+IGridControlState <|-- PlaceStructureState
+@enduml

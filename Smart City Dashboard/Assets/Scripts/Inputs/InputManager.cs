@@ -8,26 +8,32 @@ using static UnityEngine.InputSystem.InputAction;
 /// <summary>
 /// All input for the project should pass through here
 /// </summary>
-public class InputManager : MonoBehaviour
+public class InputManager : MonoBehaviour   
 {
     [SerializeField]
     public Action<Vector3> OnCameraPan;
     public Action<float> OnCameraRotation;
     public Action<float> OnCameraZoom;
 
+    // Keyboard Actions
     public Action<int> OnNumberPressed;
+    public Action<KeyCode> OnEscapePressed;
+    public Action<KeyCode> OnTildePressed;
+    public Action OnCPressed;
+    public Action OnTabPressed;
 
     public Action OnPlaceTile;
     public Action OnEndPlaceTile;
 
     private bool isMoving = false;
+    private bool isUIActive = false;
     Vector3 moveBy;
 
     private void Update()
     {
         if(isMoving == true)
         {
-            OnCameraPan.Invoke(moveBy);
+            if (!isUIActive) OnCameraPan.Invoke(moveBy);
         }
     }
 
@@ -101,5 +107,41 @@ public class InputManager : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Alpha2)) OnNumberPressed?.Invoke(1);
             else if (Input.GetKeyDown(KeyCode.Alpha3)) OnNumberPressed?.Invoke(2);
         }
+    }
+
+    public void OnEscapeKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnEscapePressed?.Invoke(KeyCode.Escape);
+        }
+    }
+
+    public void OnTildeKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnTildePressed?.Invoke(KeyCode.BackQuote);
+        }
+    }
+
+    public void OnCKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnCPressed?.Invoke();
+        }
+    }
+    public void OnTabKeyPressed(CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnTabPressed?.Invoke();
+        }
+    }
+
+    // Used as an event handler in Game manager. This way UI manager can talk to this manager
+    public void IsUIActive(bool active) { 
+        isUIActive = active; 
     }
 }
