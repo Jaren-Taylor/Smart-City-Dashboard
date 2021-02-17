@@ -156,7 +156,7 @@ class GridManager {
  +WhatRoadTileAmI()
 }
 
-class EntityManager {
+class EntityController {
 -tileDestination : Vector2Int
 -tilePosition : Vector2Int
 -maxSpeed : float
@@ -242,41 +242,56 @@ class NodeCollectionController {
 -NodeCollection : GameObject
 -void Awake()
 +GameObject GetNode()
--List FindPathToNextTile
+-List FindPathToNextTile()
++NodeController GetInboundNode()
 {static} -List NodeToVectorList()
 {static} -List GetWalkableNodes()
 }
 enum TargetUser {
     Pedestrians
     Vehicles
+    Both
+}
+enum ExitingDirection {
+    NorthBound
+    EastBound
+    SouthBound
+    WestBound
+}
+enum EnteringDirection {
+    NorthBound
+    EastBound
+    SouthBound
+    WestBound
 }
 class Node {
-+X : int
-+y : int
++Row : int
++Col : int
 +Occupied : bool
 +Position :Vector3
-+Target : Vector3
++TargetNode : Vector3
 +Vector2Pos : Vector2Int
-+Distance : int
-+CostDistance : int
++TargetUser : TargetUser
 +Parent : Node
-+void SetDistance()
-+void SetVector2Int()
++EnteringDirection : EnteringDirection
++ExitingDirection : ExitingDirection
++index : Tuple
 }
 
 class NodeController {
--capacity : Queue
--neighbors : List
--target : Tile
--origin : Tile
--currOccupant : Entity
--Tile GetTile()
--void SetTile()
--Tile GetOrigin()
--void SetOrigin()
--Entity GetCurrOccupant()
--void SetCurrentOccupant()
--void ChangeEntity()
++Connections : List
+-debugRadius : float
+-ConnectionDictionary : Dictionary
+-void OnDrawGizmos()
+-void Start()
+-Dictionary ConnectionListToDictionary()
++NodeController GetNodeByDirection()
+-void OnDrawGizmosSelected()
+}
+
+class Connections {
++Exiting : ExitingDirection
++NC : NodeController
 }
 
 GameManager "1" --> "1"  CameraManager : contains
@@ -292,4 +307,6 @@ VehicleEntity <|-- Entity
 VehicleEntity -- VehicleType
 NavPointConnection -- ConnectionType
 NodeCollectionController -- TargetUser
+NodeCollectionController -- EnteringDirection
+NodeCollectionController -- ExitingDirection
 @enduml
