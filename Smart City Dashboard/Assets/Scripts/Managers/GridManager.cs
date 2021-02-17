@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,15 +20,18 @@ public class GridManager : MonoBehaviour
     public LayerMask groundMask; // The mask used to find the ground plane
 
     private int state = 0;
+    private NodeController EntityLoc;
 
     public Material TileMaterial;
     public Material TransparentMaterial;
 
+    private Vector2Int tileLoc;
+    public VehicleEntity entity;
     private TileGrid grid; // Data object that holds the information about all tiles
     public static GridManager Instance { get; private set; } //Singleton pattern
 
     private GridController GridSM; //Controls the state of build mode
-
+    public GameObject NavPointPrefab;
     public bool CursorEnabled { get => cursorEnabled; set => SetCursor(value); }
 
     // Used as an event handler
@@ -205,6 +209,51 @@ public class GridManager : MonoBehaviour
             SceneManager.LoadScene(0);
             //SaveGameManager.LoadGame("save.xml");
         }
+
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            tileLoc= grid.GetRoadTile()[0];
+            entity = new VehicleEntity();
+            EntityLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetInboundNode(NodeCollectionController.EnteringDirection.NorthBound);
+            entity.InstantiateEntity(EntityLoc.transform.position);
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.X) && EntityLoc != null)
+        {
+    
+            EntityLoc = EntityLoc.GetNodeByDirection(NodeCollectionController.ExitingDirection.WestBound);
+            if(EntityLoc == null)
+            {
+                tileLoc += Vector2Int.left;
+                 EntityLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetInboundNode(NodeCollectionController.EnteringDirection.WestBound);
+            }
+            
+            entity.GetComponent<EntityController>().transform.LookAt(EntityLoc.transform.position);
+            entity.GetComponent<EntityController>().MoveToNextNode(EntityLoc.transform.position);
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            GameObject path = new GameObject("Path Holder");
+
+            List<Vector2Int> points = Pathfinding.PathFromTo(grid, new Vector2Int(1, 1), grid.GetBuildingLoc()[1]);
+            points.Reverse();
+
+            List<GameObject> pointInstances = new List<GameObject>();
+
+            if (points.Count > 0) pointInstances.Add(Instantiate(NavPointPrefab, new Vector3(points[0].x, 0f, points[0].y), Quaternion.identity, path.transform));
+            for (int i = 1; i < points.Count; i++)
+            {
+                var navPt = Instantiate(NavPointPrefab, new Vector3(points[i].x, 0f, points[i].y), Quaternion.identity, path.transform);
+                navPt.GetComponent<NavPoint>().Connections.Add(new NavPointConnection(pointInstances[i - 1].GetComponent<NavPoint>(), NavPointConnection.ConnectionType.Directed));
+                pointInstances.Add(navPt);
+            }
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.C)) CursorEnabled = !CursorEnabled; //If C pressed, cursor is disabled
         if (CursorEnabled)
         {
             HandleCursorMovement(); //Updates state with cursor movement

@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
         // Please be mindful. Order of handler assignment could matters
 
         // Camera Manager events
-
+        
         inputManager.OnCameraPan += cameraManager.PanHandler;
 
         inputManager.OnCameraRotation += cameraManager.RotationHandler;
