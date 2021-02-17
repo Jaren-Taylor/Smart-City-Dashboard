@@ -3,7 +3,7 @@ using UnityEngine;
 public abstract class Menu : MonoBehaviour
 {
     protected RectTransform menuBounds;
-    private int activeTab;
+    public int ActiveTab;
     [HideInInspector]
     public bool isOnScreen;
 
@@ -17,18 +17,18 @@ public abstract class Menu : MonoBehaviour
             transform.GetChild(i).gameObject.GetComponent<Tab>().DeActivate();
         }
         //
-        activeTab = 1;
+        ActiveTab = 1;
         isOnScreen = false;
     }
 
     public void SwitchTabs()
     {
         // deactivate current tab
-        transform.GetChild(activeTab).GetComponent<Tab>().DeActivate();
+        transform.GetChild(ActiveTab).GetComponent<Tab>().DeActivate();
         // increment or reset counter
-        activeTab = activeTab == transform.childCount - 1 ? 1 : activeTab+1;
+        ActiveTab = ActiveTab == transform.childCount - 1 ? 1 : ActiveTab+1;
         // activate new tab
-        transform.GetChild(activeTab).GetComponent<Tab>().Activate();
+        transform.GetChild(ActiveTab).GetComponent<Tab>().Activate();
     }
 
     public abstract void ToggleMenuHandler();

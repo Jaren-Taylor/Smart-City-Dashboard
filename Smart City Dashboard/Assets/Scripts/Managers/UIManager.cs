@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     private Dictionary<KeyCode, Menu> keyToMenuDict = new Dictionary<KeyCode, Menu>();
     private List<Menu> menus = new List<Menu>();
     public Action<bool> OnUIToggle;
+    public Action<int> OnTabSwitch;
     public Menu EscapeMenu;
     public Menu TildeMenu;
     // contains a dupe reference to the currently active menu
@@ -19,23 +20,13 @@ public class UIManager : MonoBehaviour
         keyToMenuDict.Add(KeyCode.BackQuote, TildeMenu);
     }
 
-    public void OnUIToggleHandler() {
-        Debug.Log(IsUIActive());
-        OnUIToggle?.Invoke(IsUIActive());
-    }
-
-    public bool IsUIActive()
-    {
-        foreach (var menu in menus)
-        {
-            if (menu.isOnScreen) return true;
-        }
-        return false;
-    }
-
     public void SwitchTabs()
     {
         if (ActiveMenu != null) ActiveMenu.SwitchTabs();
+        if (ActiveMenu == EscapeMenu) // TODO this only works if ModeMenu is externally set as the escape menu
+        {
+            OnTabSwitch?.Invoke(ActiveMenu.ActiveTab);
+        }
     }
 
     public void ToggleMenu(KeyCode key)
@@ -54,7 +45,7 @@ public class UIManager : MonoBehaviour
         } else {
             throw new Exception("That key is not bound to a menu!");
         }
-        OnUIToggleHandler();
+        OnUIToggle?.Invoke(IsUIActive());
     }
 
     private void TurnOffMenu(Menu menu)
@@ -73,5 +64,14 @@ public class UIManager : MonoBehaviour
     {
         menus.Add(menu);
         ActiveMenu = menu;
+    }
+
+    public bool IsUIActive()
+    {
+        foreach (var menu in menus)
+        {
+            if (menu.isOnScreen) return true;
+        }
+        return false;
     }
 }

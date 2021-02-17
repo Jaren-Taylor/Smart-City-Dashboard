@@ -1,8 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-
-
 /// <summary>
 /// Accepts control states to control the grid using
 /// </summary>
@@ -13,12 +9,31 @@ public class GridController
     /// </summary>
     private IGridControlState activeState;
 
+    private enum IGridControlGroups {
+        Tiles,
+        Sensors,
+        Entities,
+        Objects
+    }
+
+    private Dictionary<IGridControlGroups, IGridControlState[]> controlGroups = new Dictionary<IGridControlGroups, IGridControlState[]>();
+    //private IGridControlState[] controlStates = new IGridControlState[4];
 
     /// <summary>
     /// Creates grid controller with the inital state
     /// </summary>
     /// <param name="initState"></param>
-    public GridController(IGridControlState initState) => activeState = initState;
+    public GridController(IGridControlState initState) {
+        controlGroups.Add(IGridControlGroups.Tiles, new IGridControlState[4]);
+        controlGroups[IGridControlGroups.Tiles][0] = new PlaceRoadState();
+        controlGroups[IGridControlGroups.Tiles][0] = new PlaceStructureState(BuildingTile.StructureType.House);
+        controlGroups[IGridControlGroups.Tiles][0] = new RemoveTileState();
+        // TODO
+        // controlGroups.Add(IGridControlGroups.Sensors, new IGridControlState[3]);
+        // controlGroups.Add(IGridControlGroups.Entities, new IGridControlState[3]);
+        // controlGroups.Add(IGridControlGroups.Objects, new IGridControlState[3]);
+        activeState = initState;
+    }
 
     /// <summary>
     /// Replaces active state with the new state
@@ -44,8 +59,8 @@ public class GridController
     public void MoveCursor(DigitalCursor oldPosition, DigitalCursor newPosition)
     {
         if (activeState == null) throw new System.Exception("State not set");
-        if(IsValid(oldPosition)) activeState.OnMouseExitTile(oldPosition);
-        if(IsValid(newPosition)) activeState.OnMouseEnterTile(newPosition);
+        if (IsValid(oldPosition)) activeState.OnMouseExitTile(oldPosition);
+        if (IsValid(newPosition)) activeState.OnMouseEnterTile(newPosition);
     }
 
     /// <summary>
@@ -54,7 +69,7 @@ public class GridController
     /// <param name="location">Tile that the cursor was hovering over</param>
     public void OnMouseDown(DigitalCursor mousePosition)
     {
-        if(IsValid(mousePosition)) activeState?.OnMouseDown(mousePosition);
+        if (IsValid(mousePosition)) activeState?.OnMouseDown(mousePosition);
     }
 
     /// <summary>
