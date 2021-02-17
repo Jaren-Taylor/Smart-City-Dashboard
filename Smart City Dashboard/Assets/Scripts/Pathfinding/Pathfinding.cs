@@ -14,7 +14,6 @@ public static class Pathfinding
 
         public int Cost; //How many tiles have been traversed to get here
         public int Distance { get; private set; } //Manhattan distance to target
- 
         public int CostDistance => Cost + Distance;
 
         public PathNode Parent; //What tile we came from
@@ -25,7 +24,16 @@ public static class Pathfinding
         }
     }
 
-    public static List<Vector2Int> PathFromTo(TileGrid grid, Vector2Int fromTile, Vector2Int toTile) 
+    public static Path GetPathFromTo(TileGrid grid, Vector2Int fromTile, Vector2Int toTile)
+    {
+        List<Vector2Int> pathList = GetListOfPositionsFromTo(grid, fromTile, toTile);
+
+        Path path = new Path(pathList);
+
+        return path;
+    }
+
+    public static List<Vector2Int> GetListOfPositionsFromTo(TileGrid grid, Vector2Int fromTile, Vector2Int toTile) 
     {
         var start = new PathNode() { Position = fromTile };
         var finish = new PathNode() { Position = toTile };

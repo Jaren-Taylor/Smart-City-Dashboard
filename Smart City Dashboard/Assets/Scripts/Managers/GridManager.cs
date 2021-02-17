@@ -215,6 +215,7 @@ public class GridManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
+
             tileLoc= grid.GetRoadTile()[0];
             entity = new VehicleEntity();
             EntityLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetInboundNode(NodeCollectionController.EnteringDirection.NorthBound);
@@ -240,7 +241,7 @@ public class GridManager : MonoBehaviour
         {
             GameObject path = new GameObject("Path Holder");
 
-            List<Vector2Int> points = Pathfinding.PathFromTo(grid, new Vector2Int(1, 1), grid.GetBuildingLoc()[1]);
+            List<Vector2Int> points = Pathfinding.GetListOfPositionsFromTo(grid, new Vector2Int(1, 1), grid.GetBuildingLoc()[1]);
             points.Reverse();
 
             List<GameObject> pointInstances = new List<GameObject>();

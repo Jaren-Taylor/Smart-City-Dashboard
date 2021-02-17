@@ -55,10 +55,6 @@ public class NodeCollectionController : MonoBehaviour
         else throw new Exception("Path invalid"); //Delta is wonky
     }
 
-    private void Start()
-    {
-
-    }
 
     private class PedestrianNode
     {

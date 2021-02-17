@@ -8,7 +8,7 @@ public class Path
     private List<Vector2Int> TilePoints;
     private NodeController currentNode;
     private int currentTile;
-    private NodeCollectionController.ExitingDirection currentExitDirection;
+    private NodeCollectionController.ExitingDirection? currentExitDirection;
 
     public Path(List<Vector2Int> tilePoints)
     {
@@ -49,17 +49,18 @@ public class Path
 
 
     /// <summary>
-    /// Advances current node to the next one along the path. Returns false if at end of path or unable to advance
+    /// Advances current node to the next one along the path. Returns false if already at end of path or unable to advance.
     /// </summary>
     /// <returns></returns>
     public bool AdvanceNextNode()
     {
-        currentNode = currentNode.GetNodeByDirection(currentExitDirection);
-        if(currentNode == null)
+        if (currentExitDirection is null) return false; //Has reached direction
+        currentNode = currentNode.GetNodeByDirection(currentExitDirection.Value);
+        if(currentNode == null) 
         {
             return TryAdvanceNextTile();
         }
-        return false;
+        return true;
     }
 
     private bool TryAdvanceNextTile()
@@ -68,6 +69,7 @@ public class Path
         if (ReachedDestination()) return false;
         else
         {
+            //If able to get the tile collect at tile
             if (TryGetCollectionAtPosition(TilePoints[currentTile], out NodeCollectionController collection))
             {
                 var entering = (NodeCollectionController.EnteringDirection)currentExitDirection;
@@ -83,14 +85,15 @@ public class Path
         }
     }
 
-    private bool TryUpdateExitingDirection() //Will fail if entering last tile. 
+    private bool TryUpdateExitingDirection()
     {
-        if (!ReachedDestination())
+        if (currentTile + 1 <= TilePoints.Count) //Is not on the last tile
         {
-            var delta = TilePoints[currentTile + 1] - TilePoints[currentTile];
+            var delta = TilePoints[currentTile + 1] - TilePoints[currentTile]; //How to handle the OOB Exception?
             currentExitDirection = NodeCollectionController.GetExitingFromDelta(delta);
             return true;
         }
+        currentExitDirection = null;
         return false;
     }
 
