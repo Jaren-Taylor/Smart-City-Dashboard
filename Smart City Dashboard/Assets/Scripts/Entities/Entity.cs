@@ -40,12 +40,18 @@ public abstract class Entity
     public Vector3 InstantiateEntity(Vector2Int point)
     {
         Vector3 position = new Vector3(point.x + .2f, .1f, point.y + .2f);
-       managedObject = Object.Instantiate(
-            Resources.Load<ManagedGameObject>(ManagedGameObjectLocation),
-            position,
-            Quaternion.identity);
+        return InstantiateEntity(position);
+
+    }
+
+    public Vector3 InstantiateEntity(Vector3 point)
+    {
+        managedObject = Object.Instantiate(
+             Resources.Load<ManagedGameObject>(ManagedGameObjectLocation),
+             point,
+             Quaternion.identity);
         AttachModelToManaged("Prefabs/Vehicles/Bus_Base");
-        return position;
+        return point;
 
     }
     protected void AttachModelToManaged(string prefabLocation)
