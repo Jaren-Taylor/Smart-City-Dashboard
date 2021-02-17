@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
         keyToMenuDict.Add(KeyCode.Escape, EscapeMenu);
         keyToMenuDict.Add(KeyCode.BackQuote, TildeMenu);
     }
+
     public void OnUIToggleHandler() {
         Debug.Log(IsUIActive());
         OnUIToggle?.Invoke(IsUIActive());

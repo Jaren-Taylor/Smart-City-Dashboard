@@ -8,10 +8,9 @@ public class Tab : MonoBehaviour
 {
     public void DeActivate()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 1; i < transform.childCount; i++)
         {
-            GameObject element = transform.GetChild(i).gameObject;
-            if (!element.TryGetComponent<TextMeshProUGUI>(out _)) element.SetActive(false);
+            transform.GetChild(i).gameObject.SetActive(false);
             // make transparent
             SetTransparency(0.5f);
         }
@@ -19,7 +18,7 @@ public class Tab : MonoBehaviour
 
     public void Activate()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 1; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(true);
             // make fully visible

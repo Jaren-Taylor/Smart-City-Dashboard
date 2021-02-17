@@ -12,7 +12,7 @@ public abstract class Menu : MonoBehaviour
         // Assumed to be used in child classes for use in movement calculations
         menuBounds = gameObject.GetComponent<RectTransform>();
         // Deactivate all but the first child tab
-        for (int i = 1; i < transform.childCount; i++)
+        for (int i = 2; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.GetComponent<Tab>().DeActivate();
         }
