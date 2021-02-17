@@ -141,7 +141,8 @@ public class InputManager : MonoBehaviour
     }
 
     // Used as an event handler in Game manager. This way UI manager can talk to this manager
-    public void IsUIActive(bool active) { 
+    public void IsUIActive(bool active) {
+        Debug.Log(active);
         isUIActive = active; 
     }
 }

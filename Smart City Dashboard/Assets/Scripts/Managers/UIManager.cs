@@ -54,6 +54,7 @@ public class UIManager : MonoBehaviour
         } else {
             throw new Exception("That key is not bound to a menu!");
         }
+        OnUIToggleHandler();
     }
 
     private void TurnOffMenu(Menu menu)
