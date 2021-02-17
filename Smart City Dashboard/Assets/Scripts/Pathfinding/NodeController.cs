@@ -34,7 +34,11 @@ public class NodeController : MonoBehaviour
         return output;
     }
 
-    public NodeController GetNodeByDirection(NodeCollectionController.ExitingDirection direction) => ConnectionDictionary[direction];
+    public NodeController GetNodeByDirection(NodeCollectionController.ExitingDirection direction)
+    {
+        if (ConnectionDictionary.TryGetValue(direction, out NodeController next)) return next;
+        else return null;
+    }
 
 
     private void OnDrawGizmosSelected()

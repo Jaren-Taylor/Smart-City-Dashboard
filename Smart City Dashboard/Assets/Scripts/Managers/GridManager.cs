@@ -165,6 +165,8 @@ public class GridManager : MonoBehaviour
 
     public void StateNumberChangeHandler(int stateNum) => ChangeState(stateNum);
 
+    public NodeCollectionController GetCollectionAtTileLocation(Vector2Int position) => grid[position]?.GetComponent<NodeCollectionController>();
+
     private void ChangeState(int state)
     {
         if(this.state != state)

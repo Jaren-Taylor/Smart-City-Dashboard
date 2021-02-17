@@ -11,6 +11,7 @@ public class NodeCollectionController : MonoBehaviour
 {
     [SerializeField]
     private GameObject[] NodeCollection;
+
     private List<Vector3> VehicleExits = new List<Vector3>();
     private List<Node> NodeStructure = new List<Node>();
     public enum TargetUser
@@ -26,12 +27,32 @@ public class NodeCollectionController : MonoBehaviour
         SouthBound,
         WestBound
     }
+
+    public static ExitingDirection GetExitingFromDelta(Vector2Int delta)
+    {
+        //Get direction from movement delta
+        if (delta.x == 1 && delta.y == 0) return ExitingDirection.EastBound;
+        else if (delta.x == 1 && delta.y == 0) return ExitingDirection.WestBound;
+        else if (delta.x == 0 && delta.y == 1) return ExitingDirection.NorthBound;
+        else if (delta.x == 0 && delta.y == -1) return ExitingDirection.SouthBound;
+        else throw new Exception("Path invalid"); //Delta is wonky
+    }
+
     public enum EnteringDirection
     {
         NorthBound,
         EastBound,
         SouthBound,
         WestBound
+    }
+    public static EnteringDirection GetEnteringFromDelta(Vector2Int delta)
+    {
+        //Get direction from movement delta
+        if (delta.x == 1 && delta.y == 0) return EnteringDirection.EastBound;
+        else if (delta.x == 1 && delta.y == 0) return EnteringDirection.WestBound;
+        else if (delta.x == 0 && delta.y == 1) return EnteringDirection.NorthBound;
+        else if (delta.x == 0 && delta.y == -1) return EnteringDirection.SouthBound;
+        else throw new Exception("Path invalid"); //Delta is wonky
     }
 
     private void Start()
@@ -74,6 +95,12 @@ public class NodeCollectionController : MonoBehaviour
         if(col < 4 & row < 4) return this.NodeCollection[col + row * 4];
         else { throw new IndexOutOfRangeException(); }
     }
+
+    public NodeController GetSpawnNode(EnteringDirection direction)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public NodeController GetInboundNode(EnteringDirection direction)
     {
         switch (direction)
