@@ -1,0 +1,50 @@
+@startuml SensorClassDiagram
+class SensorManager {
+    +CameraSet : HashSet<CameraSensor>
+    -heatMap : HeatMap
+}
+
+abstract class Sensor<T> {
+    +TargetCallsPerSecond : int
+    +ViewShape : Collider
+    +DataCollected : Action<List<T>>
+
+    -CollectAndSendData() : void
+    -AreEntitiesInCollider() : bool
+    -DetectEnvironment() : List<T>
+    #{abstract}CollectData(GameObject sensedObject) : T
+    +{abstract}RegisterToManager(SensorManager sensor) : void
+    +{abstract}DeregisterFromManager(SensorManager sensor) : void
+}
+
+class CameraSensor<CameraSensorData> {
+    #CollectData(GameObject sensedObject) : CameraSensorData
+    +RegisterToManager(SensorManager sensor) : void
+    +DeregisterFromManager(SensorManager sensor) : void
+}
+
+class "<<Struct>> CameraSensorData" as CameraSensorData {
+    +DetectedObject : GameObject <<readonly>>
+    +Position : Vector3 <<readonly>>
+    +Velocity : Vector3 <<readonly>>
+    +SelfPostion : Vector3 <<readonly>>
+    +SelfVelocity : Vector3 <<readonly>>
+}
+
+class HeatMap {
+    +Width : int <<readonly>>
+    +Height : int <<readonly>>
+    -texture : Texture2D
+    -trackedHeat : Dictionary<Vector2Int, int> <<readonly>>
+
+    +ClearMap() : void
+    +CreatePNG() : Texture2D
+    +ApplyData(positions : List<Vector2Int>) : void
+}
+
+MonoBehavior <|-- Sensor
+Sensor <|-- CameraSensor
+
+SensorManager "1" *-- "many" CameraSensor : contains
+
+@enduml
