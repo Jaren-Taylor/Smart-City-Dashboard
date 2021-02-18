@@ -32,7 +32,7 @@ public class NodeCollectionController : MonoBehaviour
     {
         //Get direction from movement delta
         if (delta.x == 1 && delta.y == 0) return ExitingDirection.EastBound;
-        else if (delta.x == 1 && delta.y == 0) return ExitingDirection.WestBound;
+        else if (delta.x == -1 && delta.y == 0) return ExitingDirection.WestBound;
         else if (delta.x == 0 && delta.y == 1) return ExitingDirection.NorthBound;
         else if (delta.x == 0 && delta.y == -1) return ExitingDirection.SouthBound;
         else throw new Exception("Path invalid"); //Delta is wonky
@@ -45,11 +45,12 @@ public class NodeCollectionController : MonoBehaviour
         SouthBound,
         WestBound
     }
+
     public static EnteringDirection GetEnteringFromDelta(Vector2Int delta)
     {
         //Get direction from movement delta
         if (delta.x == 1 && delta.y == 0) return EnteringDirection.EastBound;
-        else if (delta.x == 1 && delta.y == 0) return EnteringDirection.WestBound;
+        else if (delta.x == -1 && delta.y == 0) return EnteringDirection.WestBound;
         else if (delta.x == 0 && delta.y == 1) return EnteringDirection.NorthBound;
         else if (delta.x == 0 && delta.y == -1) return EnteringDirection.SouthBound;
         else throw new Exception("Path invalid"); //Delta is wonky
@@ -94,7 +95,7 @@ public class NodeCollectionController : MonoBehaviour
 
     public NodeController GetSpawnNode(EnteringDirection direction)
     {
-        throw new System.NotImplementedException();
+        return GetInboundNode(direction); //Temp fix
     }
 
     public NodeController GetInboundNode(EnteringDirection direction)

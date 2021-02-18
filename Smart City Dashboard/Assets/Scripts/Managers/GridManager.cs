@@ -27,6 +27,7 @@ public class GridManager : MonoBehaviour
 
     private Vector2Int tileLoc;
     public VehicleEntity entity;
+    private Path _path;
     private TileGrid grid; // Data object that holds the information about all tiles
     public static GridManager Instance { get; private set; } //Singleton pattern
 
@@ -165,7 +166,7 @@ public class GridManager : MonoBehaviour
 
     public void StateNumberChangeHandler(int stateNum) => ChangeState(stateNum);
 
-    public NodeCollectionController GetCollectionAtTileLocation(Vector2Int position) => grid[position]?.GetComponent<NodeCollectionController>();
+    public NodeCollectionController GetCollectionAtTileLocation(Vector2Int position) => grid[position]?.GetComponent<PathfindingNodeInterface>().NodeCollection;
 
     private void ChangeState(int state)
     {
@@ -216,25 +217,45 @@ public class GridManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
 
-            tileLoc= grid.GetRoadTile()[0];
+            var roadTiles = grid.GetRoadTile();
+
+            tileLoc = roadTiles[0];
+
+            var biggest = -1f;
+            Vector2Int farPos = Vector2Int.zero; 
+            foreach(var pos in roadTiles)
+            {
+                var dist = (pos - tileLoc).magnitude;
+                if (dist > biggest) {
+                    biggest = dist;
+                    farPos = pos;
+                }
+            }
+
+            _path = Pathfinding.GetPathFromTo(grid, tileLoc, farPos);
+
             entity = new VehicleEntity();
-            EntityLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetInboundNode(NodeCollectionController.EnteringDirection.NorthBound);
-            entity.InstantiateEntity(EntityLoc.transform.position);
+            //EntityLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetInboundNode(NodeCollectionController.EnteringDirection.NorthBound);
+            //entity.InstantiateEntity(EntityLoc.transform.position);
+            entity.InstantiateEntity(_path.GetCurrentNode().Position);
 
         }
 
-        if (Input.GetKeyDown(KeyCode.X) && EntityLoc != null)
+        if (Input.GetKeyDown(KeyCode.X))
         {
-    
+            /*
             EntityLoc = EntityLoc.GetNodeByDirection(NodeCollectionController.ExitingDirection.WestBound);
             if(EntityLoc == null)
             {
                 tileLoc += Vector2Int.left;
                  EntityLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetInboundNode(NodeCollectionController.EnteringDirection.WestBound);
+            }*/
+            if (_path.AdvanceNextNode())
+            {
+                entity.GetComponent<EntityController>().transform.LookAt(_path.GetCurrentNode().Position);//EntityLoc.transform.position);
+                entity.GetComponent<EntityController>().MoveToNextNode(_path.GetCurrentNode().Position);//EntityLoc.transform.position);
             }
-            
-            entity.GetComponent<EntityController>().transform.LookAt(EntityLoc.transform.position);
-            entity.GetComponent<EntityController>().MoveToNextNode(EntityLoc.transform.position);
+
         }
 
         if (Input.GetKeyDown(KeyCode.O))

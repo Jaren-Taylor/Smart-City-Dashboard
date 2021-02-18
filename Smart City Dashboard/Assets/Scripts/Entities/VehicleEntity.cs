@@ -35,8 +35,8 @@ public class VehicleEntity : Entity
     }
 
     public VehicleEntity()
-        {
+    {
 
-        }
+    }
     
 }

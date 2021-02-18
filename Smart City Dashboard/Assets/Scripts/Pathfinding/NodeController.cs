@@ -19,6 +19,8 @@ public class NodeController : MonoBehaviour
 
     private Dictionary<NodeCollectionController.ExitingDirection, NodeController> ConnectionDictionary;
 
+    public Vector3 Position => gameObject.transform.position;
+
     private void Start()
     {
         ConnectionDictionary = ConnectionListToDictionary();
