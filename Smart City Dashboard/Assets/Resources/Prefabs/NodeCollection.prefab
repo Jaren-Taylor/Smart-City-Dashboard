@@ -46,10 +46,13 @@ MonoBehaviour:
   Connections:
   - Exiting: 0
     NC: {fileID: 4546297252791091818}
+    PathType: 0
   - Exiting: 1
     NC: {fileID: 2800450873405029658}
+    PathType: 0
   - Exiting: 3
     NC: {fileID: 4546297252791091818}
+    PathType: 0
 --- !u!1 &2859686442466186807
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,7 +78,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2859686442466186807}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.175, y: 0.025, z: -0.42}
+  m_LocalPosition: {x: 0.175, y: 0.025, z: -0.425}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2859686443456918085}
@@ -96,10 +99,13 @@ MonoBehaviour:
   Connections:
   - Exiting: 0
     NC: {fileID: 4997197209853984924}
+    PathType: 0
   - Exiting: 1
     NC: {fileID: 4997197209853984924}
+    PathType: 0
   - Exiting: 3
     NC: {fileID: 4997197209853984924}
+    PathType: 0
 --- !u!1 &2859686442497666747
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,6 +152,7 @@ MonoBehaviour:
   Connections:
   - Exiting: 0
     NC: {fileID: 0}
+    PathType: 0
 --- !u!1 &2859686442706450121
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,6 +243,7 @@ MonoBehaviour:
   Connections:
   - Exiting: 2
     NC: {fileID: 0}
+    PathType: 0
 --- !u!1 &2859686442936734678
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,10 +290,13 @@ MonoBehaviour:
   Connections:
   - Exiting: 2
     NC: {fileID: 6861280982412553785}
+    PathType: 0
   - Exiting: 1
     NC: {fileID: 4997197209853984924}
+    PathType: 0
   - Exiting: 0
     NC: {fileID: 4997197209853984924}
+    PathType: 0
 --- !u!1 &2859686443085492160
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,10 +343,13 @@ MonoBehaviour:
   Connections:
   - Exiting: 0
     NC: {fileID: 3101763557990230967}
+    PathType: 0
   - Exiting: 3
     NC: {fileID: 3450662157450943480}
+    PathType: 0
   - Exiting: 2
     NC: {fileID: 3450662157450943480}
+    PathType: 0
 --- !u!1 &2859686443258243629
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,6 +396,7 @@ MonoBehaviour:
   Connections:
   - Exiting: 3
     NC: {fileID: 0}
+    PathType: 0
 --- !u!1 &2859686443456918087
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,10 +651,13 @@ MonoBehaviour:
   Connections:
   - Exiting: 3
     NC: {fileID: 7569996765532296494}
+    PathType: 0
   - Exiting: 2
     NC: {fileID: 4982912438812023894}
+    PathType: 0
   - Exiting: 1
     NC: {fileID: 4982912438812023894}
+    PathType: 0
 --- !u!1 &2859686444156343358
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,10 +704,13 @@ MonoBehaviour:
   Connections:
   - Exiting: 3
     NC: {fileID: 4546297252791091818}
+    PathType: 0
   - Exiting: 2
     NC: {fileID: 4546297252791091818}
+    PathType: 0
   - Exiting: 0
     NC: {fileID: 4546297252791091818}
+    PathType: 0
 --- !u!1 &2859686444200219133
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,10 +757,13 @@ MonoBehaviour:
   Connections:
   - Exiting: 1
     NC: {fileID: 4982912438812023894}
+    PathType: 0
   - Exiting: 2
     NC: {fileID: 4982912438812023894}
+    PathType: 0
   - Exiting: 0
     NC: {fileID: 4982912438812023894}
+    PathType: 0
 --- !u!1 &2859686444200961446
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,10 +810,13 @@ MonoBehaviour:
   Connections:
   - Exiting: 2
     NC: {fileID: 3450662157450943480}
+    PathType: 0
   - Exiting: 3
     NC: {fileID: 3450662157450943480}
+    PathType: 0
   - Exiting: 1
     NC: {fileID: 3450662157450943480}
+    PathType: 0
 --- !u!1 &2859686444342577019
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,3 +863,4 @@ MonoBehaviour:
   Connections:
   - Exiting: 1
     NC: {fileID: 0}
+    PathType: 0
