@@ -6,23 +6,28 @@ using UnityEngine;
 [CustomEditor(typeof(NodeController))]
 public class NodeController_DebugHandler : Editor
 {
-    private readonly NodeCollectionController.Direction? specificDirection = NodeCollectionController.Direction.EastBound;
+    private readonly NodeCollectionController.Direction? specificDirection = NodeCollectionController.Direction.NorthBound;
     private readonly NodeCollectionController.TargetUser? specificTargetType = NodeCollectionController.TargetUser.Vehicles;
 
     private void OnSceneGUI()
     {
-        NodeController navPT = target as NodeController;
+        NodeController nodePT = target as NodeController;
 
-        if (navPT is null || navPT.Connections == null)
+        if (nodePT is null || nodePT.Connections == null)
             return;
 
-        Vector3 center = navPT.transform.position;
-        foreach(Connection connection in navPT.Connections)
+        DrawDebugArrows(nodePT, specificDirection, specificTargetType);
+    }
+
+    public static void DrawDebugArrows(NodeController nodePT, NodeCollectionController.Direction? forceDirection, NodeCollectionController.TargetUser? forceTargetType)
+    {
+        Vector3 center = nodePT.transform.position;
+        foreach (Connection connection in nodePT.Connections)
         {
-            if ((specificDirection.HasValue && specificDirection.Value != connection.Exiting) || //If connection type is not debug type to draw
-                (specificTargetType.HasValue && specificTargetType.Value != connection.PathType))  //If connection target is not debug target to draw
+            if ((forceDirection.HasValue && forceDirection.Value != connection.Exiting) || //If connection type is not debug type to draw
+                (forceTargetType.HasValue && forceTargetType.Value != connection.PathType && connection.PathType != NodeCollectionController.TargetUser.Both))  //If connection target is not debug target to draw
                 continue; //Skip drawing this connection
-            
+
             Color color = GetColorFromDirection(connection.Exiting);
 
             Vector3 target = connection.NC?.transform.position ?? Vector3.up + center;
@@ -40,7 +45,7 @@ public class NodeController_DebugHandler : Editor
     {
         NodeCollectionController.Direction.EastBound => Color.red,
         NodeCollectionController.Direction.SouthBound => Color.green,
-        NodeCollectionController.Direction.WestBound => Color.blue,
-        _ => Color.gray
+        NodeCollectionController.Direction.WestBound => Color.yellow,
+        _ => Color.blue
     };
 }

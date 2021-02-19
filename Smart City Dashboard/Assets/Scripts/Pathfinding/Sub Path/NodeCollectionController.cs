@@ -10,7 +10,9 @@ using UnityEngine;
 public class NodeCollectionController : MonoBehaviour
 {
     [SerializeField]
-    private GameObject[] NodeCollection;
+    private NodeController[] NodeCollection;
+
+    public NodeController[] NodeCollectionReference => NodeCollection;
 
     /// <summary>
     /// The type of user that can traverse the node
@@ -43,7 +45,7 @@ public class NodeCollectionController : MonoBehaviour
         else throw new Exception("Path invalid"); //Delta is wonky
     }
 
-    public GameObject GetNode(int row, int col)
+    public NodeController GetNode(int row, int col)
     {
         if(col < 4 & row < 4) return this.NodeCollection[col + row * 4];
         else { throw new IndexOutOfRangeException(); }
@@ -59,13 +61,13 @@ public class NodeCollectionController : MonoBehaviour
         switch (direction)
         {
             case Direction.NorthBound:
-                return GetNode(0, 2).GetComponent<NodeController>();
+                return GetNode(0, 2);
             case Direction.EastBound:
-                return GetNode(1, 0).GetComponent<NodeController>();
+                return GetNode(1, 0);
             case Direction.WestBound:
-                return GetNode(2, 3).GetComponent<NodeController>();
+                return GetNode(2, 3);
             default:
-                return GetNode(3, 1).GetComponent<NodeController>();
+                return GetNode(3, 1);
         }
     }
 }
