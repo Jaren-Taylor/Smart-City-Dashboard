@@ -8,7 +8,7 @@ public class Path
     private List<Vector2Int> TilePoints;
     private NodeController currentNode;
     private int currentTileIndex;
-    private NodeCollectionController.ExitingDirection? currentExitDirection;
+    private NodeCollectionController.Direction? currentExitDirection;
 
     public Path(List<Vector2Int> tilePoints)
     {
@@ -24,8 +24,7 @@ public class Path
     /// </summary>
     private NodeController GetStartingNodeFromPath(Vector2Int firstPosition, Vector2Int secondPosition)
     {
-        var delta = (secondPosition - firstPosition);
-        var enteringDirection = NodeCollectionController.GetEnteringFromDelta(delta);
+        var enteringDirection = NodeCollectionController.GetDirectionFromDelta(firstPosition, secondPosition);
 
         if(!TryGetCollectionAtPosition(firstPosition, out NodeCollectionController collection)) throw new Exception("Tile position not valid");
         return collection.GetSpawnNode(enteringDirection);
@@ -47,8 +46,10 @@ public class Path
         currentNode = currentNode.GetNodeByDirection(currentExitDirection.Value);
         if(currentNode == null) 
         {
+            Debug.Log("Trying to advance to next tile" + currentExitDirection.ToString());
             return TryAdvanceNextTile();
         }
+        Debug.Log(currentNode.Position);
         return true;
     }
 
@@ -61,8 +62,8 @@ public class Path
             //If able to get the node collection controller at tile position
             if (TryGetCollectionAtPosition(TilePoints[currentTileIndex], out NodeCollectionController collection))
             {
-                var entering = (NodeCollectionController.EnteringDirection)currentExitDirection;
-                currentNode = collection.GetInboundNode(entering);
+                //Casting a null to a direction returns the first item in the enumeration
+                currentNode = collection.GetInboundNode(currentExitDirection.Value);
                 TryUpdateExitingDirection();
 
                 return true;
@@ -77,10 +78,10 @@ public class Path
 
     private bool TryUpdateExitingDirection()
     {
-        if (currentTileIndex + 1 <= TilePoints.Count) //Is not on the last tile
+        if (currentTileIndex + 1 < TilePoints.Count) //Is not on the last tile
         {
-            var delta = TilePoints[currentTileIndex + 1] - TilePoints[currentTileIndex]; //How to handle the OOB Exception?
-            currentExitDirection = NodeCollectionController.GetExitingFromDelta(delta);
+            //How to handle the OOB Exception?
+            currentExitDirection = NodeCollectionController.GetDirectionFromDelta(TilePoints[currentTileIndex + 1], TilePoints[currentTileIndex]);
             return true;
         }
         currentExitDirection = null;

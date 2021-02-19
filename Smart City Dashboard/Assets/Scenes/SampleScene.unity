@@ -820,6 +820,7 @@ MonoBehaviour:
     m_Bits: 64
   TileMaterial: {fileID: 2100000, guid: edb32815f7d5d61419b7b11f774dc6cf, type: 2}
   TransparentMaterial: {fileID: 2100000, guid: 8caca4e70e716ae4490ee606d7ef5041, type: 2}
+  NavPointPrefab: {fileID: 0}
 --- !u!1 &1193146151 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7280734610239771723, guid: 12eda182d08f69949917a208778c8bf7, type: 3}

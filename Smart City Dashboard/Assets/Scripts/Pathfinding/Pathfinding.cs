@@ -26,11 +26,18 @@ public static class Pathfinding
 
     public static Path GetPathFromTo(TileGrid grid, Vector2Int fromTile, Vector2Int toTile)
     {
-        List<Vector2Int> pathList = GetListOfPositionsFromTo(grid, fromTile, toTile);
+        try
+        {
+            List<Vector2Int> pathList = GetListOfPositionsFromTo(grid, fromTile, toTile);
 
-        Path path = new Path(pathList);
+            Path path = new Path(pathList);
 
-        return path;
+            return path;
+        }
+        catch(System.Exception)
+        {
+            return null;
+        }
     }
 
     public static List<Vector2Int> GetListOfPositionsFromTo(TileGrid grid, Vector2Int fromTile, Vector2Int toTile) 

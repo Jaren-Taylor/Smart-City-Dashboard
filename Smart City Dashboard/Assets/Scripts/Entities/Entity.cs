@@ -1,95 +1,55 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity
+public abstract class Entity : MonoBehaviour
 {
-    Vector2Int pos; // Possibly useless
-
-    Vector2Int spawnPos;
-
-    Vector2Int destinationPos;
-
-    private ManagedGameObject managedObject;
-    private const string ManagedGameObjectLocation = "Prefabs/ManagedEntity";
-
-    //public Vector2Int requestTilePos(Vector2Int tilePos)
-    //{
-
-    //}
-    public Entity()
+    public NodeController SpawnPosition { get; protected set; }
+    private float maxSpeed = .5f;
+    private Path path;
+    public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
+    public bool TrySetDestination(Vector2Int tileLocation)
     {
-        this.managedObject = null;
+        path = Pathfinding.GetPathFromTo(GridManager.Instance.Grid, TilePosition, tileLocation);
+        return !(path is null);
     }
 
-    public Entity(Vector2Int pos, ManagedGameObject model)
+    private void Update()
     {
-        this.spawnPos = pos;
-        this.managedObject = model;
+        if (HasPath())
+        {
+            MoveAlongPath();
+        }
+    }
+    //Comment
+    private void MoveAlongPath()
+    {
+        if (path.GetCurrentNode() is NodeController nodeController)
+        {
+            MoveTowardsPosition(nodeController.transform.position);
+            if (HasArrivedAtNode(nodeController.transform.position))
+            {
+                if (!path.AdvanceNextNode())
+                {
+                    DestroyPath();
+                }
+            }
+        }
+        else DestroyPath();
     }
 
-    public Entity(Vector2Int pos, Vector2Int destination, ManagedGameObject model)
+    private bool HasArrivedAtNode(Vector3 position)
     {
-
-        this.spawnPos = pos;
-        this.destinationPos = destination;
-        this.managedObject = model;
-
+        return Vector3.Distance(transform.position, position) < .0005;
     }
 
-    public Vector3 InstantiateEntity(Vector2Int point)
+    private void MoveTowardsPosition(Vector3 position)
     {
-        Vector3 position = new Vector3(point.x + .2f, .1f, point.y + .2f);
-        return InstantiateEntity(position);
-
+        transform.position = Vector3.MoveTowards(transform.position, position, maxSpeed * Time.deltaTime);
     }
 
-    public Vector3 InstantiateEntity(Vector3 point)
-    {
-        managedObject = Object.Instantiate(
-             Resources.Load<ManagedGameObject>(ManagedGameObjectLocation),
-             point,
-             Quaternion.identity);
-        AttachModelToManaged("Prefabs/Vehicles/Bus_Base");
-        return point;
+    private void DestroyPath() => path = null;
 
-    }
-    protected void AttachModelToManaged(string prefabLocation)
-    {
-        GameObject prefab = Resources.Load<GameObject>(prefabLocation);
-        managedObject.InstantiateModel(prefab, Quaternion.Euler(-90, -90, -90));
-    }
-
-    /// <summary>
-    /// Add component to the object it is managing
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public T AddComponent<T>() where T : Component => managedObject.AddComponent<T>();
-
-    /// <summary>
-    /// Removes component from the object it is managing
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public bool RemoveComponent<T>() where T : Component => managedObject.TryRemoveComponent<T>();
-
-    /// <summary>
-    /// Trys to remove component from the object it is managing
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="component"></param>
-    /// <returns></returns>
-    public bool TryGetComponent<T>(out T component) where T : Component
-    {
-        component = GetComponent<T>();
-        return component != null;
-    }
-
-    /// <summary>
-    /// Gets component from the object it is managing
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public T GetComponent<T>() where T : Component => managedObject?.GetComponent<T>();
+    private bool HasPath() => !(path is null);
 }

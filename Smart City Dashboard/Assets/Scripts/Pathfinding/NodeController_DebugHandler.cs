@@ -19,15 +19,15 @@ public class NodeController_DebugHandler : Editor
             Color color;
             switch (connection.Exiting)
             {
-                case NodeCollectionController.ExitingDirection.EastBound:
+                case NodeCollectionController.Direction.EastBound:
                     color = Color.red;
                     break;
 
-                case NodeCollectionController.ExitingDirection.SouthBound:
+                case NodeCollectionController.Direction.SouthBound:
                     color = Color.green;
                     break;
 
-                case NodeCollectionController.ExitingDirection.WestBound:
+                case NodeCollectionController.Direction.WestBound:
                     color = Color.blue;
                     break;
 
@@ -36,7 +36,8 @@ public class NodeController_DebugHandler : Editor
                     break;
 
             }
-           // DrawDebugArrow(center, connection.NC?.transform.position ?? Vector3.up + center, color, ArrowType.SingleEnded );
+
+            DrawDebugArrow(center, connection.NC?.transform.position ?? Vector3.up + center, color, ArrowType.SingleEnded );
         }
     }
 

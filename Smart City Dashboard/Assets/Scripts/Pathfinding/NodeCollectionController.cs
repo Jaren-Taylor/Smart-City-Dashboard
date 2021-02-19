@@ -14,67 +14,39 @@ public class NodeCollectionController : MonoBehaviour
 
     private List<Vector3> VehicleExits = new List<Vector3>();
     private List<Node> NodeStructure = new List<Node>();
+    /// <summary>
+    /// The type of user that can traverse the node
+    /// </summary>
     public enum TargetUser
     {
         Pedestrians,
         Vehicles,
         Both // for areas which will occasionally need to be traversed by both entity types
     }
-    public enum ExitingDirection
+    /// <summary>
+    /// The direction that the entity will exit the tile
+    /// </summary>
+    /// 
+    public enum Direction
     {
-        NorthBound,
-        EastBound,
-        SouthBound,
-        WestBound
+        WestBound = 0,
+        EastBound = 1,
+        NorthBound = 2,
+        SouthBound = 3
+        
     }
 
-    public static ExitingDirection GetExitingFromDelta(Vector2Int delta)
+    public static Direction GetDirectionFromDelta(Vector2Int tile1, Vector2Int tile2)
     {
+        Vector2Int delta = tile1 - tile2;
         //Get direction from movement delta
-        if (delta.x == 1 && delta.y == 0) return ExitingDirection.EastBound;
-        else if (delta.x == -1 && delta.y == 0) return ExitingDirection.WestBound;
-        else if (delta.x == 0 && delta.y == 1) return ExitingDirection.NorthBound;
-        else if (delta.x == 0 && delta.y == -1) return ExitingDirection.SouthBound;
+        if (delta.x == 1 && delta.y == 0) return Direction.EastBound;
+        else if (delta.x == -1 && delta.y == 0) return Direction.WestBound;
+        else if (delta.x == 0 && delta.y == 1) return Direction.NorthBound;
+        else if (delta.x == 0 && delta.y == -1) return Direction.SouthBound;
         else throw new Exception("Path invalid"); //Delta is wonky
     }
-
-    public enum EnteringDirection
-    {
-        NorthBound,
-        EastBound,
-        SouthBound,
-        WestBound
-    }
-
-    public static EnteringDirection GetEnteringFromDelta(Vector2Int delta)
-    {
-        //Get direction from movement delta
-        if (delta.x == 1 && delta.y == 0) return EnteringDirection.EastBound;
-        else if (delta.x == -1 && delta.y == 0) return EnteringDirection.WestBound;
-        else if (delta.x == 0 && delta.y == 1) return EnteringDirection.NorthBound;
-        else if (delta.x == 0 && delta.y == -1) return EnteringDirection.SouthBound;
-        else throw new Exception("Path invalid"); //Delta is wonky
-    }
-
-
-    private class PedestrianNode
-    {
-
-    }
-    private class Node
-    {
-        public int Col;
-        public int Row;
-        public Tuple<int,int> index { get => index; set => new Tuple<int, int>(Col, Row); }
-        public bool Occupied { get => Occupied; set { Occupied = value; } }
-        public Vector3 Position { get => Position; set { Position = value; } }
-        public EnteringDirection EnteringDirection { get; set; }
-        public ExitingDirection ExitingDirection { get; set; }
-        public TargetUser TargetUser { get => TargetUser; set { TargetUser = value; } }
-        public Vector3 TargetNode { get; set; }
-
-        public Node Parent;
-    }
+    
     [Serializable]
     public class TileConnection { }
 
@@ -82,7 +54,7 @@ public class NodeCollectionController : MonoBehaviour
 
     private void Awake()
     {
-        NodeController inbound = GetInboundNode(EnteringDirection.SouthBound);
+        NodeController inbound = GetInboundNode(Direction.SouthBound);
 
 
     }
@@ -93,20 +65,20 @@ public class NodeCollectionController : MonoBehaviour
         else { throw new IndexOutOfRangeException(); }
     }
 
-    public NodeController GetSpawnNode(EnteringDirection direction)
+    public NodeController GetSpawnNode(Direction direction)
     {
         return GetInboundNode(direction); //Temp fix
     }
 
-    public NodeController GetInboundNode(EnteringDirection direction)
+    public NodeController GetInboundNode(Direction direction)
     {
         switch (direction)
         {
-            case EnteringDirection.NorthBound:
+            case Direction.NorthBound:
                 return GetNode(0, 2).GetComponent<NodeController>();
-            case EnteringDirection.EastBound:
+            case Direction.EastBound:
                 return GetNode(1, 0).GetComponent<NodeController>();
-            case EnteringDirection.WestBound:
+            case Direction.WestBound:
                 return GetNode(2, 3).GetComponent<NodeController>();
             default:
                 return GetNode(3, 1).GetComponent<NodeController>();
