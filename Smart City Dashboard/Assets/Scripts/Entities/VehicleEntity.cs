@@ -26,7 +26,7 @@ public class VehicleEntity : Entity
         Tile tile = GridManager.Instance.Grid[tilePosition];
         NodeCollectionController.Direction spawnDirection = GetValidDirectionForTile(tile);
         //Hi Kenny
-        var NCC = tile.GetComponent<PathfindingNodeInterface>();
+        var NCC = tile.GetComponent<PathfindingTileInterface>();
         NodeController spawnLocation = NCC.NodeCollection.GetSpawnNode(spawnDirection);
         var vehicleEntity = Instantiate(model, spawnLocation.Position, Quaternion.identity).GetComponent<VehicleEntity>();
         vehicleEntity.SpawnPosition = spawnLocation;

@@ -60,18 +60,6 @@ public class Connection {
     public NodeCollectionController.Direction Exiting;
     [SerializeField]
     public NodeController NC;
-}
-
-public class Node
-{
-    public int Col;
-    public int Row;
-    public Tuple<int, int> index { get => index; set => new Tuple<int, int>(Col, Row); }
-    public bool Occupied { get => Occupied; set { Occupied = value; } }
-    public Vector3 Position { get => Position; set { Position = value; } }
-    public NodeCollectionController.Direction Direction { get; set; }
-    public NodeCollectionController.TargetUser TargetUser { get => TargetUser; set { TargetUser = value; } }
-    public Vector3 TargetNode { get; set; }
-
-    public Node Parent;
+    [SerializeField]
+    public NodeCollectionController.TargetUser PathType;
 }

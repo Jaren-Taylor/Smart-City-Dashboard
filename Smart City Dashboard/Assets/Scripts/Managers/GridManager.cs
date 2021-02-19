@@ -163,7 +163,7 @@ public class GridManager : MonoBehaviour
 
     public void StateNumberChangeHandler(int stateNum) => ChangeState(stateNum);
 
-    public NodeCollectionController GetCollectionAtTileLocation(Vector2Int position) => Grid[position]?.GetComponent<PathfindingNodeInterface>().NodeCollection;
+    public NodeCollectionController GetCollectionAtTileLocation(Vector2Int position) => Grid[position]?.GetComponent<PathfindingTileInterface>().NodeCollection;
 
     private void ChangeState(int state)
     {

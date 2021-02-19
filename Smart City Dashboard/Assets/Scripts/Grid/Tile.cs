@@ -128,7 +128,7 @@ public abstract class Tile
 
     private void SpawnManagedNodes()
     {
-        if(!managedObject.TryGetComponent<PathfindingNodeInterface>(out _)) managedObject.AddComponent<PathfindingNodeInterface>();
+        if(!managedObject.TryGetComponent<PathfindingTileInterface>(out _)) managedObject.AddComponent<PathfindingTileInterface>();
 
     }
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathfindingNodeInterface : MonoBehaviour
+public class PathfindingTileInterface : MonoBehaviour
 {
     private string ManagedNodeCollection = "Prefabs/NodeCollection";
     public NodeCollectionController NodeCollection;
