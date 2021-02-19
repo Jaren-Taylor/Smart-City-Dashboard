@@ -218,14 +218,13 @@ public class GridManager : MonoBehaviour
             var buildingTiles = Grid.GetBuildingLocations();
 
             var tileLoc = roadTiles[0];
-            var buildingTile = buildingTiles[0];
             var entity = VehicleEntity.Spawn(tileLoc, VehicleEntity.VehicleType.Bus);
             var biggest = -1f;
             Vector2Int farPos = Vector2Int.zero; 
             //Finding farthest road tile
-            foreach(var pos in buildingTiles)
+            foreach(var pos in roadTiles)
             {
-                var dist = (pos - buildingTile).magnitude;
+                var dist = (pos - tileLoc).magnitude;
                 if (dist > biggest) {
                     biggest = dist;
                     farPos = pos;
@@ -239,7 +238,7 @@ public class GridManager : MonoBehaviour
         {
             GameObject path = new GameObject("Path Holder");
 
-            List<Vector2Int> points = Pathfinding.GetListOfPositionsFromTo(Grid, new Vector2Int(1, 1), Grid.GetBuildingLocations()[1]);
+            List<Vector2Int> points = Pathfinding.GetListOfPositionsFromTo(new Vector2Int(1, 1), Grid.GetBuildingLocations()[1]);
             points.Reverse();
 
             List<GameObject> pointInstances = new List<GameObject>();

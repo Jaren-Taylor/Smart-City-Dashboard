@@ -6,7 +6,7 @@ using UnityEditor;
 public class NodeCollectionController_DebugHandler : Editor
 {
     private readonly NodeCollectionController.Direction? specificDirection = NodeCollectionController.Direction.NorthBound;
-    private readonly NodeCollectionController.TargetUser? specificTargetType = NodeCollectionController.TargetUser.Vehicles;
+    private readonly NodeCollectionController.TargetUser? specificTargetType = NodeCollectionController.TargetUser.Pedestrians;
 
     private void OnSceneGUI()
     {

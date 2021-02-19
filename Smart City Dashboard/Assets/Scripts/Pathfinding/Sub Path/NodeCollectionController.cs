@@ -51,12 +51,12 @@ public class NodeCollectionController : MonoBehaviour
         else { throw new IndexOutOfRangeException(); }
     }
 
-    public NodeController GetSpawnNode(Direction direction)
+    public NodeController GetSpawnNode(Direction direction, TargetUser user)
     {
-        return GetInboundNode(direction); //Temp fix
+        return GetInboundNode(direction, user); //Temp fix
     }
 
-    public NodeController GetInboundNode(Direction direction)
+    public NodeController GetInboundNode(Direction direction, TargetUser user)
     {
         switch (direction)
         {

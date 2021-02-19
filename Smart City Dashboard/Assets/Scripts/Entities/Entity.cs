@@ -9,9 +9,9 @@ public abstract class Entity : MonoBehaviour
     private float maxSpeed = .5f;
     private Path path;
     public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
-    public bool TrySetDestination(Vector2Int tileLocation)
+    protected bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser)
     {
-        path = Pathfinding.GetPathFromTo(GridManager.Instance.Grid, TilePosition, tileLocation);
+        path = new Path(Pathfinding.GetListOfPositionsFromTo(TilePosition, tileLocation), targetUser);
         return !(path is null);
     }
 
@@ -39,17 +39,10 @@ public abstract class Entity : MonoBehaviour
         else DestroyPath();
     }
 
-    private bool HasArrivedAtNode(Vector3 position)
-    {
-        return Vector3.Distance(transform.position, position) < .0005;
-    }
-
-    private void MoveTowardsPosition(Vector3 position)
-    {
-        transform.position = Vector3.MoveTowards(transform.position, position, maxSpeed * Time.deltaTime);
-    }
-
+    private bool HasArrivedAtNode(Vector3 position) => Vector3.Distance(transform.position, position) < .0005;
+    private void MoveTowardsPosition(Vector3 position) => transform.position = Vector3.MoveTowards(transform.position, position, maxSpeed * Time.deltaTime);
     private void DestroyPath() => path = null;
-
     private bool HasPath() => !(path is null);
+
+    public abstract bool TrySetDestination(Vector2Int tileLocation);
 }

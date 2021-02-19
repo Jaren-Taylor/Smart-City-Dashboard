@@ -17,31 +17,45 @@ public class NodeController : MonoBehaviour
         Gizmos.color = stashedColor;
     }
 
-    private Dictionary<NodeCollectionController.Direction, NodeController> ConnectionDictionary;
+    private Dictionary<NodeCollectionController.Direction, NodeController> VehicleConnectionDictionary;
+    private Dictionary<NodeCollectionController.Direction, NodeController> PedestrianConnectionDictionary;
 
     public Vector3 Position => gameObject.transform.position;
 
     private void Start()
     {
-        ConnectionDictionary = ConnectionListToDictionary();
+        (VehicleConnectionDictionary, PedestrianConnectionDictionary) = ConnectionListToDictionarys();
     }
 
-    private Dictionary<NodeCollectionController.Direction, NodeController> ConnectionListToDictionary()
+    private (Dictionary<NodeCollectionController.Direction, NodeController> vehicle, Dictionary<NodeCollectionController.Direction, NodeController> pedestrian) ConnectionListToDictionarys()
     {
-        Dictionary<NodeCollectionController.Direction, NodeController> output = new Dictionary<NodeCollectionController.Direction, NodeController>();
-        foreach (Connection con in Connections)
+        Dictionary<NodeCollectionController.Direction, NodeController> vehicle = new Dictionary<NodeCollectionController.Direction, NodeController>();
+        Dictionary<NodeCollectionController.Direction, NodeController> pedestrian = new Dictionary<NodeCollectionController.Direction, NodeController>();
+
+        foreach(Connection connection in Connections)
         {
-            output.Add(con.Exiting, con.NC);
+            switch (connection.PathType)
+            {
+                case NodeCollectionController.TargetUser.Vehicles:
+                    vehicle.Add(connection.Exiting, connection.NC);
+                    break;
+                case NodeCollectionController.TargetUser.Pedestrians:
+                    pedestrian.Add(connection.Exiting, connection.NC);
+                    break;
+                default:
+                    vehicle.Add(connection.Exiting, connection.NC);
+                    pedestrian.Add(connection.Exiting, connection.NC);
+                    break;
+            }
         }
-        return output;
+
+        if (vehicle.Keys.Count < 4 || pedestrian.Keys.Count < 4) throw new Exception("");
+
+        return (vehicle, pedestrian);
     }
 
-    public NodeController GetNodeByDirection(NodeCollectionController.Direction direction)
-    {
-        if (ConnectionDictionary.TryGetValue(direction, out NodeController next)) return next;
-        else return null;
-    }
-
+    public NodeController GetNodeForVehicleByDirection(NodeCollectionController.Direction direction) => VehicleConnectionDictionary[direction];
+    public NodeController GetNodeForPedestrianByDirection(NodeCollectionController.Direction direction) => PedestrianConnectionDictionary[direction];
 
     private void OnDrawGizmosSelected()
     {

@@ -24,24 +24,10 @@ public static class Pathfinding
         }
     }
 
-    public static Path GetPathFromTo(TileGrid grid, Vector2Int fromTile, Vector2Int toTile)
+    public static List<Vector2Int> GetListOfPositionsFromTo(Vector2Int fromTile, Vector2Int toTile) 
     {
-        try
-        {
-            List<Vector2Int> pathList = GetListOfPositionsFromTo(grid, fromTile, toTile);
+        var grid = GridManager.Instance.Grid;
 
-            Path path = new Path(pathList);
-
-            return path;
-        }
-        catch(System.Exception)
-        {
-            return null;
-        }
-    }
-
-    public static List<Vector2Int> GetListOfPositionsFromTo(TileGrid grid, Vector2Int fromTile, Vector2Int toTile) 
-    {
         var start = new PathNode() { Position = fromTile };
         var finish = new PathNode() { Position = toTile };
 

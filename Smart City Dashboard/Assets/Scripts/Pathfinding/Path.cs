@@ -9,10 +9,13 @@ public class Path
     private NodeController currentNode;
     private int currentTileIndex;
     private NodeCollectionController.Direction? currentExitDirection;
+    private NodeCollectionController.TargetUser userType;
 
-    public Path(List<Vector2Int> tilePoints)
+
+    public Path(List<Vector2Int> tilePoints, NodeCollectionController.TargetUser userType)
     {
         TilePoints = tilePoints;
+        this.userType = userType;
         if (tilePoints.Count < 1) throw new System.Exception("Destination already reached");
         currentNode = GetStartingNodeFromPath(tilePoints[0], tilePoints[1]);
         currentTileIndex = 0;
@@ -27,7 +30,7 @@ public class Path
         var enteringDirection = NodeCollectionController.GetDirectionFromDelta(firstPosition, secondPosition);
 
         if(!TryGetCollectionAtPosition(firstPosition, out NodeCollectionController collection)) throw new Exception("Tile position not valid");
-        return collection.GetSpawnNode(enteringDirection);
+        return collection.GetSpawnNode(enteringDirection, userType);
     }
 
     /// <summary>
@@ -43,15 +46,20 @@ public class Path
     public bool AdvanceNextNode()
     {
         if (currentExitDirection is null) return false; //Has reached direction
-        currentNode = currentNode.GetNodeByDirection(currentExitDirection.Value);
+        currentNode = GetNodeInDirection(currentExitDirection.Value);
         if(currentNode == null) 
         {
-            Debug.Log("Trying to advance to next tile" + currentExitDirection.ToString());
+            //Debug.Log("Trying to advance to next tile" + currentExitDirection.ToString());
             return TryAdvanceNextTile();
         }
-        Debug.Log(currentNode.Position);
+        //Debug.Log(currentNode.Position);
         return true;
     }
+
+    private NodeController GetNodeInDirection(NodeCollectionController.Direction direction) => 
+        (userType == NodeCollectionController.TargetUser.Vehicles) ?
+            currentNode.GetNodeForVehicleByDirection(direction) :
+            currentNode.GetNodeForPedestrianByDirection(direction);
 
     private bool TryAdvanceNextTile()
     {
@@ -63,7 +71,7 @@ public class Path
             if (TryGetCollectionAtPosition(TilePoints[currentTileIndex], out NodeCollectionController collection))
             {
                 //Casting a null to a direction returns the first item in the enumeration
-                currentNode = collection.GetInboundNode(currentExitDirection.Value);
+                currentNode = collection.GetInboundNode(currentExitDirection.Value, userType);
                 TryUpdateExitingDirection();
 
                 return true;

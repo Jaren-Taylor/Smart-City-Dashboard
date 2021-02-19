@@ -16,8 +16,8 @@ public class VehicleEntity : Entity
     public static readonly Dictionary<VehicleType, string> ModelLookup = new Dictionary<VehicleType, string>()
     {
         { VehicleType.Bus, "Prefabs/Vehicles/Bus_Base" },
-        { VehicleType.Van, "Prefabs/Vehicles/Van_Base" }
-        
+        { VehicleType.Van, "Prefabs/Vehicles/Van_Base" },
+        { VehicleType.Car, "Prefabs/Vehicles/Car_Base" }
     };
     public static VehicleEntity Spawn(Vector2Int tilePosition, VehicleType type)
     {
@@ -25,9 +25,8 @@ public class VehicleEntity : Entity
         var model = Resources.Load<GameObject>(address);
         Tile tile = GridManager.Instance.Grid[tilePosition];
         NodeCollectionController.Direction spawnDirection = GetValidDirectionForTile(tile);
-        //Hi Kenny
         var NCC = tile.GetComponent<PathfindingTileInterface>();
-        NodeController spawnLocation = NCC.NodeCollection.GetSpawnNode(spawnDirection);
+        NodeController spawnLocation = NCC.NodeCollection.GetSpawnNode(spawnDirection, NodeCollectionController.TargetUser.Vehicles);
         var vehicleEntity = Instantiate(model, spawnLocation.Position, Quaternion.identity).GetComponent<VehicleEntity>();
         vehicleEntity.SpawnPosition = spawnLocation;
         return vehicleEntity;
@@ -51,6 +50,8 @@ public class VehicleEntity : Entity
     {
         return NodeCollectionController.Direction.EastBound;
     }
+
+    public override bool TrySetDestination(Vector2Int tileLocation) => TrySetDestination(tileLocation, NodeCollectionController.TargetUser.Vehicles);
 
     public VehicleType Type { get; private set; }
 }
