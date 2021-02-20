@@ -19,36 +19,11 @@ public class VehicleEntity : Entity
         { VehicleType.Van, "Prefabs/Vehicles/Van_Base" },
         { VehicleType.Car, "Prefabs/Vehicles/Car_Base" }
     };
+
     public static VehicleEntity Spawn(Vector2Int tilePosition, VehicleType type)
     {
         var address = ModelLookup[type];
-        var model = Resources.Load<GameObject>(address);
-        Tile tile = GridManager.Instance.Grid[tilePosition];
-        NodeCollectionController.Direction spawnDirection = GetValidDirectionForTile(tile);
-        var NCC = tile.GetComponent<PathfindingTileInterface>();
-        NodeController spawnLocation = NCC.NodeCollection.GetSpawnNode(spawnDirection, NodeCollectionController.TargetUser.Vehicles);
-        var vehicleEntity = Instantiate(model, spawnLocation.Position, Quaternion.identity).GetComponent<VehicleEntity>();
-        vehicleEntity.SpawnPosition = spawnLocation;
-        return vehicleEntity;
-    }
-
-    private static NodeCollectionController.Direction GetValidDirectionForTile(Tile tile)
-    {
-        if (tile is BuildingTile building)
-        {
-            return (NodeCollectionController.Direction)building.currentFacing;
-        }
-        else if (tile is RoadTile road)
-        {
-            return GetValidRoadDirection(road);
-        }
-        throw new System.Exception("Invalid Tile Type...HOW?");
-    }
-
-    //TODO: Decide which side of the road to spawn on
-    private static NodeCollectionController.Direction GetValidRoadDirection(RoadTile road)
-    {
-        return NodeCollectionController.Direction.EastBound;
+        return Spawn<VehicleEntity>(tilePosition, address);
     }
 
     public override bool TrySetDestination(Vector2Int tileLocation) => TrySetDestination(tileLocation, NodeCollectionController.TargetUser.Vehicles);

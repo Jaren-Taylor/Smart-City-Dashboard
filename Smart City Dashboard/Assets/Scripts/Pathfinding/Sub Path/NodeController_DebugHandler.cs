@@ -6,8 +6,8 @@ using UnityEngine;
 [CustomEditor(typeof(NodeController))]
 public class NodeController_DebugHandler : Editor
 {
-    private readonly NodeCollectionController.Direction? specificDirection = NodeCollectionController.Direction.NorthBound;
-    private readonly NodeCollectionController.TargetUser? specificTargetType = null;//NodeCollectionController.TargetUser.Pedestrians;
+    private readonly NodeCollectionController.Direction? specificDirection = null;//NodeCollectionController.Direction.NorthBound;
+    private readonly NodeCollectionController.TargetUser? specificTargetType = NodeCollectionController.TargetUser.Vehicles;
 
     private void OnSceneGUI()
     {

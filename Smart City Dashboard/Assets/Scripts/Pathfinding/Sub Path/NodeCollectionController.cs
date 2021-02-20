@@ -45,29 +45,28 @@ public class NodeCollectionController : MonoBehaviour
         else throw new Exception("Path invalid"); //Delta is wonky
     }
 
+    public NodeController GetInboundNodeFrom(Direction inboundDirection, int position) => inboundDirection switch
+    {
+        Direction.NorthBound => GetNode(0, position),
+        Direction.EastBound => GetNode(position, 0),
+        Direction.WestBound => GetNode(position, 3),
+        _ => GetNode(3, position),
+    };
+
     public NodeController GetNode(int row, int col)
     {
         if(col < 4 & row < 4) return this.NodeCollection[col + row * 4];
         else { throw new IndexOutOfRangeException(); }
     }
 
-    public NodeController GetSpawnNode(Direction direction, TargetUser user)
+    /// <summary>
+    /// Gets column or run number of node depending on the exiting direction
+    /// </summary>
+    internal int GetPositionFrom(Direction currentExitDirection, NodeController currentNode) => currentExitDirection switch
     {
-        return GetInboundNode(direction, user); //Temp fix
-    }
-
-    public NodeController GetInboundNode(Direction direction, TargetUser user)
-    {
-        switch (direction)
-        {
-            case Direction.NorthBound:
-                return GetNode(0, 2);
-            case Direction.EastBound:
-                return GetNode(1, 0);
-            case Direction.WestBound:
-                return GetNode(2, 3);
-            default:
-                return GetNode(3, 1);
-        }
-    }
+        Direction.NorthBound => Array.IndexOf(NodeCollection, currentNode) % 4, //Returns column number
+        Direction.EastBound => Array.IndexOf(NodeCollection, currentNode) / 4, //Returns row number
+        Direction.WestBound => Array.IndexOf(NodeCollection, currentNode) / 4, //Returns row number
+        _ => Array.IndexOf(NodeCollection, currentNode) % 4 //Returns column number
+    };
 }

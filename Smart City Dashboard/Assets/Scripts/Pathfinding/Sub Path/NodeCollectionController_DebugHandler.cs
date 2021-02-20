@@ -5,7 +5,7 @@ using UnityEditor;
 [CustomEditor(typeof(NodeCollectionController))]
 public class NodeCollectionController_DebugHandler : Editor
 {
-    private readonly NodeCollectionController.Direction? specificDirection = NodeCollectionController.Direction.NorthBound;
+    private readonly NodeCollectionController.Direction? specificDirection = NodeCollectionController.Direction.WestBound;
     private readonly NodeCollectionController.TargetUser? specificTargetType = NodeCollectionController.TargetUser.Pedestrians;
 
     private void OnSceneGUI()

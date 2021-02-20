@@ -8,29 +8,20 @@ public class Path
     private List<Vector2Int> TilePoints;
     private NodeController currentNode;
     private int currentTileIndex;
+    private NodeCollectionController currentCollection;
     private NodeCollectionController.Direction? currentExitDirection;
     private NodeCollectionController.TargetUser userType;
 
 
-    public Path(List<Vector2Int> tilePoints, NodeCollectionController.TargetUser userType)
+    public Path(List<Vector2Int> tilePoints, NodeController startingPoint, NodeController endingPoint,  NodeCollectionController.TargetUser userType)
     {
         TilePoints = tilePoints;
         this.userType = userType;
         if (tilePoints.Count < 1) throw new System.Exception("Destination already reached");
-        currentNode = GetStartingNodeFromPath(tilePoints[0], tilePoints[1]);
+        currentNode = startingPoint;
         currentTileIndex = 0;
         TryUpdateExitingDirection();
-    }
-
-    /// <summary>
-    /// Takes the first two tile positions on the grid and returns the spawn position from the first tile.
-    /// </summary>
-    private NodeController GetStartingNodeFromPath(Vector2Int firstPosition, Vector2Int secondPosition)
-    {
-        var enteringDirection = NodeCollectionController.GetDirectionFromDelta(firstPosition, secondPosition);
-
-        if(!TryGetCollectionAtPosition(firstPosition, out NodeCollectionController collection)) throw new Exception("Tile position not valid");
-        return collection.GetSpawnNode(enteringDirection, userType);
+        TryGetCollectionAtPosition(TilePoints[currentTileIndex], out currentCollection);
     }
 
     /// <summary>
@@ -45,14 +36,23 @@ public class Path
     /// <returns></returns>
     public bool AdvanceNextNode()
     {
-        if (currentExitDirection is null) return false; //Has reached direction
-        currentNode = GetNodeInDirection(currentExitDirection.Value);
-        if(currentNode == null) 
-        {
-            //Debug.Log("Trying to advance to next tile" + currentExitDirection.ToString());
-            return TryAdvanceNextTile();
-        }
-        //Debug.Log(currentNode.Position);
+        //Once current exit direcition is null, this indicates entity is on the final tile.
+        if (currentExitDirection is null) return false;
+
+        //Debug.Log($"Move toward: [{currentExitDirection}]");
+
+        //Figures out the next node on the current collection
+        var nextNode = GetNodeInDirection(currentExitDirection.Value);
+
+        //Debug.Log(nextNode?.Position);
+
+        //If next node was found to be null, try to transition to next tile
+        if(nextNode is null) return TryAdvanceNextTile();
+
+        //If next node was found in current collection, overwrite current node with new one
+        else currentNode = nextNode;
+        
+        //Return successfully able to find next node
         return true;
     }
 
@@ -63,16 +63,30 @@ public class Path
 
     private bool TryAdvanceNextTile()
     {
+        //Point tile index to the next tile
         currentTileIndex++;
+
+        //Checks if there is no next tile to find
         if (ReachedDestination()) return false;
         else
         {
-            //If able to get the node collection controller at tile position
-            if (TryGetCollectionAtPosition(TilePoints[currentTileIndex], out NodeCollectionController collection))
+            //Debug.Log("Advancing Next node");
+
+            int position = currentCollection.GetPositionFrom(currentExitDirection.Value, currentNode);
+
+            //If able to get the node collection controller at tile position, updates current collection controller
+            if (TryGetCollectionAtPosition(TilePoints[currentTileIndex], out currentCollection))
             {
-                //Casting a null to a direction returns the first item in the enumeration
-                currentNode = collection.GetInboundNode(currentExitDirection.Value, userType);
+
+                //Debug.Log($"Entering from: [{currentExitDirection},{position}]");
+
+                //Depending on the position and exiting direction sets node to the adjacent node on the next collection
+                currentNode = currentCollection.GetInboundNodeFrom(currentExitDirection.Value, position);
+
+                //Trys to get new exiting direction. Will fail when entering the last tile
                 TryUpdateExitingDirection();
+
+                //Debug.Log($"Updated exiting: [{currentExitDirection}]");
 
                 return true;
             }

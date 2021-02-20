@@ -11,8 +11,52 @@ public abstract class Entity : MonoBehaviour
     public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
     protected bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser)
     {
-        path = new Path(Pathfinding.GetListOfPositionsFromTo(TilePosition, tileLocation), targetUser);
+        path = new Path(Pathfinding.GetListOfPositionsFromTo(TilePosition, tileLocation), SpawnPosition, null, targetUser);
         return !(path is null);
+    }
+
+    /// <summary>
+    /// Spawns Entity of type T on node from the address specificied
+    /// </summary>
+    protected static T Spawn<T>(NodeController spawnNode, string prefabAddress) where T : Entity
+    {
+        var model = Resources.Load<GameObject>(prefabAddress);
+        var entity = Instantiate(model, spawnNode.Position, Quaternion.identity).GetComponent<T>();
+        entity.SpawnPosition = spawnNode;
+        return entity;
+    }
+
+    /// <summary>
+    /// Spawns Entity of type T on tile position from the address specificied
+    /// </summary>
+    protected static T Spawn<T>(Vector2Int tilePosition, string prefabAddress) where T : Entity
+    {
+        Tile tile = GridManager.Instance.Grid[tilePosition];
+        NodeCollectionController.Direction spawnDirection = GetValidDirectionForTile(tile);
+        var NCC = tile.GetComponent<PathfindingTileInterface>();
+        NodeController spawnLocation = NCC.NodeCollection.GetInboundNodeFrom(spawnDirection, 2);
+
+        //Uses location found to spawn prefab
+        return Spawn<T>(spawnLocation, prefabAddress);
+    }
+
+    private static NodeCollectionController.Direction GetValidDirectionForTile(Tile tile)
+    {
+        if (tile is BuildingTile building)
+        {
+            return (NodeCollectionController.Direction)building.currentFacing;
+        }
+        else if (tile is RoadTile road)
+        {
+            return GetValidRoadDirection(road);
+        }
+        throw new System.Exception("Invalid Tile Type...HOW?");
+    }
+
+    //TODO: Decide which side of the road to spawn on
+    private static NodeCollectionController.Direction GetValidRoadDirection(RoadTile road)
+    {
+        return NodeCollectionController.Direction.EastBound;
     }
 
     private void Update()

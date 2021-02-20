@@ -218,6 +218,7 @@ public class GridManager : MonoBehaviour
             var buildingTiles = Grid.GetBuildingLocations();
 
             var tileLoc = roadTiles[0];
+            //var entity = PedestrianEntity.Spawn(tileLoc);
             var entity = VehicleEntity.Spawn(tileLoc, VehicleEntity.VehicleType.Bus);
             var biggest = -1f;
             Vector2Int farPos = Vector2Int.zero; 
