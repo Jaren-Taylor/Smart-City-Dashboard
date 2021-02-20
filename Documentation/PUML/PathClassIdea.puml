@@ -1,0 +1,16 @@
+@startuml
+class PathFinding{
+    +GetPath(StartTile : Vector2Int, EndTile: Vector2Int, entityType: Entity) : Path
+}
+
+class Path {
+    +GetCurrentNode() : NodeController
+    +AdvanceNextNode() : Bool
+}
+
+
+class Entity {
+    -path : Path
+}
+
+@enduml

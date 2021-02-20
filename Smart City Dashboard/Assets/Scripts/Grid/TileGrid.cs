@@ -21,6 +21,7 @@ public class TileGrid
     [DataMember(Name="Height")]
     public readonly int Height;
 
+    private List<Vector2Int> cachedDestinations = null;
    
     public TileGrid(int width, int height)
     {
@@ -60,7 +61,12 @@ public class TileGrid
             {
                 throw new IndexOutOfRangeException($"Cannot assign [{x}, {y}] to outside of grid boundaries.");
             }
-            if (SafeLookup(x,y)?.ManagedExists() ?? false) SafeLookup(x, y).DeleteManaged();
+
+            if (SafeLookup(x, y)?.ManagedExists() ?? false) {
+                if (SafeLookup(x, y) is BuildingTile) cachedDestinations = null;
+                SafeLookup(x, y).DeleteManaged();
+            }
+            if (value is BuildingTile) cachedDestinations = null;
             if (value == null) grid.Remove(new Vector2Int(x, y));
             else grid[new Vector2Int(x, y)] = value;
         }
@@ -69,6 +75,14 @@ public class TileGrid
     private List<Vector2Int> GetLocations() => new List<Vector2Int>(grid.Keys);
 
     private int XyToGrid(int x, int y) => x + y * Width;
+
+    
+    /// <summary>
+    /// Checks to see if a 
+    /// </summary>
+    /// <returns></returns>
+    public List<Vector2Int> GetBuildingLoc() => cachedDestinations ??= grid.Where(x => ((x.Value is BuildingTile) && (x.Value.IsPermanent))).Select(x => x.Key).ToList();
+    public List<Vector2Int> GetRoadTile() => grid.Where(x => ((x.Value is RoadTile) && (x.Value.IsPermanent))).Select(x => x.Key).ToList();
 
     private Tile SafeLookup(int x, int y) => grid.TryGetValue(new Vector2Int(x, y), out Tile output) ? output : null;
 
@@ -89,7 +103,7 @@ public class TileGrid
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    /// <returns></returns>
+    /// <returns> bool </returns>
     public bool InBounds(int x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
 
     /// <summary>

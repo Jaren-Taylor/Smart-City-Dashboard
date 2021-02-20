@@ -27,7 +27,7 @@ public class BuildingTile : Tile
     [DataMember(Name="Structure")]
     public readonly StructureType structure;
     [DataMember(Name="Facing")]
-    private Facing currentFacing;
+    public Facing currentFacing { get; private set; }
     [DataMember(Name="IsLocationValid")]
     public bool IsLocationValid { get; private set; }
 
