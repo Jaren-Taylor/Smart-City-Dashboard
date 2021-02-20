@@ -3,6 +3,7 @@ using UnityEngine;
 public abstract class Menu : MonoBehaviour
 {
     protected RectTransform menuBounds;
+    [HideInInspector]
     public int ActiveTab;
     [HideInInspector]
     public bool isOnScreen;
