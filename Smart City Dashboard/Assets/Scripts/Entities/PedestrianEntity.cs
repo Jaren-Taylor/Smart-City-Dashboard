@@ -9,4 +9,5 @@ public class PedestrianEntity : Entity
     public override bool TrySetDestination(Vector2Int tileLocation) => TrySetDestination(tileLocation, NodeCollectionController.TargetUser.Pedestrians);
 
     public static PedestrianEntity Spawn(Vector2Int tileLocation) => Spawn<PedestrianEntity>(tileLocation, PedestrianPrefabAddress);
+    public static PedestrianEntity Spawn(NodeController controller) => Spawn<PedestrianEntity>(controller, PedestrianPrefabAddress);
 }

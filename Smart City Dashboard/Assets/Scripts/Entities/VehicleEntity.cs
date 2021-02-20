@@ -25,6 +25,11 @@ public class VehicleEntity : Entity
         var address = ModelLookup[type];
         return Spawn<VehicleEntity>(tilePosition, address);
     }
+    public static VehicleEntity Spawn(NodeController controller, VehicleType type)
+    {
+        var address = ModelLookup[type];
+        return Spawn<VehicleEntity>(controller, address);
+    }
 
     public override bool TrySetDestination(Vector2Int tileLocation) => TrySetDestination(tileLocation, NodeCollectionController.TargetUser.Vehicles);
 

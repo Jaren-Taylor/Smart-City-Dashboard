@@ -210,31 +210,6 @@ public class GridManager : MonoBehaviour
             //SaveGameManager.LoadGame("save.xml");
         }
 
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-
-            var roadTiles = Grid.GetRoadLocations();
-            var buildingTiles = Grid.GetBuildingLocations();
-
-            var tileLoc = roadTiles[0];
-            //var entity = PedestrianEntity.Spawn(tileLoc);
-            var entity = VehicleEntity.Spawn(tileLoc, VehicleEntity.VehicleType.Bus);
-            var biggest = -1f;
-            Vector2Int farPos = Vector2Int.zero; 
-            //Finding farthest road tile
-            foreach(var pos in roadTiles)
-            {
-                var dist = (pos - tileLoc).magnitude;
-                if (dist > biggest) {
-                    biggest = dist;
-                    farPos = pos;
-                }
-            }
-            entity.TrySetDestination(farPos);
-
-        }
-
         if (Input.GetKeyDown(KeyCode.O))
         {
             GameObject path = new GameObject("Path Holder");

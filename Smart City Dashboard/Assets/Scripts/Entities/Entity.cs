@@ -9,9 +9,13 @@ public abstract class Entity : MonoBehaviour
     private float maxSpeed = .5f;
     private Path path;
     public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
+    public Action<Entity> OnReachedDestination;
     protected bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser)
     {
-        path = new Path(Pathfinding.GetListOfPositionsFromTo(TilePosition, tileLocation), SpawnPosition, null, targetUser);
+        var pathList = Pathfinding.GetListOfPositionsFromTo(TilePosition, tileLocation);
+        if (pathList is null)
+            return false;
+        path = new Path(pathList, SpawnPosition, null, targetUser);
         return !(path is null);
     }
 
@@ -71,6 +75,7 @@ public abstract class Entity : MonoBehaviour
     {
         if (path.GetCurrentNode() is NodeController nodeController)
         {
+            transform.LookAt(nodeController.transform.position);
             MoveTowardsPosition(nodeController.transform.position);
             if (HasArrivedAtNode(nodeController.transform.position))
             {
@@ -85,7 +90,11 @@ public abstract class Entity : MonoBehaviour
 
     private bool HasArrivedAtNode(Vector3 position) => Vector3.Distance(transform.position, position) < .0005;
     private void MoveTowardsPosition(Vector3 position) => transform.position = Vector3.MoveTowards(transform.position, position, maxSpeed * Time.deltaTime);
-    private void DestroyPath() => path = null;
+    private void DestroyPath()
+    {
+        path = null;
+        OnReachedDestination?.Invoke(this);
+    }
     private bool HasPath() => !(path is null);
 
     public abstract bool TrySetDestination(Vector2Int tileLocation);

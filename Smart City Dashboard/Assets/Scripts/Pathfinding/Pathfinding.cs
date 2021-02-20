@@ -78,7 +78,7 @@ public static class Pathfinding
             }
         }
 
-        throw new System.Exception("No tile-level path found!");
+        return null;
 
     }
 
@@ -112,6 +112,8 @@ public static class Pathfinding
     private static bool IsWalkableInDirection(TileGrid grid, Vector2Int current, Tile.Facing direction)
     {
         Tile currentTile = grid[current];
+        if (!currentTile.IsPermanent)
+            return false;
         if (currentTile is BuildingTile)
         {
             if (((BuildingTile)currentTile).currentFacing == direction && grid[current + Tile.Directions[(int)direction]] is RoadTile) return true;

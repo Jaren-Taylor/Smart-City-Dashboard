@@ -67,7 +67,7 @@ public class Path
         currentTileIndex++;
 
         //Checks if there is no next tile to find
-        if (ReachedDestination()) return false;
+        if (ReachedDestinationTile()) return false;
         else
         {
             //Debug.Log("Advancing Next node");
@@ -92,6 +92,7 @@ public class Path
             }
             else
             {
+                Debug.Log(GridManager.Instance.Grid);
                 throw new Exception("Cant find tile at that position"); //TODO : Remove this. Only for debug, should just return false
                 return false;
             }
@@ -117,5 +118,5 @@ public class Path
         return true;
     }
 
-    private bool ReachedDestination() => currentTileIndex >= TilePoints.Count;
+    private bool ReachedDestinationTile() => currentTileIndex >= TilePoints.Count;
 }
