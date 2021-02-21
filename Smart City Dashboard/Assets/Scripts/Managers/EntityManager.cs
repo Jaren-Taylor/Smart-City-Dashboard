@@ -21,7 +21,8 @@ public class EntityManager : MonoBehaviour
         {
             if(GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation))
             {
-                NodeCollectionController collection = GridManager.Instance.GetTile(spawnLocation).GetComponent<PathfindingTileInterface>().NodeCollection;
+                NodeCollectionController collection = GridManager.GetTile(spawnLocation).NodeCollection;
+
                 VehicleEntity vehicleEntity = SpawnVehicle(VehicleEntity.VehicleType.Car, collection.GetNode(0, 0));
                 vehicleEntity.TrySetDestination(targetLocation);
             }
@@ -30,7 +31,7 @@ public class EntityManager : MonoBehaviour
         {
             if(GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation))
             {
-                NodeCollectionController collection = GridManager.Instance.GetTile(spawnLocation).GetComponent<PathfindingTileInterface>().NodeCollection;
+                NodeCollectionController collection = GridManager.GetTile(spawnLocation).NodeCollection;
                 PedestrianEntity pedestrianEntity = SpawnPedestrian(collection.GetNode(0, 0));
                 pedestrianEntity.TrySetDestination(targetLocation);
             }
@@ -94,14 +95,14 @@ public class EntityManager : MonoBehaviour
             Entities.Remove(entity);
         }
     }
-    IEnumerator DestroyAfterDelay(Entity entity, int delay)
+    IEnumerator DestroyAfterDelay(Entity entity, float delay)
     {
         yield return new WaitForSeconds(delay);
         DestroyEntity(entity);
     }
-    private void StartDespawnCoroutine(Entity entity)
+    private void StartDespawnCoroutine(Entity entity, float delay)
     {
-        StartCoroutine(DestroyAfterDelay(entity, 2));
+        StartCoroutine(DestroyAfterDelay(entity, delay));
     }
 }
     

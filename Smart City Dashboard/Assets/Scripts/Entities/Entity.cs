@@ -9,7 +9,7 @@ public abstract class Entity : MonoBehaviour
     private float maxSpeed = .5f;
     private Path path;
     public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
-    public Action<Entity> OnReachedDestination;
+    public Action<Entity, float> OnReachedDestination;
     protected bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser)
     {
         var pathList = Pathfinding.GetListOfPositionsFromTo(TilePosition, tileLocation);
@@ -81,19 +81,19 @@ public abstract class Entity : MonoBehaviour
             {
                 if (!path.AdvanceNextNode())
                 {
-                    DestroyPath();
+                    DestroyPath(2f);
                 }
             }
         }
-        else DestroyPath();
+        else DestroyPath(0f);
     }
 
     private bool HasArrivedAtNode(Vector3 position) => Vector3.Distance(transform.position, position) < .0005;
     private void MoveTowardsPosition(Vector3 position) => transform.position = Vector3.MoveTowards(transform.position, position, maxSpeed * Time.deltaTime);
-    private void DestroyPath()
+    private void DestroyPath(float delay)
     {
         path = null;
-        OnReachedDestination?.Invoke(this);
+        OnReachedDestination?.Invoke(this, delay);
     }
     private bool HasPath() => !(path is null);
 

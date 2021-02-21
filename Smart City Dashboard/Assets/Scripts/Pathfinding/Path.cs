@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Path
 {
     private List<Vector2Int> TilePoints;
     private NodeController currentNode;
+    private NodeController endingNode;
     private int currentTileIndex;
     private NodeCollectionController currentCollection;
     private NodeCollectionController.Direction? currentExitDirection;
@@ -15,13 +17,64 @@ public class Path
 
     public Path(List<Vector2Int> tilePoints, NodeController startingPoint, NodeController endingPoint,  NodeCollectionController.TargetUser userType)
     {
+        InitalizeClass(tilePoints, startingPoint, endingPoint, userType);
+    }
+
+    private void InitalizeClass(List<Vector2Int> tilePoints, NodeController startingPoint, NodeController endingPoint, NodeCollectionController.TargetUser userType)
+    {
         TilePoints = tilePoints;
         this.userType = userType;
-        if (tilePoints.Count < 1) throw new System.Exception("Destination already reached");
+        endingNode = endingPoint;
+        if (TilePoints.Count < 1) throw new System.Exception("Destination already reached");
         currentNode = startingPoint;
         currentTileIndex = 0;
         TryUpdateExitingDirection();
         TryGetCollectionAtPosition(TilePoints[currentTileIndex], out currentCollection);
+        RegisterToPath(tilePoints);
+    }
+
+    ~Path()
+    {
+        for(int i = currentTileIndex; i < TilePoints.Count; i++)
+        {
+            DeregisterFromTileAt(TilePoints[currentTileIndex]);
+        }
+    }
+
+    private void TileDestroyedOnPath(Tile tile)
+    {
+        DeregisterFromAll();
+        var newPath = Pathfinding.GetListOfPositionsFromTo(TilePoints[currentTileIndex], TilePoints[TilePoints.Count - 1]);
+        if (newPath is null)
+        {
+            // Can't set destination, so destroy self
+            currentNode = null;
+            endingNode = null;
+        }
+        else
+        {
+            // New path valid, assign path object
+            InitalizeClass(newPath, currentNode, endingNode, userType);
+        }
+
+    }
+
+    public void DeregisterFromAll()
+    {
+        foreach (Vector2Int tilePos in TilePoints) DeregisterFromTileAt(tilePos);
+    }
+
+    public void DeregisterFromTileAt(Vector2Int position)
+    {
+        if (GridManager.Instance.Grid[position] is Tile t) t.OnTileDestroyed -= TileDestroyedOnPath;
+    }
+
+    public void RegisterToPath(List<Vector2Int> tilePoints)
+    {
+        foreach(Vector2Int tilePos in tilePoints)
+        {
+            GridManager.Instance.Grid[tilePos].OnTileDestroyed += TileDestroyedOnPath;
+        }
     }
 
     /// <summary>
@@ -63,8 +116,8 @@ public class Path
 
     private bool TryAdvanceNextTile()
     {
-        //Point tile index to the next tile
-        currentTileIndex++;
+        //Point tile index to the next tile, and handles deregistration
+        DepartCurrentTile();
 
         //Checks if there is no next tile to find
         if (ReachedDestinationTile()) return false;
@@ -97,6 +150,12 @@ public class Path
                 return false;
             }
         }
+    }
+
+    private void DepartCurrentTile()
+    {
+        DeregisterFromTileAt(TilePoints[currentTileIndex]);
+        currentTileIndex++;
     }
 
     private bool TryUpdateExitingDirection()
