@@ -7,7 +7,6 @@ public class SensorManager : MonoBehaviour
 {
     public Action<HeatMap> OnHeatMapUpdated;
 
-
     private float totalTime = 0f;
     private float callDelay;
     protected Rigidbody ownerRigidBody = null;
@@ -63,10 +62,7 @@ public class SensorManager : MonoBehaviour
     private void UpdateHeatMap()
     {
         heatMap.Update(TrackedPoints);
-        if(TrackedPoints.Count > 0)
-        {
-            TrackedPoints.Clear();
-        }
+        TrackedPoints.Clear();
         OnHeatMapUpdated?.Invoke(heatMap);
     }
 
