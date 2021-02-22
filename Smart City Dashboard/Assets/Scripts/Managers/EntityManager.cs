@@ -24,7 +24,8 @@ public class EntityManager : MonoBehaviour
                 NodeCollectionController collection = GridManager.GetTile(spawnLocation).NodeCollection;
 
                 VehicleEntity vehicleEntity = SpawnVehicle(VehicleEntity.VehicleType.Car, collection.GetNode(0, 0));
-                vehicleEntity.TrySetDestination(targetLocation);
+                if (!vehicleEntity.TrySetDestination(targetLocation))
+                    DestroyEntity(vehicleEntity);
             }
         }
         if (Input.GetKey(KeyCode.X))
@@ -33,7 +34,8 @@ public class EntityManager : MonoBehaviour
             {
                 NodeCollectionController collection = GridManager.GetTile(spawnLocation).NodeCollection;
                 PedestrianEntity pedestrianEntity = SpawnPedestrian(collection.GetNode(0, 0));
-                pedestrianEntity.TrySetDestination(targetLocation);
+                if (!pedestrianEntity.TrySetDestination(targetLocation))
+                    DestroyEntity(pedestrianEntity);
             }
         }
 

@@ -35,10 +35,9 @@ public abstract class Entity : MonoBehaviour
     /// </summary>
     protected static T Spawn<T>(Vector2Int tilePosition, string prefabAddress) where T : Entity
     {
-        Tile tile = GridManager.Instance.Grid[tilePosition];
+        Tile tile = GridManager.GetTile(tilePosition);
         NodeCollectionController.Direction spawnDirection = GetValidDirectionForTile(tile);
-        var NCC = tile.GetComponent<PathfindingTileInterface>();
-        NodeController spawnLocation = NCC.NodeCollection.GetInboundNodeFrom(spawnDirection, 2);
+        NodeController spawnLocation = tile.NodeCollection.GetInboundNodeFrom(spawnDirection, 2);
 
         //Uses location found to spawn prefab
         return Spawn<T>(spawnLocation, prefabAddress);

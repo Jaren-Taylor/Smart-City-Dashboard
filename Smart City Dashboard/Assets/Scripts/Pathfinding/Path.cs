@@ -73,7 +73,7 @@ public class Path
     {
         foreach(Vector2Int tilePos in tilePoints)
         {
-            GridManager.Instance.Grid[tilePos].OnTileDestroyed += TileDestroyedOnPath;
+            GridManager.GetTile(tilePos).OnTileDestroyed += TileDestroyedOnPath;
         }
     }
 
@@ -145,7 +145,6 @@ public class Path
             }
             else
             {
-                Debug.Log(GridManager.Instance.Grid);
                 throw new Exception("Cant find tile at that position"); //TODO : Remove this. Only for debug, should just return false
                 return false;
             }
