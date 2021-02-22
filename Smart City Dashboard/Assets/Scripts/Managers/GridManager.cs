@@ -267,9 +267,9 @@ public class GridManager : MonoBehaviour
     /// Makes the tile permanent at location
     /// </summary>
     /// <param name="point"></param>
-    public void MakePermanent(Vector2Int point)
+    public void MakePermanent(Vector2Int point, bool animateSpawn = false)
     {
-        Grid[point]?.MakePermanent();
+        Grid[point]?.MakePermanent(animateSpawn);
         Grid[point]?.SetTransparency(false);
     }
 

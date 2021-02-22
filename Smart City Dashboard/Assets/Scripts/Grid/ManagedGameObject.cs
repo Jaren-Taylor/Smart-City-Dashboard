@@ -99,6 +99,11 @@ public class ManagedGameObject : MonoBehaviour
         
     }
 
+    internal void AddComponentToManaged<T>() where T : Component
+    {
+        if (ModelExists) childModel.AddComponent<T>();
+    }
+
 
     /// <summary>
     /// Deletes current model and replaced with passed prefab.

@@ -85,11 +85,14 @@ public abstract class Tile
         return base.ToString() + " (Perm: " + IsPermanent.ToString() + ")";
     }
 
-    public void MakePermanent()
+    public void MakePermanent(bool animateSpawn = false)
     {
-
         if (!IsPermanent) { 
             IsPermanent = true;
+            if (animateSpawn)
+            {
+                managedObject.AddComponentToManaged<SlideIntoPlace>();
+            }
             SpawnManagedNodes();
         }
     }
@@ -133,7 +136,7 @@ public abstract class Tile
         SetTransparency(isTransparent);
         if (IsPermanent)
         {
-            SpawnManagedNodes();  
+            SpawnManagedNodes();
         }
         return CalculateAndSetModelFromNeighbors(neighbors);
     }
@@ -141,7 +144,6 @@ public abstract class Tile
     private void SpawnManagedNodes()
     {
         if(!managedObject.TryGetComponent<PathfindingTileInterface>(out _)) managedObject.AddComponent<PathfindingTileInterface>();
-
     }
 
 
