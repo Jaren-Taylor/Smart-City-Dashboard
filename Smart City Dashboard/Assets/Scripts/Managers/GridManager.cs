@@ -306,7 +306,7 @@ public class GridManager : MonoBehaviour
         //Tile location is ensured empty, can proceed to file location
         Grid[point] = tile;
         if (Grid[point].CreateManaged(point, Grid.GetNeighbors(point))) ForceRemoveTileDirty(point);
-        UpdateNeighbors(point);
+        else UpdateNeighbors(point);
     }
 
     /// <summary>

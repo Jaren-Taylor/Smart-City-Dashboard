@@ -6,7 +6,7 @@ using UnityEngine;
 public class SlideIntoPlace : MonoBehaviour
 {
     private Vector3 target;
-    private readonly float slideInSpeed = 1f;
+    private readonly float slideInSpeed = 2f;
 
     void Start()
     {

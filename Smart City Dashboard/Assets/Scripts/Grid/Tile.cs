@@ -200,8 +200,7 @@ public abstract class Tile
     /// <param name="rotation">Rotation to spawn model at</param>
     protected void AttachModelToManaged(string prefabLocation, Facing direction)
     {
-        GameObject prefab = Resources.Load<GameObject>(prefabLocation);
-        managedObject.InstantiateModel(prefab, FacingToQuaternion[direction]);
+        managedObject.InstantiateModel(prefabLocation, FacingToQuaternion[direction]);
     }
 
     /// <summary>
