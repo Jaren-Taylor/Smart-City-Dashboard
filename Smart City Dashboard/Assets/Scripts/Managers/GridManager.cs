@@ -54,13 +54,8 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void Awake()
-    {
-
-    }
-
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         if (!TryLoadFile())
         {
@@ -163,7 +158,7 @@ public class GridManager : MonoBehaviour
 
     public void StateNumberChangeHandler(int stateNum) => ChangeState(stateNum);
 
-    public NodeCollectionController GetCollectionAtTileLocation(Vector2Int position) => Grid[position]?.GetComponent<PathfindingTileInterface>().NodeCollection;
+    public NodeCollectionController GetCollectionAtTileLocation(Vector2Int position) => Grid[position]?.NodeCollection;
 
     private void ChangeState(int state)
     {
@@ -258,7 +253,7 @@ public class GridManager : MonoBehaviour
     /// </summary>
     /// <param name="location"></param>
     /// <returns></returns>
-    public Tile GetTile(Vector2Int location) => Grid[location];
+    public static Tile GetTile(Vector2Int location) => GridManager.Instance.Grid[location];
 
 
     /// <summary>

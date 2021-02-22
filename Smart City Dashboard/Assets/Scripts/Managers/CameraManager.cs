@@ -12,12 +12,8 @@ public class CameraManager : MonoBehaviour
 
     public Vector2 defaultPosition;
 
-
     private Vector3 panVelocity = Vector3.zero;
     private float sizeVelocity = 0;
-
-
-
 
     private float size;
     public float Size { get => size; set => size = Mathf.Clamp(value, Config.minSize, Config.maxSize); }

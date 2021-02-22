@@ -9,7 +9,7 @@ public abstract class Entity : MonoBehaviour
     private float maxSpeed = .5f;
     private Path path;
     public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
-    public Action<Entity> OnReachedDestination;
+    public Action<Entity, float> OnReachedDestination;
     protected bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser)
     {
         var pathList = Pathfinding.GetListOfPositionsFromTo(TilePosition, tileLocation);
@@ -26,6 +26,7 @@ public abstract class Entity : MonoBehaviour
     {
         var model = Resources.Load<GameObject>(prefabAddress);
         var entity = Instantiate(model, spawnNode.Position, Quaternion.identity).GetComponent<T>();
+        entity.tag = "Entity";
         entity.SpawnPosition = spawnNode;
         return entity;
     }
@@ -35,10 +36,9 @@ public abstract class Entity : MonoBehaviour
     /// </summary>
     protected static T Spawn<T>(Vector2Int tilePosition, string prefabAddress) where T : Entity
     {
-        Tile tile = GridManager.Instance.Grid[tilePosition];
+        Tile tile = GridManager.GetTile(tilePosition);
         NodeCollectionController.Direction spawnDirection = GetValidDirectionForTile(tile);
-        var NCC = tile.GetComponent<PathfindingTileInterface>();
-        NodeController spawnLocation = NCC.NodeCollection.GetInboundNodeFrom(spawnDirection, 2);
+        NodeController spawnLocation = tile.NodeCollection.GetInboundNodeFrom(spawnDirection, 2);
 
         //Uses location found to spawn prefab
         return Spawn<T>(spawnLocation, prefabAddress);
@@ -81,19 +81,19 @@ public abstract class Entity : MonoBehaviour
             {
                 if (!path.AdvanceNextNode())
                 {
-                    DestroyPath();
+                    DestroyPath(2f);
                 }
             }
         }
-        else DestroyPath();
+        else DestroyPath(0f);
     }
 
     private bool HasArrivedAtNode(Vector3 position) => Vector3.Distance(transform.position, position) < .0005;
     private void MoveTowardsPosition(Vector3 position) => transform.position = Vector3.MoveTowards(transform.position, position, maxSpeed * Time.deltaTime);
-    private void DestroyPath()
+    private void DestroyPath(float delay)
     {
         path = null;
-        OnReachedDestination?.Invoke(this);
+        OnReachedDestination?.Invoke(this, delay);
     }
     private bool HasPath() => !(path is null);
 

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
 public abstract class Sensor<T> : MonoBehaviour
 {
     private float totalTime = 0f;
@@ -26,7 +25,19 @@ public abstract class Sensor<T> : MonoBehaviour
     {
         RegisterToManager(SensorManager.Instance);
         TryGetComponent(out ownerRigidBody);
-        ViewShape = GetComponent<Collider>();
+
+        if(TryGetComponent(out Collider viewShape))
+        {
+            ViewShape = viewShape;
+        }
+        else
+        {
+            gameObject.AddComponent<SphereCollider>();
+            SphereCollider sc = gameObject.GetComponent<SphereCollider>();
+            sc.radius = 1f;
+            ViewShape = sc;
+        }
+
         ViewShape.isTrigger = true;
         objectsInCollider = new HashSet<GameObject>();
         TargetCallsPerSecond = 4; 
@@ -69,11 +80,13 @@ public abstract class Sensor<T> : MonoBehaviour
     private List<T> DetectEnvironment()
     {
         List<T> collectedData = new List<T>();
+        HashSet<GameObject> deadReferences = new HashSet<GameObject>();
         foreach (GameObject sensedObject in objectsInCollider)
         {
-            if (sensedObject == null) objectsInCollider.Remove(sensedObject); // Safeguard to ensure that the sensed object was not deleted before it could exit the trigger
+            if (sensedObject == null) deadReferences.Add(sensedObject); // Safeguard to ensure that the sensed object was not deleted before it could exit the trigger
             else collectedData.Add(CollectData(sensedObject));
         }
+        foreach (GameObject deadRef in deadReferences) objectsInCollider.Remove(deadRef);
         return collectedData;
     }
 

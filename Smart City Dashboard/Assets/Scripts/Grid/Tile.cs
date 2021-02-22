@@ -7,6 +7,8 @@ using UnityEngine;
 [DataContract]
 public abstract class Tile
 {
+    public Action<Tile> OnTileDestroyed;
+
     public enum Facing
     {
         Left = 0,
@@ -66,6 +68,13 @@ public abstract class Tile
         isTransparent = value;
     }
 
+    private NodeCollectionController cachedCollection = null;
+
+
+#pragma warning disable UNT0008 // Null propagation on Unity objects
+    public NodeCollectionController NodeCollection => cachedCollection ??= GetComponent<PathfindingTileInterface>()?.NodeCollection;
+#pragma warning restore UNT0008 // Null propagation on Unity objects
+
     public Tile()
     {
         IsPermanent = false;
@@ -99,6 +108,9 @@ public abstract class Tile
     /// <returns></returns>
     public void DeleteManaged()
     {
+        IsPermanent = false;
+        OnTileDestroyed?.Invoke(this);
+
         managedObject?.DestroyTree();
         managedObject = null;
     }
