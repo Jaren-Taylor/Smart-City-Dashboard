@@ -2093,7 +2093,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1122856876}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1068862571}
+        m_TargetAssemblyTypeName: GridManager, Assembly-CSharp
+        m_MethodName: ChangeState
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1122856876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2358,8 +2370,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 299274495cb6dcc419099474fc3633ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonMappings: []
   ActiveTab: 0
   isOnScreen: 0
+  controlState: 0
   heatmapImage: {fileID: 8904471728419388649}
 --- !u!114 &1193146154
 MonoBehaviour:
@@ -2534,7 +2548,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1243110197}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1243110197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3466,8 +3492,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4d8ff81ae2ce5e408e8ebce3d9572ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonMappings:
+  - button: {fileID: 0}
+    ControlState: 0
+  - button: {fileID: 0}
+    ControlState: 0
   ActiveTab: 0
   isOnScreen: 0
+  controlState: 0
 --- !u!1 &2029918574
 GameObject:
   m_ObjectHideFlags: 0
