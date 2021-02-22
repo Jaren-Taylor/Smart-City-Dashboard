@@ -9,7 +9,7 @@ public class HeatMap
     public readonly int Width;
     public readonly int Height;
 
-    private const int DEGRADE_RATE = 32;
+    private const int DEGRADE_RATE = 64;
     private const int INCREASE_RATE = 64;
 
     private Texture2D texture;
@@ -41,8 +41,8 @@ public class HeatMap
 
     public void Update(List<Vector2Int> positions)
     {
-        ApplyData(positions);
         DegradeMap();
+        ApplyData(positions);
     }
 
     public void ClearMap()

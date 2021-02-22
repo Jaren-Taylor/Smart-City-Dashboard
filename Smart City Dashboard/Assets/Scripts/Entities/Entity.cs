@@ -26,6 +26,7 @@ public abstract class Entity : MonoBehaviour
     {
         var model = Resources.Load<GameObject>(prefabAddress);
         var entity = Instantiate(model, spawnNode.Position, Quaternion.identity).GetComponent<T>();
+        entity.tag = "Entity";
         entity.SpawnPosition = spawnNode;
         return entity;
     }
