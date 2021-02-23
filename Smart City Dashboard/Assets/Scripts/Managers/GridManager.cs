@@ -172,7 +172,7 @@ public class GridManager : MonoBehaviour
                     newState = new PlaceRoadState();
                     break;
                 case 1:
-                    newState = new PlaceSensorState();//new PlaceStructureState(BuildingTile.StructureType.House);
+                    newState = new PlaceStructureState(BuildingTile.StructureType.House);
                     break;
                 case 2:
                     newState = new RemoveTileState();

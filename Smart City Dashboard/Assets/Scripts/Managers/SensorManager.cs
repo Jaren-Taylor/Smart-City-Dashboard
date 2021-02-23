@@ -98,7 +98,7 @@ public class SensorManager : MonoBehaviour
         return true;
     }
 
-    private static bool TryCreateSensorAt<T>(Vector2Int tilePosition) where T : Component
+    public static bool TryCreateSensorAt<T>(Vector2Int tilePosition) where T : Component
     {
         //Makes sure the tile exists and doesn't have a T type sensor on the tile already
         if(GridManager.GetTile(tilePosition) is Tile tile && !tile.TryGetComponent<T>(out _))
