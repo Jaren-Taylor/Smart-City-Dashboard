@@ -25,9 +25,7 @@ public class GridManager : MonoBehaviour
     public Material TileMaterial;
     public Material TransparentMaterial;
 
-    private Vector2Int tileLoc;
-    public VehicleEntity entity;
-    private TileGrid grid; // Data object that holds the information about all tiles
+    public TileGrid Grid; // Data object that holds the information about all tiles
     public static GridManager Instance { get; private set; } //Singleton pattern
 
     private GridController GridSM; //Controls the state of build mode
@@ -56,17 +54,12 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void Awake()
-    {
-
-    }
-
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         if (!TryLoadFile())
         {
-            grid = new TileGrid(gridSize, gridSize);
+            Grid = new TileGrid(gridSize, gridSize);
         }
 
         GridSM = new GridController(new PlaceRoadState());
@@ -75,17 +68,17 @@ public class GridManager : MonoBehaviour
         
         ground = CreateGround();
         
-        grid.RefreshGrid();
+        Grid.RefreshGrid();
     }
 
     private bool TryLoadFile()
     {
         if (SaveGameManager.LoadFromFile != "")
         {
-            grid = SaveGameManager.LoadGame(SaveGameManager.LoadFromFile);
-            if (grid == null) return false;
+            Grid = SaveGameManager.LoadGame(SaveGameManager.LoadFromFile);
+            if (Grid == null) return false;
             SaveGameManager.LoadFromFile = "";
-            gridSize = grid.Width;
+            gridSize = Grid.Width;
             return true;
         }
         return false;
@@ -108,7 +101,7 @@ public class GridManager : MonoBehaviour
         var meshRenderer = blueprint.AddComponent<MeshRenderer>(); //Stores material for rendering mesh with material
         meshRenderer.material = Resources.Load<Material>("Materials/Grass_Mat"); //Assigns material as grass
 
-        var mesh = GenerateMesh(grid.Width, grid.Height); //Creates the mesh according to the specified grid size
+        var mesh = GenerateMesh(Grid.Width, Grid.Height); //Creates the mesh according to the specified grid size
 
         meshFilter.mesh = mesh; //Adds mesh to filter
         meshCollider.sharedMesh = mesh;  //Adds mesh to collider
@@ -165,6 +158,8 @@ public class GridManager : MonoBehaviour
 
     public void StateNumberChangeHandler(int stateNum) => ChangeState(stateNum);
 
+    public NodeCollectionController GetCollectionAtTileLocation(Vector2Int position) => Grid[position]?.NodeCollection;
+
     private void ChangeState(int state)
     {
         if(this.state != state)
@@ -194,12 +189,12 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P)) Debug.Log(grid.ToString());
+        if (Input.GetKeyDown(KeyCode.P)) Debug.Log(Grid.ToString());
 
         if (Input.GetKeyDown(KeyCode.S))
         {
             GridSM.SuspendState(cursor);
-            SaveGameManager.SaveGame("save.xml", grid);
+            SaveGameManager.SaveGame("save.xml", Grid);
             GridSM.ResumeState(cursor);
         }
 
@@ -210,35 +205,11 @@ public class GridManager : MonoBehaviour
             //SaveGameManager.LoadGame("save.xml");
         }
 
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            tileLoc= grid.GetRoadTile()[0];
-            entity = new VehicleEntity();
-            EntityLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetInboundNode(NodeCollectionController.EnteringDirection.NorthBound);
-            entity.InstantiateEntity(EntityLoc.transform.position);
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.X) && EntityLoc != null)
-        {
-    
-            EntityLoc = EntityLoc.GetNodeByDirection(NodeCollectionController.ExitingDirection.WestBound);
-            if(EntityLoc == null)
-            {
-                tileLoc += Vector2Int.left;
-                 EntityLoc = grid[tileLoc].GetComponent<PathfindingNodeInterface>().NodeCollection.GetInboundNode(NodeCollectionController.EnteringDirection.WestBound);
-            }
-            
-            entity.GetComponent<EntityController>().transform.LookAt(EntityLoc.transform.position);
-            entity.GetComponent<EntityController>().MoveToNextNode(EntityLoc.transform.position);
-        }
-
         if (Input.GetKeyDown(KeyCode.O))
         {
             GameObject path = new GameObject("Path Holder");
 
-            List<Vector2Int> points = Pathfinding.PathFromTo(grid, new Vector2Int(1, 1), grid.GetBuildingLoc()[1]);
+            List<Vector2Int> points = Pathfinding.GetListOfPositionsFromTo(new Vector2Int(1, 1), Grid.GetBuildingLocations()[1]);
             points.Reverse();
 
             List<GameObject> pointInstances = new List<GameObject>();
@@ -282,7 +253,7 @@ public class GridManager : MonoBehaviour
     /// </summary>
     /// <param name="location"></param>
     /// <returns></returns>
-    public Tile GetTile(Vector2Int location) => grid[location];
+    public static Tile GetTile(Vector2Int location) => GridManager.Instance.Grid[location];
 
 
     /// <summary>
@@ -290,16 +261,16 @@ public class GridManager : MonoBehaviour
     /// </summary>
     /// <param name="location"></param>
     /// <param name="value"></param>
-    public void SetTransparency(Vector2Int location, bool value) => grid[location]?.SetTransparency(value);
+    public void SetTransparency(Vector2Int location, bool value) => Grid[location]?.SetTransparency(value);
 
     /// <summary>
     /// Makes the tile permanent at location
     /// </summary>
     /// <param name="point"></param>
-    public void MakePermanent(Vector2Int point)
+    public void MakePermanent(Vector2Int point, bool animateSpawn = false)
     {
-        grid[point]?.MakePermanent();
-        grid[point]?.SetTransparency(false);
+        Grid[point]?.MakePermanent(animateSpawn);
+        Grid[point]?.SetTransparency(false);
     }
 
     /// <summary>
@@ -328,14 +299,14 @@ public class GridManager : MonoBehaviour
     /// <param name="tile"></param>
     public void AddTileToGrid(Vector2Int point, Tile tile)
     {
-        if (grid[point] != null) //If there is a tile at this location already, try to remove
+        if (Grid[point] != null) //If there is a tile at this location already, try to remove
         {
             if (!RemoveTileIfTemporary(point)) return; //The tile could not be removed (is is permanent) so halting
         }
         //Tile location is ensured empty, can proceed to file location
-        grid[point] = tile;
-        if (grid[point].CreateManaged(point, grid.GetNeighbors(point))) ForceRemoveTileDirty(point);
-        UpdateNeighbors(point);
+        Grid[point] = tile;
+        if (Grid[point].CreateManaged(point, Grid.GetNeighbors(point))) ForceRemoveTileDirty(point);
+        else UpdateNeighbors(point);
     }
 
     /// <summary>
@@ -344,7 +315,7 @@ public class GridManager : MonoBehaviour
     /// <param name="point"></param>
     private void RecalculateTile(Vector2Int point) 
     {
-        if (grid[point]?.RecalculateManaged(grid.GetNeighbors(point)) ?? false) RemoveTile(point);
+        if (Grid[point]?.RecalculateManaged(Grid.GetNeighbors(point)) ?? false) RemoveTile(point);
     }
 
 
@@ -355,7 +326,7 @@ public class GridManager : MonoBehaviour
     /// <returns>Returns true if a tile was deleted</returns>
     public bool RemoveTileIfTemporary(Vector2Int point)
     {
-        if (grid[point]?.IsPermanent ?? true) return false; //Returns false when either the tile is permanent or it is null
+        if (Grid[point]?.IsPermanent ?? true) return false; //Returns false when either the tile is permanent or it is null
         else if (ForceRemoveTileDirty(point))
         {
             UpdateNeighbors(point);
@@ -387,8 +358,8 @@ public class GridManager : MonoBehaviour
     /// <returns></returns>
     private bool ForceRemoveTileDirty(Vector2Int point)
     {
-        grid[point]?.DeleteManaged();
-        grid[point] = null;
+        Grid[point]?.DeleteManaged();
+        Grid[point] = null;
         return true;
     }
 

@@ -27,7 +27,8 @@ public class NavPoint_DebugHandler : Editor
     {
         float lineLength = Vector3.Distance(from, to);
         float radius = Mathf.Clamp(.05f * lineLength, .05f, .1f);
-        Vector3 direction = Vector3.Normalize(to - from);
+        Vector3 delta = to - from;
+        Vector3 direction = (delta.magnitude > 1) ? Vector3.Normalize(delta) : delta;
 
         Color stashedColor = Handles.color;
         type ??= ArrowType.SingleEnded;

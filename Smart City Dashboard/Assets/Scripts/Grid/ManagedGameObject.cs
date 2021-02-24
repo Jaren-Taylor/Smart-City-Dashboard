@@ -9,6 +9,7 @@ using UnityEngine;
 public class ManagedGameObject : MonoBehaviour
 {
     public GameObject childModel = null;
+    private string currentPrefabAddress = "";
 
     private Material cachedMaterial = null;
     public bool ModelExists { get => childModel != null; }
@@ -86,24 +87,37 @@ public class ManagedGameObject : MonoBehaviour
     /// <summary>
     /// Instantiates prefab as child of this object. Saves this object as it's Model. Will DESTROY current model if it exists.
     /// </summary>
-    /// <param name="modelPrefab">Prefab to be instanced (will be copied if already instantiated)</param>
+    /// <param name="prefabAddress">Prefab to be instanced (will be copied if already instantiated)</param>
     /// <param name="rotation">Rotation for instanced model</param>
-    public void InstantiateModel(GameObject modelPrefab, Quaternion? rotation = null)
+    public void InstantiateModel(string prefabAddress, Quaternion? rotation = null)
     {
+        if (ModelExists && CompareAgainstCurrentModel(prefabAddress, rotation)) return;
         DestroyModel();
-        childModel = Instantiate(modelPrefab, transform, false);
+        GameObject prefab = Resources.Load<GameObject>(prefabAddress);
+        childModel = Instantiate(prefab, transform, false);
         childModel.transform.rotation = rotation ?? Quaternion.identity;
         childModel.transform.localPosition = Vector3.zero;
         childModel.name = childModel.name.Replace("(Clone)", "");
+        currentPrefabAddress = prefabAddress;
         ApplyCachedMaterial();
         
+    }
+
+    private bool CompareAgainstCurrentModel(string prefabAddress, Quaternion? rotation)
+    {
+        return ModelExists && prefabAddress == currentPrefabAddress && rotation == childModel.transform.rotation;
+    }
+
+    internal void AddComponentToManaged<T>() where T : Component
+    {
+        if (ModelExists) childModel.AddComponent<T>();
     }
 
 
     /// <summary>
     /// Deletes current model and replaced with passed prefab.
     /// </summary>
-    /// <param name="modelPrefab">Prefab to be instanced (will be copied if already instantiated)</param>
+    /// <param name="prefabAddress">Prefab to be instanced (will be copied if already instantiated)</param>
     /// <param name="rotation">Rotation for instanced model</param>
-    public void SwapModel(GameObject modelPrefab, Quaternion? rotation = null) => InstantiateModel(modelPrefab, rotation);
+    public void SwapModel(string prefabAddress, Quaternion? rotation = null) => InstantiateModel(prefabAddress, rotation);
 }

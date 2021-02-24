@@ -3,40 +3,34 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
-[DataContract]
+
 public class VehicleEntity : Entity
 {
-    public Vector3 position;
     public enum VehicleType{
         Car,
         Bus,
-        Van,
-        Bike
+        Van
     }
 
     public static readonly Dictionary<VehicleType, string> ModelLookup = new Dictionary<VehicleType, string>()
     {
         { VehicleType.Bus, "Prefabs/Vehicles/Bus_Base" },
-        { VehicleType.Van, "Prefabs/Vehicles/Van_Base" }
-        
+        { VehicleType.Van, "Prefabs/Vehicles/Van_Base" },
+        { VehicleType.Car, "Prefabs/Vehicles/Car_Base" }
     };
 
-    [DataMember(Name = "Type")]
+    public static VehicleEntity Spawn(Vector2Int tilePosition, VehicleType type)
+    {
+        var address = ModelLookup[type];
+        return Spawn<VehicleEntity>(tilePosition, address);
+    }
+    public static VehicleEntity Spawn(NodeController controller, VehicleType type)
+    {
+        var address = ModelLookup[type];
+        return Spawn<VehicleEntity>(controller, address);
+    }
+
+    public override bool TrySetDestination(Vector2Int tileLocation) => TrySetDestination(tileLocation, NodeCollectionController.TargetUser.Vehicles);
+
     public VehicleType Type { get; private set; }
-    public VehicleEntity(Vector3 position)
-    {
-        this.position = position;
-    }
-
-
-    public override string ToString()
-    {
-        return "[Vehicle]: " + base.ToString();
-    }
-
-    public VehicleEntity()
-        {
-
-        }
-    
 }

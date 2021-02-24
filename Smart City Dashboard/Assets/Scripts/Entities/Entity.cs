@@ -1,95 +1,101 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity
+public abstract class Entity : MonoBehaviour
 {
-    Vector2Int pos; // Possibly useless
-
-    Vector2Int spawnPos;
-
-    Vector2Int destinationPos;
-
-    private ManagedGameObject managedObject;
-    private const string ManagedGameObjectLocation = "Prefabs/ManagedEntity";
-
-    //public Vector2Int requestTilePos(Vector2Int tilePos)
-    //{
-
-    //}
-    public Entity()
+    public NodeController SpawnPosition { get; protected set; }
+    private float maxSpeed = .5f;
+    private Path path;
+    public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
+    public Action<Entity, float> OnReachedDestination;
+    protected bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser)
     {
-        this.managedObject = null;
-    }
-
-    public Entity(Vector2Int pos, ManagedGameObject model)
-    {
-        this.spawnPos = pos;
-        this.managedObject = model;
-    }
-
-    public Entity(Vector2Int pos, Vector2Int destination, ManagedGameObject model)
-    {
-
-        this.spawnPos = pos;
-        this.destinationPos = destination;
-        this.managedObject = model;
-
-    }
-
-    public Vector3 InstantiateEntity(Vector2Int point)
-    {
-        Vector3 position = new Vector3(point.x + .2f, .1f, point.y + .2f);
-        return InstantiateEntity(position);
-
-    }
-
-    public Vector3 InstantiateEntity(Vector3 point)
-    {
-        managedObject = Object.Instantiate(
-             Resources.Load<ManagedGameObject>(ManagedGameObjectLocation),
-             point,
-             Quaternion.identity);
-        AttachModelToManaged("Prefabs/Vehicles/Bus_Base");
-        return point;
-
-    }
-    protected void AttachModelToManaged(string prefabLocation)
-    {
-        GameObject prefab = Resources.Load<GameObject>(prefabLocation);
-        managedObject.InstantiateModel(prefab, Quaternion.Euler(-90, -90, -90));
+        var pathList = Pathfinding.GetListOfPositionsFromTo(TilePosition, tileLocation);
+        if (pathList is null)
+            return false;
+        path = new Path(pathList, SpawnPosition, null, targetUser);
+        return !(path is null);
     }
 
     /// <summary>
-    /// Add component to the object it is managing
+    /// Spawns Entity of type T on node from the address specificied
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public T AddComponent<T>() where T : Component => managedObject.AddComponent<T>();
-
-    /// <summary>
-    /// Removes component from the object it is managing
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public bool RemoveComponent<T>() where T : Component => managedObject.TryRemoveComponent<T>();
-
-    /// <summary>
-    /// Trys to remove component from the object it is managing
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="component"></param>
-    /// <returns></returns>
-    public bool TryGetComponent<T>(out T component) where T : Component
+    protected static T Spawn<T>(NodeController spawnNode, string prefabAddress) where T : Entity
     {
-        component = GetComponent<T>();
-        return component != null;
+        var model = Resources.Load<GameObject>(prefabAddress);
+        var entity = Instantiate(model, spawnNode.Position, Quaternion.identity).GetComponent<T>();
+        entity.tag = "Entity";
+        entity.SpawnPosition = spawnNode;
+        return entity;
     }
 
     /// <summary>
-    /// Gets component from the object it is managing
+    /// Spawns Entity of type T on tile position from the address specificied
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public T GetComponent<T>() where T : Component => managedObject?.GetComponent<T>();
+    protected static T Spawn<T>(Vector2Int tilePosition, string prefabAddress) where T : Entity
+    {
+        Tile tile = GridManager.GetTile(tilePosition);
+        NodeCollectionController.Direction spawnDirection = GetValidDirectionForTile(tile);
+        NodeController spawnLocation = tile.NodeCollection.GetInboundNodeFrom(spawnDirection, 2);
+
+        //Uses location found to spawn prefab
+        return Spawn<T>(spawnLocation, prefabAddress);
+    }
+
+    private static NodeCollectionController.Direction GetValidDirectionForTile(Tile tile)
+    {
+        if (tile is BuildingTile building)
+        {
+            return (NodeCollectionController.Direction)building.currentFacing;
+        }
+        else if (tile is RoadTile road)
+        {
+            return GetValidRoadDirection(road);
+        }
+        throw new System.Exception("Invalid Tile Type...HOW?");
+    }
+
+    //TODO: Decide which side of the road to spawn on
+    private static NodeCollectionController.Direction GetValidRoadDirection(RoadTile road)
+    {
+        return NodeCollectionController.Direction.EastBound;
+    }
+
+    private void Update()
+    {
+        if (HasPath())
+        {
+            MoveAlongPath();
+        }
+    }
+    //Comment
+    private void MoveAlongPath()
+    {
+        if (path.GetCurrentNode() is NodeController nodeController)
+        {
+            transform.LookAt(nodeController.transform.position);
+            MoveTowardsPosition(nodeController.transform.position);
+            if (HasArrivedAtNode(nodeController.transform.position))
+            {
+                if (!path.AdvanceNextNode())
+                {
+                    DestroyPath(2f);
+                }
+            }
+        }
+        else DestroyPath(0f);
+    }
+
+    private bool HasArrivedAtNode(Vector3 position) => Vector3.Distance(transform.position, position) < .0005;
+    private void MoveTowardsPosition(Vector3 position) => transform.position = Vector3.MoveTowards(transform.position, position, maxSpeed * Time.deltaTime);
+    private void DestroyPath(float delay)
+    {
+        path = null;
+        OnReachedDestination?.Invoke(this, delay);
+    }
+    private bool HasPath() => !(path is null);
+
+    public abstract bool TrySetDestination(Vector2Int tileLocation);
 }
