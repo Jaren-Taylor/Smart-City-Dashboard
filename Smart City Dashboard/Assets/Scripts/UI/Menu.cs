@@ -1,35 +1,56 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Menu : MonoBehaviour
 {
     protected RectTransform menuBounds;
     [HideInInspector]
-    public int ActiveTab;
+    public int ActiveTab = 0;
     [HideInInspector]
     public bool isOnScreen;
+    public List<Tab> Tabs;
 
     protected void Start()
     {
         // Assumed to be used in child classes for use in movement calculations
         menuBounds = gameObject.GetComponent<RectTransform>();
-        // Deactivate all but the first child tab
-        for (int i = 2; i < transform.childCount; i++)
-        {
-            transform.GetChild(i).gameObject.GetComponent<Tab>().DeActivate();
-        }
-        //
-        ActiveTab = 1;
+        FetchTabs();
+        DeactivateTabs();
         isOnScreen = false;
     }
 
+    private void FetchTabs()
+    {
+        // Deactivate all but the first child tab
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            var child = transform.GetChild(i);
+            var tab = child.GetComponent<Tab>();
+            if (tab != null)
+            {
+                Tabs.Add(tab);
+            }
+        }
+        //
+    }
+    private void DeactivateTabs()
+    {
+        // Deactivate all but the first child tab
+        for (int i = 1; i < Tabs.Count; i++)
+        {
+            Tabs[i].DeActivate();
+        }
+        //
+    }
     public void SwitchTabs()
     {
         // deactivate current tab
-        transform.GetChild(ActiveTab).GetComponent<Tab>().DeActivate();
+        Tabs[ActiveTab].DeActivate();
         // increment or reset counter
-        ActiveTab = ActiveTab == transform.childCount - 1 ? 1 : ActiveTab+1;
+        ActiveTab = ActiveTab == Tabs.Count - 1 ? 0 : ActiveTab+1;
         // activate new tab
-        transform.GetChild(ActiveTab).GetComponent<Tab>().Activate();
+        Tabs[ActiveTab].Activate();
     }
 
     public abstract void ToggleMenuHandler();
