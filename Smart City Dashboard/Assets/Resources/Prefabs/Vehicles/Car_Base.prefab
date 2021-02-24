@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8013893240079289291}
   - component: {fileID: 5527014467204081315}
   - component: {fileID: 4251986960457883658}
+  - component: {fileID: 2480055647436069490}
   m_Layer: 7
   m_Name: Car_Base
   m_TagString: Entity
@@ -47,7 +48,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875c9d70480b4aa4bae89646e1631245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raycastSource: {fileID: 7793347650186554615}
 --- !u!65 &5527014467204081315
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -77,6 +77,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2480055647436069490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787260273796647328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63ecbd862bbb2f749bfbf8d89bd94683, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastSource: {fileID: 7793347650186554615}
+  SpawnPosition: {fileID: 0}
 --- !u!1 &2864492125536135898
 GameObject:
   m_ObjectHideFlags: 0

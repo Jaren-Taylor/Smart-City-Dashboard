@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 3470908649315823054}
   - component: {fileID: 2656525351783805946}
   - component: {fileID: 3095710205243542309}
+  - component: {fileID: 7131836820024272059}
   m_Layer: 7
   m_Name: Pedestrian_Base
   m_TagString: Entity
@@ -77,7 +78,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b964e5a72e5286449bbc1e6d78b91a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raycastSource: {fileID: 492091638718919481}
 --- !u!65 &2656525351783805946
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -107,6 +107,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7131836820024272059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3303504251571723046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63ecbd862bbb2f749bfbf8d89bd94683, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastSource: {fileID: 492091638718919481}
+  SpawnPosition: {fileID: 0}
 --- !u!1001 &2734133812063763678
 PrefabInstance:
   m_ObjectHideFlags: 0

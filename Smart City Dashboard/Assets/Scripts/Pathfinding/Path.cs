@@ -145,7 +145,6 @@ public class Path
             }
             else
             {
-                throw new Exception("Cant find tile at that position"); //TODO : Remove this. Only for debug, should just return false
                 return false;
             }
         }

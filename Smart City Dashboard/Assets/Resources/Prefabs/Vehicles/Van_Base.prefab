@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 1234401156159382093}
   - component: {fileID: 3675232731571026486}
   - component: {fileID: 2520410747824705585}
+  - component: {fileID: 7770382620162223140}
   m_Layer: 7
   m_Name: Van_Base
   m_TagString: Entity
@@ -128,7 +129,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875c9d70480b4aa4bae89646e1631245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raycastSource: {fileID: 5493976337963648978}
 --- !u!54 &3675232731571026486
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -158,6 +158,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.22, y: 0.21, z: 0.42}
   m_Center: {x: 0, y: 0.09, z: -0.06}
+--- !u!114 &7770382620162223140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2806357887620639691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63ecbd862bbb2f749bfbf8d89bd94683, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastSource: {fileID: 5493976337963648978}
+  SpawnPosition: {fileID: 0}
 --- !u!1 &5493976337963648978
 GameObject:
   m_ObjectHideFlags: 0
