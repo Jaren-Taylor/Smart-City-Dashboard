@@ -10,36 +10,62 @@ public class EntityManager : MonoBehaviour
     private List<Vector2Int> BuildingLocations => GridManager.Instance.Grid.GetBuildingLocations();
     private readonly List<Entity> Entities = new List<Entity>();
     private int spawnLimit = 5000;
+    private float spawnDelay = .5f;
+    private float totalTime = 0f;
 
+    [Range(.5f, 4)]
+    [SerializeField]
+    [Tooltip("Scales the spawn cap at which entities can spawn.")]
+    private float SpawnScalar = 2f;
+    private float TargetTotal => BuildingLocations.Count * SpawnScalar;
     private void Start()
     {
         
     }
     private void Update()
     {
+        totalTime += Time.deltaTime;
+        while(totalTime >= spawnDelay)
+        {
+            if (Entities.Count < TargetTotal)
+                PeriodicallySpawn();
+            totalTime -= spawnDelay;
+            RecalculateSpawnDelay();
+            Debug.Log($"Entity Count: {Entities.Count}  SpawnRate: {1f/spawnDelay} TargetTotal: {TargetTotal}");
+        }
+
         if (Input.GetKey(KeyCode.Q))
         {
-            if(GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation))
-            {
-                NodeCollectionController collection = GridManager.GetTile(spawnLocation).NodeCollection;
-
-                VehicleEntity vehicleEntity = SpawnVehicle(VehicleEntity.VehicleType.Car, collection.GetNode(0, 0));
-                if (!vehicleEntity.TrySetDestination(targetLocation))
-                    DestroyEntity(vehicleEntity);
-            }
+            RandomlySpawnVehicle(GetRandomVehicleType());
         }
         if (Input.GetKey(KeyCode.X))
         {
-            if(GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation))
-            {
-                NodeCollectionController collection = GridManager.GetTile(spawnLocation).NodeCollection;
-                PedestrianEntity pedestrianEntity = SpawnPedestrian(collection.GetNode(0, 0));
-                if (!pedestrianEntity.TrySetDestination(targetLocation))
-                    DestroyEntity(pedestrianEntity);
-            }
+            RandomlySpawnPedestrian();
         }
 
     }
+
+    private void RandomlySpawnPedestrian()
+    {
+        if (GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation))
+        {
+            
+            PedestrianEntity pedestrianEntity = SpawnPedestrian(spawnLocation);
+            if (!pedestrianEntity.TrySetDestination(targetLocation))
+                DestroyEntity(pedestrianEntity);
+        }
+    }
+
+    private void RandomlySpawnVehicle(VehicleEntity.VehicleType type)
+    {
+        if (GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation))
+        {
+            VehicleEntity vehicleEntity = SpawnVehicle(type,spawnLocation);
+            if (!vehicleEntity.TrySetDestination(targetLocation))
+                DestroyEntity(vehicleEntity);
+        }
+    }
+
     public PedestrianEntity SpawnPedestrian(NodeController controller)
     {
         PedestrianEntity entity = PedestrianEntity.Spawn(controller);
@@ -51,6 +77,18 @@ public class EntityManager : MonoBehaviour
         VehicleEntity entity = VehicleEntity.Spawn(controller, type);
         Register(entity);
         return entity;
+    }
+
+    public PedestrianEntity SpawnPedestrian(Vector2Int spawnLocation)
+    {
+        Tile tile = GridManager.GetTile(spawnLocation);
+        return SpawnPedestrian(tile.NodeCollection.GetPedestrianSpawnNode(tile));
+       
+    }
+    public VehicleEntity SpawnVehicle(VehicleEntity.VehicleType type, Vector2Int spawnLocation)
+    {
+        Tile tile = GridManager.GetTile(spawnLocation);
+        return SpawnVehicle(type, tile.NodeCollection.GetVehicleSpawnNode(tile));
     }
     private void Register(Entity entity)
     {
@@ -106,5 +144,21 @@ public class EntityManager : MonoBehaviour
     {
         StartCoroutine(DestroyAfterDelay(entity, delay));
     }
+
+    private void PeriodicallySpawn()
+    {
+        if (UnityEngine.Random.Range(0,2) == 0)
+            RandomlySpawnPedestrian();
+        else
+            RandomlySpawnVehicle(GetRandomVehicleType());
+    }
+
+    private VehicleEntity.VehicleType GetRandomVehicleType() => (VehicleEntity.VehicleType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(VehicleEntity.VehicleType)).Length);
+    private void RecalculateSpawnDelay() 
+    {
+        if (!(TargetTotal == 0))
+            spawnDelay = Mathf.Lerp(10 / TargetTotal , 100/TargetTotal, Entities.Count / TargetTotal);
+    }
+    
 }
     

@@ -69,4 +69,54 @@ public class NodeCollectionController : MonoBehaviour
         Direction.WestBound => Array.IndexOf(NodeCollection, currentNode) / 4, //Returns row number
         _ => Array.IndexOf(NodeCollection, currentNode) % 4 //Returns column number
     };
+
+    internal NodeController GetVehicleSpawnNode(Tile tile)
+    {
+        if(tile is BuildingTile building)
+        {
+            switch (building.currentFacing)
+            {
+                case Tile.Facing.Left:
+                    return GetNode(2, 1);
+                case Tile.Facing.Right:
+                    return GetNode(1, 2);
+                case Tile.Facing.Top:
+                    return GetNode(2, 2);
+                default :
+                    return GetNode(1, 1);
+
+            
+            }
+        }
+        else
+        {
+            return GetNode(2, 2);
+        }
+
+    }
+
+    internal NodeController GetPedestrianSpawnNode(Tile tile)
+    {
+        if (tile is BuildingTile building)
+        {
+            switch (building.currentFacing)
+            {
+                case Tile.Facing.Left:
+                    return GetNode(1, 1);
+                case Tile.Facing.Right:
+                    return GetNode(2, 2);
+                case Tile.Facing.Top:
+                    return GetNode(2, 1);
+                default:
+                    return GetNode(1, 2);
+
+
+            }
+        }
+        else
+        {
+            return GetNode(3, 0);
+        }
+
+    }
 }

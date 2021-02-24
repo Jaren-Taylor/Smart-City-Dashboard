@@ -9,8 +9,7 @@ public class VehicleEntity : Entity
     public enum VehicleType{
         Car,
         Bus,
-        Van,
-        Bike
+        Van
     }
 
     public static readonly Dictionary<VehicleType, string> ModelLookup = new Dictionary<VehicleType, string>()
