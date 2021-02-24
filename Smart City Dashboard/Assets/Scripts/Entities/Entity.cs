@@ -5,7 +5,12 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
+    [SerializeField]
+    protected GameObject raycastSource;
+
     public NodeController SpawnPosition { get; protected set; }
+    private int layerMask = 1 << 7;
+
     private float maxSpeed = .5f;
     private Path path;
     public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
@@ -76,7 +81,7 @@ public abstract class Entity : MonoBehaviour
         if (path.GetCurrentNode() is NodeController nodeController)
         {
             transform.LookAt(nodeController.transform.position);
-            MoveTowardsPosition(nodeController.transform.position);
+            TryMoveTowardsPosition(nodeController.transform.position);
             if (HasArrivedAtNode(nodeController.transform.position))
             {
                 if (!path.AdvanceNextNode())
@@ -89,7 +94,19 @@ public abstract class Entity : MonoBehaviour
     }
 
     private bool HasArrivedAtNode(Vector3 position) => Vector3.Distance(transform.position, position) < .0005;
-    private void MoveTowardsPosition(Vector3 position) => transform.position = Vector3.MoveTowards(transform.position, position, maxSpeed * Time.deltaTime);
+    private void TryMoveTowardsPosition(Vector3 position)
+    {
+        var speed = maxSpeed;
+        /* TODO: Collision Check
+        if (Physics.Raycast(raycastSource.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, maxSpeed * .5f))
+        {
+            Debug.Log("Draw hit distance: " + hit.distance);
+            Debug.DrawRay(raycastSource.transform.position, transform.TransformDirection(Vector3.forward) * maxSpeed, Color.white, 1f, false);
+            speed = 0;
+        }
+        */
+        transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
+    }
     private void DestroyPath(float delay)
     {
         path = null;

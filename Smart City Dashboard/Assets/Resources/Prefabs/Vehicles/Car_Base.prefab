@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8013893240079289291}
   - component: {fileID: 5527014467204081315}
   - component: {fileID: 4251986960457883658}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Car_Base
   m_TagString: Entity
   m_Icon: {fileID: 0}
@@ -31,6 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 204164728768155396}
+  - {fileID: 6772247288676233232}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -46,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875c9d70480b4aa4bae89646e1631245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raycastSource: {fileID: 7793347650186554615}
 --- !u!65 &5527014467204081315
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -57,7 +59,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.22, y: 0.21, z: 0.4}
+  m_Size: {x: 0.22, y: 0.21, z: 0.37}
   m_Center: {x: 0, y: 0.09, z: -0.03}
 --- !u!54 &4251986960457883658
 Rigidbody:
@@ -86,7 +88,7 @@ GameObject:
   - component: {fileID: 204164728768155396}
   - component: {fileID: 1599499939112582196}
   - component: {fileID: 7117679183529502807}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Car_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,3 +158,33 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7793347650186554615
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6772247288676233232}
+  m_Layer: 7
+  m_Name: raycast_source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6772247288676233232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7793347650186554615}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0.16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7028865346043994562}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
