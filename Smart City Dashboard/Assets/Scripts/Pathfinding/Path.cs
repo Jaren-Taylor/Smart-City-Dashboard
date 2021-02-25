@@ -170,7 +170,7 @@ public class Path
 
     private bool TryGetCollectionAtPosition(Vector2Int position, out NodeCollectionController collection)
     {
-        collection = GridManager.Instance.GetCollectionAtTileLocation(position);
+        collection = GridManager.GetCollectionAtTileLocation(position);
         if (collection is null) return false;
         return true;
     }

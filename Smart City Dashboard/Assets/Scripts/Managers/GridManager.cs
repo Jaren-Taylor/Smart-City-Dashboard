@@ -239,6 +239,14 @@ public class GridManager : MonoBehaviour
 
 
     /// <summary>
+    /// Gets the node collection controller from the specified vector2int position
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    public static NodeCollectionController GetCollectionAtTileLocation(Vector2Int position) => GetTile(position).NodeCollection;
+
+
+    /// <summary>
     /// Sets transparency of the tile at this location
     /// </summary>
     /// <param name="location"></param>
