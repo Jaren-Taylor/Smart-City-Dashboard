@@ -25,7 +25,7 @@ public class PlaceRoadState : IGridControlState
     /// <param name="location"></param>
     public void OnMouseDown(DigitalCursor location)
     {
-        if (location != null && GridManager.Instance.GetTile(location.Position) is RoadTile)
+        if (location != null && GridManager.GetTile(location.Position) is RoadTile)
         {
             GridManager.Instance.MakePermanent(location.Position);
         }

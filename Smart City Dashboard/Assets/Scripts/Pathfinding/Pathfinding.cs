@@ -14,7 +14,6 @@ public static class Pathfinding
 
         public int Cost; //How many tiles have been traversed to get here
         public int Distance { get; private set; } //Manhattan distance to target
- 
         public int CostDistance => Cost + Distance;
 
         public PathNode Parent; //What tile we came from
@@ -25,8 +24,10 @@ public static class Pathfinding
         }
     }
 
-    public static List<Vector2Int> PathFromTo(TileGrid grid, Vector2Int fromTile, Vector2Int toTile) 
+    public static List<Vector2Int> GetListOfPositionsFromTo(Vector2Int fromTile, Vector2Int toTile) 
     {
+        var grid = GridManager.Instance.Grid;
+
         var start = new PathNode() { Position = fromTile };
         var finish = new PathNode() { Position = toTile };
 
@@ -77,7 +78,7 @@ public static class Pathfinding
             }
         }
 
-        throw new System.Exception("No tile-level path found!");
+        return null;
 
     }
 
@@ -111,6 +112,8 @@ public static class Pathfinding
     private static bool IsWalkableInDirection(TileGrid grid, Vector2Int current, Tile.Facing direction)
     {
         Tile currentTile = grid[current];
+        if (!currentTile.IsPermanent)
+            return false;
         if (currentTile is BuildingTile)
         {
             if (((BuildingTile)currentTile).currentFacing == direction && grid[current + Tile.Directions[(int)direction]] is RoadTile) return true;
