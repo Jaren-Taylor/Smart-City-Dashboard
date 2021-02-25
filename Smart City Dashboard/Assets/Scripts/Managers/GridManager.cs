@@ -11,25 +11,24 @@ public class GridManager : MonoBehaviour
     public int gridSize;
 
     private DigitalCursor cursor = null;
-
     private bool cursorEnabled = true; //When false, cursor will not be shown
     private bool clickRecieved = false; //When true, update function will pick this up and signal to its state controller
 
+    private Vector2Int tileLoc;
     private GameObject ground = null;
-
     public LayerMask groundMask; // The mask used to find the ground plane
 
-    private int state = 0;
+    public GameObject NavPointPrefab;
     private NodeController EntityLoc;
+    public VehicleEntity entity;
 
     public Material TileMaterial;
     public Material TransparentMaterial;
 
+    private GridController GridSM; //Controls the state of build
     public TileGrid Grid; // Data object that holds the information about all tiles
     public static GridManager Instance { get; private set; } //Singleton pattern
 
-    private GridController GridSM; //Controls the state of build mode
-    public GameObject NavPointPrefab;
     public bool CursorEnabled { get => cursorEnabled; set => SetCursor(value); }
 
     // Used as an event handler
@@ -62,7 +61,7 @@ public class GridManager : MonoBehaviour
             Grid = new TileGrid(gridSize, gridSize);
         }
 
-        GridSM = new GridController(new PlaceRoadState());
+        GridSM = new GridController(EGridControlState.PlaceRoads);
         if (Instance != null) Destroy(this);
         Instance = this;
         
@@ -156,35 +155,18 @@ public class GridManager : MonoBehaviour
         clickRecieved = true;
     }
 
-    public void StateNumberChangeHandler(int stateNum) => ChangeState(stateNum);
+    public void ChangeStateHandler(EGridControlState state) => ChangeState(state);
 
-    public NodeCollectionController GetCollectionAtTileLocation(Vector2Int position) => Grid[position]?.NodeCollection;
+    /// <summary>
+    /// Changes the functionality of the curser by modifying GridController's active State
+    /// </summary>
+    /// <param name="state"></param>
+    public void ChangeState(EGridControlState state) { if (GridSM.state != state) GridSM.SetState(state, cursor); }
 
-    private void ChangeState(int state)
-    {
-        if(this.state != state)
-        {
-            IGridControlState newState;
-            this.state = state;
-            switch (state)
-            {
-                case 0:
-                    newState = new PlaceRoadState();
-                    break;
-                case 1:
-                    newState = new PlaceStructureState(BuildingTile.StructureType.House);
-                    break;
-                case 2:
-                    newState = new RemoveTileState();
-                    break;
-                default:
-                    newState = new PlaceRoadState();
-                    this.state = 0;
-                    break;
-            }
-            GridSM.SetState(newState, cursor);
-        }
-    }
+    // These functions are used on UI buttons onClick()
+    public void SetPlaceRoadsState() => ChangeState(EGridControlState.PlaceRoads);
+    public void SetPlaceBuildingsState() => ChangeState(EGridControlState.PlaceHouse);
+    public void SetDeleteModeState() => ChangeState(EGridControlState.DeleteMode);
 
     // Update is called once per frame
     void Update()

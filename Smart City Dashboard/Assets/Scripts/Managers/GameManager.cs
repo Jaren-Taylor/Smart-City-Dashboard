@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
         inputManager.OnPlaceTile += gridManager.PlaceHandler;
 
-        inputManager.OnNumberPressed += gridManager.StateNumberChangeHandler;
+        inputManager.OnNumberPressed += uiManager.OnNumberKeyPress;
 
         inputManager.OnCPressed += gridManager.ToggleCursor;
 
