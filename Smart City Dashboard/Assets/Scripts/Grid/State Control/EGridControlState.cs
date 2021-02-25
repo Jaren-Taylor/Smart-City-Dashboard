@@ -1,6 +1,6 @@
 public enum EGridControlState
 {
     PlaceRoads,
-    PlaceBuildings,
+    PlaceHouse,
     DeleteMode
 }

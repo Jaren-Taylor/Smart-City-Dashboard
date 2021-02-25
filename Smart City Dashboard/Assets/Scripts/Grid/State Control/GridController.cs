@@ -21,7 +21,7 @@ public class GridController
     /// <param name="initState"></param>
     public GridController(EGridControlState initState) {
         controlStates.Add(EGridControlState.PlaceRoads,        new PlaceRoadState());
-        controlStates.Add(EGridControlState.PlaceBuildings,    new PlaceStructureState(BuildingTile.StructureType.House));
+        controlStates.Add(EGridControlState.PlaceHouse,    new PlaceStructureState(BuildingTile.StructureType.House));
         controlStates.Add(EGridControlState.DeleteMode,        new RemoveTileState());
         // TODO
         // controlGroups.Add(IGridControlGroups.Sensors, new IGridControlState[3]);

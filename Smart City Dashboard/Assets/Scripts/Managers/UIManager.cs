@@ -74,4 +74,15 @@ public class UIManager : MonoBehaviour
         }
         return false;
     }
+
+    public void OnNumberKeyPress(int value)
+    {
+        if (ActiveMenu != null)
+        {
+            ActiveMenu.OnNumberKeyPress(value);
+        }else
+        {
+            EscapeMenu.OnNumberKeyPress(value);
+        }
+    }
 }

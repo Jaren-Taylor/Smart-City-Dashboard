@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem.Controls;
 using static UnityEngine.InputSystem.InputAction;
 
 /// <summary>
@@ -16,7 +17,7 @@ public class InputManager : MonoBehaviour
     public Action<float> OnCameraZoom;
 
     // Keyboard Actions
-    public Action<EGridControlState> OnNumberPressed;
+    public Action<int> OnNumberPressed;
     public Action<KeyCode> OnEscapePressed;
     public Action<KeyCode> OnTildePressed;
     public Action OnCPressed;
@@ -25,17 +26,9 @@ public class InputManager : MonoBehaviour
     public Action OnPlaceTile;
     public Action OnEndPlaceTile;
 
-    private Dictionary<KeyCode, EGridControlState> keyCodeToControlState = new Dictionary<KeyCode, EGridControlState>();
     private bool isMoving = false;
     private bool isUIActive = false;
     Vector3 moveBy;
-
-    private void Start()
-    {
-        keyCodeToControlState.Add(KeyCode.Alpha1, EGridControlState.PlaceRoads);
-        keyCodeToControlState.Add(KeyCode.Alpha2, EGridControlState.PlaceBuildings);
-        keyCodeToControlState.Add(KeyCode.Alpha3, EGridControlState.DeleteMode);
-    }
 
     private void Update()
     {
@@ -111,9 +104,7 @@ public class InputManager : MonoBehaviour
     {
         if (context.started)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) OnNumberPressed?.Invoke(keyCodeToControlState[KeyCode.Alpha1]);
-            if (Input.GetKeyDown(KeyCode.Alpha1)) OnNumberPressed?.Invoke(keyCodeToControlState[KeyCode.Alpha2]);
-            if (Input.GetKeyDown(KeyCode.Alpha1)) OnNumberPressed?.Invoke(keyCodeToControlState[KeyCode.Alpha3]);
+            OnNumberPressed?.Invoke(((KeyControl)context.control).keyCode - UnityEngine.InputSystem.Key.Digit1);
         }
     }
 

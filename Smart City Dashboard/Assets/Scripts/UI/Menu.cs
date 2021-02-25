@@ -1,15 +1,15 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class Menu : MonoBehaviour
 {
-    public Action<EGridControlState> OnUIButtonClick;
-    public List<ButtonMapping> buttonMappings;
+    protected List<Tab> tabs = new List<Tab>();
     protected RectTransform menuBounds;
+    public EUIPosition uiPosition = EUIPosition.Bottom;
+    protected float glideAmount;
+    protected int glideSpeed = 25;
     [HideInInspector]
-    public int ActiveTab;
+    public int ActiveTab = 0;
     [HideInInspector]
     public bool isOnScreen;
 
@@ -17,49 +17,147 @@ public abstract class Menu : MonoBehaviour
     {
         // Assumed to be used in child classes for use in movement calculations
         menuBounds = gameObject.GetComponent<RectTransform>();
-        // Deactivate all but the first child tab
-        for (int i = 2; i < transform.childCount; i++)
-        {
-            transform.GetChild(i).gameObject.GetComponent<Tab>().DeActivate();
-        }
-        //
-        ActiveTab = 1;
+        InitializeTabsList();
+        DeactivateTabs();
+        tabs[0].Activate();
+        InitializeGlideAmount();
         isOnScreen = false;
     }
 
+    /// <summary>
+    /// Searches transform children for objects with Tab components, and adds them to the List tabs
+    /// </summary>
+    private void InitializeTabsList()
+    {
+        tabs.Clear();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            TryFetchTab(i);
+        }
+    }
+
+    private void TryFetchTab(int i)
+    {
+        if (transform.GetChild(i).TryGetComponent(out Tab tab))
+        {
+            tabs.Add(tab);
+        }
+    }
+
+    /// <summary>
+    /// Deactivates all tabs
+    /// </summary>
+    private void DeactivateTabs()
+    {
+        for (int i = 0; i < tabs.Count; i++)
+        {
+            tabs[i].DeActivate();
+        }
+    }
+
+    /// <summary>
+    /// Set the Menu's glide amount based on its EUIPosition
+    /// </summary>
+    private void InitializeGlideAmount()
+    {
+        switch (uiPosition)
+        {
+            case EUIPosition.Bottom:
+                glideAmount = -menuBounds.rect.height;
+                break;
+            case EUIPosition.Top:
+                glideAmount = +menuBounds.rect.height;
+                break;
+            case EUIPosition.Left:
+                glideAmount = -menuBounds.rect.width;
+                break;
+            case EUIPosition.Right:
+                glideAmount = +menuBounds.rect.width;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// If needed, glide the menu into/out of place
+    /// </summary>
+    private void Update()
+    {
+        // dont try to move if we're at our target position
+        if (transform.position.y != glideAmount) GlideTowardsDestination();
+    }
+
+    /// <summary>
+    /// Opens and closes the menu
+    /// </summary>
+    public virtual void ToggleMenuHandler()
+    {
+        // move with respect to the menu's RectTransform width or height
+        float yMove = isOnScreen ? -menuBounds.rect.height : menuBounds.rect.height;
+        isOnScreen = !isOnScreen;
+        // move the menu offscreen
+        glideAmount += yMove;
+    }
+
+    /// <summary>
+    /// Glide the menu in and out of view
+    /// </summary>
+    protected virtual void GlideTowardsDestination()
+    {
+        // Move towards destination portions at a time
+        Vector3 newPosition = transform.position;
+        switch (uiPosition)
+        {
+            case EUIPosition.Bottom:
+                newPosition.y += (glideAmount - newPosition.y) / glideSpeed;
+                break;
+            case EUIPosition.Top:
+                newPosition.y += (glideAmount - newPosition.y) / glideSpeed;
+                break;
+            case EUIPosition.Left:
+                newPosition.x += (glideAmount - newPosition.x) / glideSpeed;
+                break;
+            case EUIPosition.Right:
+                newPosition.x += (glideAmount - newPosition.x) / glideSpeed;
+                break;
+        }
+        transform.position = newPosition;
+    }
+
+    /// <summary>
+    /// Switches to the next tab. If on the last tab, warps back to the 1st tab
+    /// </summary>
     public void SwitchTabs()
     {
         // deactivate current tab
-        transform.GetChild(ActiveTab).GetComponent<Tab>().DeActivate();
+        tabs[ActiveTab].DeActivate();
         // increment or reset counter
-        ActiveTab = ActiveTab == transform.childCount - 1 ? 1 : ActiveTab + 1;
+        ActiveTab = ActiveTab == tabs.Count-1 ? 0 : ActiveTab+1;
         // activate new tab
-        transform.GetChild(ActiveTab).GetComponent<Tab>().Activate();
+        tabs[ActiveTab].Activate();
     }
 
-    public abstract void ToggleMenuHandler();
+    /// <summary>
+    /// Switch to a specific tab
+    /// </summary>
+    /// <param name="index"></param>
+    public void SwitchTab(int index)
+    {
+        if (index >= 0 && index < tabs.Count)
+        {
+            ActiveTab = index;
+            tabs[index].Activate();
+        } else
+        {
+            throw new System.Exception("Tab index out of bounds "+index);
+        }
+    }
 
-    /*  public void MapFunctionToButton(ButtonMapping buttonMapping, Button button)
-      {
-          switch (buttonMapping.ControlState)
-          {
-              case EGridControlState.PlaceRoads:
-                  buttonMapping.button.onClick.AddListener(PlaceRoadsHandler);
-                  break;
-              case EGridControlState.PlaceBuildings:
-                  buttonMapping.button.onClick.AddListener(PlaceBuildingsHandler);
-                  break;
-              case EGridControlState.DeleteMode:
-                  buttonMapping.button.onClick.AddListener(DeleteModeHandler);
-                  break;
-          }
-
-      }*/
-
-
-    public EGridControlState controlState;
-
-    //private void PlaceRoadsHandler() => OnUIButtonClick?.Invoke(EGridControlState.PlaceRoads);
-    //private void PlaceBuildingsHandler() => OnUIButtonClick?.Invoke(EGridControlState.PlaceBuildings);
-    //private void DeleteModeHandler() => OnUIButtonClick?.Invoke(EGridControlState.DeleteMode);
+    /// <summary>
+    /// Communicates to a child Tab that a number key was pressed
+    /// </summary>
+    /// <param name="index"></param>
+    public void OnNumberKeyPress(int index)
+    {
+        tabs[ActiveTab].ButtonClick(index);
+    }
 }

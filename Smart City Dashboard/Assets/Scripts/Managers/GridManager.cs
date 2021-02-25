@@ -160,7 +160,7 @@ public class GridManager : MonoBehaviour
         clickRecieved = true;
     }
 
-    public void ChangeStateHandler(EGridControlState stateNum) => ChangeState(stateNum);
+    public void ChangeStateHandler(EGridControlState state) => ChangeState(state);
 
     /// <summary>
     /// Changes the functionality of the curser by modifying GridController's active State
@@ -170,7 +170,7 @@ public class GridManager : MonoBehaviour
 
     // These functions are used on UI buttons onClick()
     public void SetPlaceRoadsState() => ChangeState(EGridControlState.PlaceRoads);
-    public void SetPlaceBuildingsState() => ChangeState(EGridControlState.PlaceBuildings);
+    public void SetPlaceBuildingsState() => ChangeState(EGridControlState.PlaceHouse);
     public void SetDeleteModeState() => ChangeState(EGridControlState.DeleteMode);
 
     // Update is called once per frame
