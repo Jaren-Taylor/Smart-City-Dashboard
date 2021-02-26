@@ -95,6 +95,11 @@ public class NodeCollectionController : MonoBehaviour
 
     }
 
+    internal bool CanEnterFromPosition(Direction enterDirection, int position)
+    {
+        return true; //TODO: Add something for traffic lights here
+    }
+
     internal NodeController GetPedestrianSpawnNode(Tile tile)
     {
         if (tile is BuildingTile building)

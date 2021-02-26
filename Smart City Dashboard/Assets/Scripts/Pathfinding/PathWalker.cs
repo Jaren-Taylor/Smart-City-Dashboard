@@ -7,10 +7,8 @@ public class PathWalker : MonoBehaviour
 {
     private enum MovementStatus
     {
-        Waiting,
-        PathObstructred,
-        MovementRefused,
-        Moving
+        MoveToSingle,
+        MoveCurve
     }
 
     [SerializeField]
@@ -45,19 +43,13 @@ public class PathWalker : MonoBehaviour
 
     private void TryMoveAlongPath()
     {
-        if (path.GetCurrentNode() is NodeController nodeController)
+        if (path.GetNextTarget(transform.position, Time.deltaTime) is Vector3 position)
         {
-            transform.LookAt(nodeController.transform.position);
-            TryMoveTowardsPosition(nodeController.transform.position);
-            if (HasArrivedAtNode(nodeController.transform.position))
-            {
-                if (!path.AdvanceNextNode())
-                {
-                    DestroyPath(2f);
-                }
-            }
+            transform.LookAt(position);
+            TryMoveTowardsPosition(position);
         }
-        else DestroyPath(0f);
+
+        if (path.ReachedDestination()) DestroyPath(2f);
     }
 
     private bool HasArrivedAtNode(Vector3 position) => Vector3.Distance(transform.position, position) < .0005;

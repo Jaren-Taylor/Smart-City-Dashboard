@@ -1,0 +1,9 @@
+@startuml  
+[*] -> GetNextTarget
+GetNextTarget -> CheckTraverseList
+CheckTraverseList -> PopulateTraverseList : If list is empty
+state PopulateTraverseList {
+    [*] -> PopulateTraverseToBareMinimum
+    
+}
+@enduml

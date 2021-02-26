@@ -7,13 +7,17 @@ using UnityEngine;
 public class Path
 {
     private List<Vector2Int> TilePoints;
-    private NodeController currentNode;
+    private List<NodeController> Nodes;
+    private List<Vector3> currentlyTraversing = new List<Vector3>();
     private NodeController endingNode;
     private int currentTileIndex;
-    private NodeCollectionController currentCollection;
     private NodeCollectionController.Direction? currentExitDirection;
     private NodeCollectionController.TargetUser userType;
 
+    private Vector3? lastTarget = null;
+    private float tStep = 0f;
+
+    private bool reachedDestination = false;
 
     public Path(List<Vector2Int> tilePoints, NodeController startingPoint, NodeController endingPoint,  NodeCollectionController.TargetUser userType)
     {
@@ -26,11 +30,161 @@ public class Path
         this.userType = userType;
         endingNode = endingPoint;
         if (TilePoints.Count < 1) throw new System.Exception("Destination already reached");
-        currentNode = startingPoint;
-        currentTileIndex = 0;
         TryUpdateExitingDirection();
-        TryGetCollectionAtPosition(TilePoints[currentTileIndex], out currentCollection);
+        Nodes = GetRegularPathWithController(startingPoint, currentExitDirection.Value);
+        currentTileIndex = 0;
         RegisterToPath(tilePoints);
+    }
+
+    internal Vector3? GetNextTarget(Vector3 position, float timeDelta)
+    {
+        float excessDelta = 0f;
+        if (lastTarget.HasValue)
+        {
+            if (Vector3.Distance(lastTarget.Value, position) < 0.0005f)
+            {
+                if (tStep < 1)
+                {
+                    tStep += timeDelta;
+                    lastTarget = CalculateTarget(currentlyTraversing, tStep);
+                    if (tStep <= 1)
+                    {
+                        return lastTarget;
+                    }
+                    else
+                    {
+                        excessDelta = tStep - 1;
+                        tStep = 0f;
+                        currentlyTraversing.Clear();
+                    }
+                }
+                else
+                {
+                    currentlyTraversing.Clear();
+                }
+            }
+            else return lastTarget;
+        }
+        else currentlyTraversing.Clear();
+
+        if(currentlyTraversing.Count == 0)
+        {
+            if (PopulateTraversingList())
+            {
+                tStep = excessDelta;
+                lastTarget = CalculateTarget(currentlyTraversing, tStep);
+                return lastTarget;
+            }
+        }
+        return lastTarget;
+    }
+    private Vector3 CalculateTarget(List<Vector3> currentlyTraversing, float tStep)
+    {
+        if(currentlyTraversing.Count <= 2)
+        {
+            this.tStep = 1f;
+            return currentlyTraversing[1];
+        }
+        else return Bezier.PointAlongCurve(currentlyTraversing, tStep);
+    }
+
+    public bool ReachedDestination() => reachedDestination;
+
+    private bool PopulateTraversingList()
+    {
+        if (currentlyTraversing.Count > 0) return false; //Already populated
+
+        if (Nodes.Count < 2)
+        {
+            if (!TryGetNextTilePath())
+            {
+                if (ReachedDestinationTile()) 
+                {
+                    reachedDestination = true;
+                    return false; //Reached Destination!
+                } 
+                else return false; //Only one node sitting in pool, but can't get more. Must wait.
+            }
+            //At least one node has been added.
+        }
+
+        currentlyTraversing.Add(Nodes[0].Position);
+
+        while (CanIncreaseTraversalList())
+        {
+            Nodes.RemoveAt(0);
+            currentlyTraversing.Add(Nodes[0].Position);
+        }
+        return true;
+    }
+
+    private bool CanIncreaseTraversalList()
+    {
+        if(Nodes.Count < 2)
+        {
+            if (!TryGetNextTilePath())
+            {
+                return false;
+            }
+        }
+
+        currentlyTraversing.Add(Nodes[1].Position);
+        bool ableTo = TraverseListValid();
+        currentlyTraversing.RemoveAt(currentlyTraversing.Count - 1);
+
+        return ableTo;
+    }
+
+    private bool TryGetNextTilePath()
+    {
+        if (ReachedDestinationTile()) return false;
+        var nextCollection = GridManager.GetCollectionAtTileLocation(TilePoints[currentTileIndex + 1]);
+        var position = GridManager.GetCollectionAtTileLocation(TilePoints[currentTileIndex]).GetPositionFrom(currentExitDirection.Value, Nodes.Last());
+        if(nextCollection.CanEnterFromPosition(currentExitDirection.Value, position))
+        {
+            DepartCurrentTile();
+            var inboundNode = nextCollection.GetInboundNodeFrom(currentExitDirection.Value, position);
+            List<NodeController> newPath = GetPathNodes(inboundNode, nextCollection);
+            Nodes.AddRange(newPath);
+            return true;
+        }
+        return false;
+    }
+
+    private bool TraverseListValid()
+    {
+        int pathIndex = 0;
+        if (currentlyTraversing.Count < 2) return false;
+        else if (currentlyTraversing.Count == 2) return true;
+        else
+        {
+            while(pathIndex + 2 < currentlyTraversing.Count)
+            {
+                if(IsCollinear(
+                    currentlyTraversing[pathIndex    ],
+                    currentlyTraversing[pathIndex + 1],
+                    currentlyTraversing[pathIndex + 2]))
+                {
+                    return false;
+                }
+                pathIndex++;
+            }
+            return true;
+        }
+    }
+
+    private bool IsCollinear(Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        List<float> Distances = new List<float>()
+        {
+            Vector3.Distance(p1, p2),
+            Vector3.Distance(p2, p3),
+            Vector3.Distance(p3, p1)
+        };
+
+        Distances.Sort();
+
+        return Math.Abs(Distances[2] - (Distances[1] + Distances[0])) < .0005f;
     }
 
     ~Path()
@@ -48,13 +202,13 @@ public class Path
         if (newPath is null)
         {
             // Can't set destination, so destroy self
-            currentNode = null;
             endingNode = null;
         }
         else
         {
+            throw new Exception("Path modified");
             // New path valid, assign path object
-            InitalizeClass(newPath, currentNode, endingNode, userType);
+            //InitalizeClass(newPath, currentNode, endingNode, userType);
         }
 
     }
@@ -77,77 +231,42 @@ public class Path
         }
     }
 
-    /// <summary>
-    /// Gets the current node to move to
-    /// </summary>
-    /// <returns></returns>
-    public NodeController GetCurrentNode() => currentNode;
-
-    /// <summary>
-    /// Advances current node to the next one along the path. Returns false if already at end of path or unable to advance.
-    /// </summary>
-    /// <returns></returns>
-    public bool AdvanceNextNode()
-    {
-        //Once current exit direcition is null, this indicates entity is on the final tile.
-        if (currentExitDirection is null) return false;
-
-        //Debug.Log($"Move toward: [{currentExitDirection}]");
-
-        //Figures out the next node on the current collection
-        var nextNode = GetNodeInDirection(currentExitDirection.Value);
-
-        //Debug.Log(nextNode?.Position);
-
-        //If next node was found to be null, try to transition to next tile
-        if(nextNode is null) return TryAdvanceNextTile();
-
-        //If next node was found in current collection, overwrite current node with new one
-        else currentNode = nextNode;
-        
-        //Return successfully able to find next node
-        return true;
-    }
-
-    private NodeController GetNodeInDirection(NodeCollectionController.Direction direction) => 
+    private NodeController GetNodeInDirection(NodeCollectionController.Direction direction, NodeController controller) =>
         (userType == NodeCollectionController.TargetUser.Vehicles) ?
-            currentNode.GetNodeForVehicleByDirection(direction) :
-            currentNode.GetNodeForPedestrianByDirection(direction);
+            controller.GetNodeForVehicleByDirection(direction) :
+            controller.GetNodeForPedestrianByDirection(direction);
 
-    private bool TryAdvanceNextTile()
+    private List<NodeController> GetPathNodes(NodeController inboundNode, NodeCollectionController nextCollection)
     {
-        //Point tile index to the next tile, and handles deregistration
-        DepartCurrentTile();
+        if(currentTileIndex == TilePoints.Count - 1)
+        {
+            //On last tile can't use exit direction
+            return new List<NodeController>() { inboundNode };
+        }
 
-        //Checks if there is no next tile to find
-        if (ReachedDestinationTile()) return false;
+        if (!TryUpdateExitingDirection()) throw new Exception("Can't update direction");
+
+        if (currentTileIndex == TilePoints.Count - 2)
+        {
+            //On second to last. Must use special logic to pull into driveway
+            return GetRegularPathWithController(inboundNode, currentExitDirection.Value);
+        } 
         else
         {
-            //Debug.Log("Advancing Next node");
-
-            int position = currentCollection.GetPositionFrom(currentExitDirection.Value, currentNode);
-
-            //If able to get the node collection controller at tile position, updates current collection controller
-            if (TryGetCollectionAtPosition(TilePoints[currentTileIndex], out currentCollection))
-            {
-
-                //Debug.Log($"Entering from: [{currentExitDirection},{position}]");
-
-                //Depending on the position and exiting direction sets node to the adjacent node on the next collection
-                currentNode = currentCollection.GetInboundNodeFrom(currentExitDirection.Value, position);
-
-                //Trys to get new exiting direction. Will fail when entering the last tile
-                TryUpdateExitingDirection();
-
-                //Debug.Log($"Updated exiting: [{currentExitDirection}]");
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            //On normal tile, use normal pathing.
+            return GetRegularPathWithController(inboundNode, currentExitDirection.Value);
         }
+    }
+
+    private List<NodeController> GetRegularPathWithController(NodeController inital, NodeCollectionController.Direction direction)
+    {
+        List<NodeController> output = new List<NodeController>();
+        output.Add(inital);
+        while (GetNodeInDirection(direction, output[output.Count - 1]) is NodeController nextNode)
+        {
+            output.Add(nextNode);
+        }
+        return output;
     }
 
     private void DepartCurrentTile()
@@ -168,12 +287,5 @@ public class Path
         return false;
     }
 
-    private bool TryGetCollectionAtPosition(Vector2Int position, out NodeCollectionController collection)
-    {
-        collection = GridManager.GetCollectionAtTileLocation(position);
-        if (collection is null) return false;
-        return true;
-    }
-
-    private bool ReachedDestinationTile() => currentTileIndex >= TilePoints.Count;
+    private bool ReachedDestinationTile() => currentTileIndex >= TilePoints.Count - 1;
 }
