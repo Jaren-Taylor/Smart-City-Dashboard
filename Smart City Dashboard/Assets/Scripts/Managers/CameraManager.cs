@@ -47,7 +47,7 @@ public class CameraManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        entityCamera.enabled = false;
+        entityCamera.gameObject.SetActive(false);
         ResetCamera();
     }
 
@@ -101,8 +101,8 @@ public class CameraManager : MonoBehaviour
         GridManager.Instance.CursorEnabled = false;
         isFollowingEntity = true;
         GridManager.Instance.GridSM.SuspendState(new DigitalCursor());
-        mainCamera.enabled = false;
-        entityCamera.enabled = true;
+        mainCamera.gameObject.SetActive(false);
+        entityCamera.gameObject.SetActive(true);
         trackedEntity = entity;
         trackedEntity.OnBeingDestroy += TrackedEntityDestroyed;
     }
@@ -115,8 +115,8 @@ public class CameraManager : MonoBehaviour
     public void StopFollowEntity()
     {
         GridManager.Instance.CursorEnabled = true;
-        entityCamera.enabled = false;
-        mainCamera.enabled = true;
+        entityCamera.gameObject.SetActive(false);
+        mainCamera.gameObject.SetActive(true);
         GridManager.Instance.GridSM.ResumeState(new DigitalCursor());
         ResetCamera();
         isFollowingEntity = false;
@@ -127,7 +127,7 @@ public class CameraManager : MonoBehaviour
     public void FollowEntity(Entity entity)
     {
         float height = entity.GetComponent<BoxCollider>().bounds.size.y;
-        transform.position = entity.transform.position + Vector3.up * height * 1.5f;
+        transform.position = entity.transform.position + Vector3.up * height;
         transform.rotation = entity.transform.rotation;
     }
     
