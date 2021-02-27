@@ -111,19 +111,21 @@ public static class Pathfinding
 
     private static bool IsWalkableInDirection(TileGrid grid, Vector2Int current, Tile.Facing direction)
     {
-        Tile currentTile = grid[current];
-        if (!currentTile.IsPermanent)
-            return false;
-        if (currentTile is BuildingTile)
+        if (grid[current] is Tile currentTile)
         {
-            if (((BuildingTile)currentTile).currentFacing == direction && grid[current + Tile.Directions[(int)direction]] is RoadTile) return true;
-        } 
-        else if (currentTile is RoadTile)
-        {
-            var tilePos = current + Tile.Directions[(int)direction];
-            Tile tileInDirection = grid[tilePos];
-            if (tileInDirection is RoadTile) return true;
-            else if (tileInDirection is BuildingTile && ((BuildingTile)tileInDirection).currentFacing == Tile.OppositeDirection(direction)) return true;
+            if (!currentTile.IsPermanent)
+                return false;
+            if (currentTile is BuildingTile)
+            {
+                if (((BuildingTile)currentTile).currentFacing == direction && grid[current + Tile.Directions[(int)direction]] is RoadTile) return true;
+            }
+            else if (currentTile is RoadTile)
+            {
+                var tilePos = current + Tile.Directions[(int)direction];
+                Tile tileInDirection = grid[tilePos];
+                if (tileInDirection is RoadTile) return true;
+                else if (tileInDirection is BuildingTile && ((BuildingTile)tileInDirection).currentFacing == Tile.OppositeDirection(direction)) return true;
+            }
         }
         return false;
     }

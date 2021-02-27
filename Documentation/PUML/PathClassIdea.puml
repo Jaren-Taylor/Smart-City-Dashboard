@@ -1,16 +1,18 @@
 @startuml
-class PathFinding{
-    +GetPath(StartTile : Vector2Int, EndTile: Vector2Int, entityType: Entity) : Path
+enum StreamStatus{
+    Success,
+    Denied,
+    EndOfStream
 }
 
-class Path {
-    +GetCurrentNode() : NodeController
-    +AdvanceNextNode() : Bool
+class NodeStream{
+    -Buffer : List<NodeController>
+    -TilePoints : List<Vector2Int>
+    -PointingIndex : int
+    -RegisterToTile(position : Vector2Int)
+    -DeregisterFromTile(position : Vector2Int)
+
+    +GetCurrent() : NodeController
+    +MoveNext() : StreamStatus
 }
-
-
-class Entity {
-    -path : Path
-}
-
 @enduml

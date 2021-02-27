@@ -21,14 +21,14 @@ public class GridController
     /// <param name="initState"></param>
     public GridController(EGridControlState initState) {
         controlStates.Add(EGridControlState.PlaceRoads,        new PlaceRoadState());
-        controlStates.Add(EGridControlState.PlaceHouse,    new PlaceStructureState(BuildingTile.StructureType.House));
+        controlStates.Add(EGridControlState.PlaceHouse, new RemoveTileState());//new PlaceStructureState(BuildingTile.StructureType.House));
         controlStates.Add(EGridControlState.DeleteMode,        new RemoveTileState());
         // TODO
         // controlGroups.Add(IGridControlGroups.Sensors, new IGridControlState[3]);
         // controlGroups.Add(IGridControlGroups.Entities, new IGridControlState[3]);
         // controlGroups.Add(IGridControlGroups.Objects, new IGridControlState[3]);
         activeControlState = controlStates[initState];
-        state = initState;
+        //SetState(initState, new DigitalCursor(DigitalCursor.Fake.Zero));
     }
 
     /// <summary>

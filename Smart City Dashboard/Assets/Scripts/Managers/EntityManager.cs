@@ -49,10 +49,9 @@ public class EntityManager : MonoBehaviour
     {
         if (GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation))
         {
-            
             PedestrianEntity pedestrianEntity = SpawnPedestrian(spawnLocation);
-            if (!pedestrianEntity.TrySetDestination(targetLocation))
-                DestroyEntity(pedestrianEntity);
+            if(pedestrianEntity is Entity && !pedestrianEntity.TrySetDestination(targetLocation))
+                    DestroyEntity(pedestrianEntity);
         }
     }
 
@@ -61,7 +60,7 @@ public class EntityManager : MonoBehaviour
         if (GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation))
         {
             VehicleEntity vehicleEntity = SpawnVehicle(type,spawnLocation);
-            if (!vehicleEntity.TrySetDestination(targetLocation))
+            if (vehicleEntity is Entity && !vehicleEntity.TrySetDestination(targetLocation))
                 DestroyEntity(vehicleEntity);
         }
     }
@@ -81,14 +80,16 @@ public class EntityManager : MonoBehaviour
 
     public PedestrianEntity SpawnPedestrian(Vector2Int spawnLocation)
     {
-        Tile tile = GridManager.GetTile(spawnLocation);
-        return SpawnPedestrian(tile.NodeCollection.GetPedestrianSpawnNode(tile));
-       
+        if(GridManager.GetTile(spawnLocation) is Tile tile)
+            return SpawnPedestrian(tile.NodeCollection.GetPedestrianSpawnNode(tile));
+        else return null;
+
     }
     public VehicleEntity SpawnVehicle(VehicleEntity.VehicleType type, Vector2Int spawnLocation)
     {
-        Tile tile = GridManager.GetTile(spawnLocation);
-        return SpawnVehicle(type, tile.NodeCollection.GetVehicleSpawnNode(tile));
+        if (GridManager.GetTile(spawnLocation) is Tile tile)
+            return SpawnVehicle(type, tile.NodeCollection.GetVehicleSpawnNode(tile));
+        else return null;
     }
     private void Register(Entity entity)
     {
@@ -149,7 +150,7 @@ public class EntityManager : MonoBehaviour
     {
         if (UnityEngine.Random.Range(0,2) == 0)
             RandomlySpawnPedestrian();
-        else
+        else 
             RandomlySpawnVehicle(GetRandomVehicleType());
     }
 

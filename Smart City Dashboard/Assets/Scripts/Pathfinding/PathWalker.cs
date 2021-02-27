@@ -20,17 +20,27 @@ public class PathWalker : MonoBehaviour
     private float maxSpeed = .5f;
     private Path path;
 
-    public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
+    private Vector2Int currentDestination;
+    private NodeCollectionController.TargetUser userType;
+
+    private Vector3 MyPosition => transform.position;
 
     public Action<float> OnReachedDestination;
 
     public bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser)
     {
-        var pathList = Pathfinding.GetListOfPositionsFromTo(TilePosition, tileLocation);
+        currentDestination = tileLocation;
+        userType = targetUser;
+        var pathList = Pathfinding.GetListOfPositionsFromTo(MyPosition.ToGridInt(), tileLocation);
         if (pathList is null)
+            return false; 
+        path = new Path(pathList, MyPosition, null, targetUser);
+        if (path.IsValid()) return true;
+        else
+        {
+            path = null;
             return false;
-        path = new Path(pathList, SpawnPosition, null, targetUser);
-        return !(path is null);
+        }
     }
 
     private void Update()
@@ -43,27 +53,42 @@ public class PathWalker : MonoBehaviour
 
     private void TryMoveAlongPath()
     {
-        if (path.GetNextTarget(transform.position, Time.deltaTime) is Vector3 position)
-        {
-            transform.LookAt(position);
-            TryMoveTowardsPosition(position);
-        }
+        Vector3 target = path.GetNextTarget(transform.position, Time.deltaTime);
 
-        if (path.ReachedDestination()) DestroyPath(2f);
+        if (MyPosition.IsBasicallyEqualTo(target))
+        {
+            if (path.ReachedDestination()) DestroyPath(2f);
+            else if (!path.IsValid() && !TrySetDestination(currentDestination, userType)) DestroyPath(0f); 
+            else
+            {
+                //Just wait ¯\_(-.-)_/¯
+            }
+        }
+        else
+        {
+            transform.LookAt(target);
+            TryMoveTowardsPosition(target);
+        }
     }
 
-    private bool HasArrivedAtNode(Vector3 position) => Vector3.Distance(transform.position, position) < .0005;
     private void TryMoveTowardsPosition(Vector3 position)
     {
         var speed = maxSpeed;
-        /* TODO: Collision Check
-        if (Physics.Raycast(raycastSource.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, maxSpeed * .5f))
+        /*
+        //TODO: Collision Check
+        var timeDelta = Time.deltaTime;
+        if (Physics.Raycast(raycastSource.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, maxSpeed * timeDelta) ||
+            Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit2, maxSpeed * timeDelta) ||
+            Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit3, maxSpeed * timeDelta))
         {
-            Debug.Log("Draw hit distance: " + hit.distance);
+            //Debug.Log("Draw hit distance: " + hit.distance);
             Debug.DrawRay(raycastSource.transform.position, transform.TransformDirection(Vector3.forward) * maxSpeed, Color.white, 1f, false);
+            Debug.DrawRay(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, transform.TransformDirection(Vector3.forward) * maxSpeed * timeDelta, Color.white, 1f, false);
+            Debug.DrawRay(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, transform.TransformDirection(Vector3.forward) * maxSpeed * timeDelta, Color.white, 1f, false);
             speed = 0;
         }
         */
+        
         transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
     }
     private void DestroyPath(float delay)
