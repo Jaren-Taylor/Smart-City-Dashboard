@@ -25,7 +25,7 @@ public class GridManager : MonoBehaviour
     public Material TileMaterial;
     public Material TransparentMaterial;
 
-    private GridController GridSM; //Controls the state of build
+    public GridController GridSM { get; private set; }  //Controls the state of build
     public TileGrid Grid; // Data object that holds the information about all tiles
     public static GridManager Instance { get; private set; } //Singleton pattern
 
@@ -207,7 +207,7 @@ public class GridManager : MonoBehaviour
 
 
         if (Input.GetKeyDown(KeyCode.C)) CursorEnabled = !CursorEnabled; //If C pressed, cursor is disabled
-        if (CursorEnabled)
+        if (CursorEnabled && CameraManager.Instance.isFollowingEntity is false)
         {
             HandleCursorMovement(); //Updates state with cursor movement
             if (clickRecieved)
