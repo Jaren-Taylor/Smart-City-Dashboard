@@ -42,7 +42,14 @@ public class EntityManager : MonoBehaviour
         {
             RandomlySpawnPedestrian();
         }
-
+        if(Input.GetKeyDown(KeyCode.E) && CameraManager.Instance.isFollowingEntity is false)
+        {
+            CameraManager.Instance.StartFollowEntity(Entities[0]);
+        }
+        else if (Input.GetKeyDown(KeyCode.E) && CameraManager.Instance.isFollowingEntity is true)
+        {
+            CameraManager.Instance.StopFollowEntity();
+        }
     }
 
     private void RandomlySpawnPedestrian()

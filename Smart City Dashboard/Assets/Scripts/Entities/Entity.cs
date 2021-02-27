@@ -9,6 +9,8 @@ public abstract class Entity : MonoBehaviour
 
     public Action<Entity, float> OnReachedDestination;
 
+    public Action OnBeingDestroy;
+
     public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
 
     /// <summary>
@@ -73,6 +75,11 @@ public abstract class Entity : MonoBehaviour
     private static NodeCollectionController.Direction GetValidRoadDirection(RoadTile road)
     {
         return NodeCollectionController.Direction.EastBound;
+    }
+
+    private void OnDestroy()
+    {
+        OnBeingDestroy?.Invoke();
     }
 
     /// <summary>
