@@ -23,6 +23,9 @@ public class PathWalker : MonoBehaviour
     private Vector2Int currentDestination;
     private NodeCollectionController.TargetUser userType;
 
+    private float stopTime = 0f;
+    private float trafficTolerance = 0f;
+
     private Vector3 MyPosition => transform.position;
 
     public Action<float> OnReachedDestination;
@@ -31,6 +34,15 @@ public class PathWalker : MonoBehaviour
     {
         currentDestination = tileLocation;
         userType = targetUser;
+        if (targetUser == NodeCollectionController.TargetUser.Pedestrians)
+        {
+            maxSpeed = .25f;
+            trafficTolerance = UnityEngine.Random.Range(10f, 15f);
+        }
+        else
+        {
+            trafficTolerance = UnityEngine.Random.Range(15f, 20f);
+        }
         var pathList = Pathfinding.GetListOfPositionsFromTo(MyPosition.ToGridInt(), tileLocation);
         if (pathList is null)
             return false; 
@@ -74,21 +86,30 @@ public class PathWalker : MonoBehaviour
     private void TryMoveTowardsPosition(Vector3 position)
     {
         var speed = maxSpeed;
-        /*
-        //TODO: Collision Check
-        var timeDelta = Time.deltaTime;
-        if (Physics.Raycast(raycastSource.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, maxSpeed * timeDelta) ||
-            Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit2, maxSpeed * timeDelta) ||
-            Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit3, maxSpeed * timeDelta))
+
+        if (false)
         {
-            //Debug.Log("Draw hit distance: " + hit.distance);
-            Debug.DrawRay(raycastSource.transform.position, transform.TransformDirection(Vector3.forward) * maxSpeed, Color.white, 1f, false);
-            Debug.DrawRay(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, transform.TransformDirection(Vector3.forward) * maxSpeed * timeDelta, Color.white, 1f, false);
-            Debug.DrawRay(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, transform.TransformDirection(Vector3.forward) * maxSpeed * timeDelta, Color.white, 1f, false);
-            speed = 0;
+            //TODO: Collision Check
+            var timeDelta = Time.deltaTime;
+            if (Physics.Raycast(raycastSource.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, maxSpeed * .25f) ||
+                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit2, maxSpeed * .25f) ||
+                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit3, maxSpeed * .25f) ||
+                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, Quaternion.AngleAxis(30, Vector3.up) * transform.TransformDirection(Vector3.forward), out RaycastHit hit4, maxSpeed * .25f) ||
+                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, Quaternion.AngleAxis(30, Vector3.up) * transform.TransformDirection(Vector3.forward), out RaycastHit hit5, maxSpeed * .25f))
+            {
+
+                //Debug.Log("Draw hit distance: " + hit.distance);
+                //Debug.DrawRay(raycastSource.transform.position, transform.TransformDirection(Vector3.forward) * maxSpeed, Color.white, 1f, false);
+                //Debug.DrawRay(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, transform.TransformDirection(Vector3.forward) * maxSpeed * timeDelta, Color.white, 1f, false);
+                //Debug.DrawRay(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, transform.TransformDirection(Vector3.forward) * maxSpeed * timeDelta, Color.white, 1f, false);
+                speed = 0;
+                stopTime += timeDelta;
+            }
+
+            if (speed != 0) stopTime = 0f;
+
+            if (stopTime > trafficTolerance) DestroyPath(0f);
         }
-        */
-        
         transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
     }
     private void DestroyPath(float delay)

@@ -136,7 +136,7 @@ public class NodeCollectionController : MonoBehaviour
 
     internal bool CanEnterFromPosition(Direction enterDirection, int position)
     {
-        //return !isLocked; For debug only
+        //return !isLocked; //For debug only
         
         return position.IsBetween(0, 3); //TODO: Add something for traffic lights here
     }
