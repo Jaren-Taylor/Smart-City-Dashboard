@@ -28,6 +28,8 @@ public class PathWalker : MonoBehaviour
 
     private Vector3 MyPosition => transform.position;
 
+    public float TurnDelta { get; private set; } = 0f;
+
     public Action<float> OnReachedDestination;
 
     public bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser)
@@ -78,7 +80,10 @@ public class PathWalker : MonoBehaviour
         }
         else
         {
+            TurnDelta = Vector3.SignedAngle(transform.TransformDirection(Vector3.forward), target - transform.position, Vector3.up);
             transform.LookAt(target);
+
+
             TryMoveTowardsPosition(target);
         }
     }

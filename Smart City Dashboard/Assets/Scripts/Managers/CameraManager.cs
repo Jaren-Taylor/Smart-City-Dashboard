@@ -8,6 +8,8 @@ public class CameraManager : MonoBehaviour
     public Camera mainCamera;
     public Camera entityCamera;
 
+    public FirstPersonViewport vehicleViewport;
+
     [Range(0, 3)]
     public int defaultRotation;
 
@@ -25,6 +27,8 @@ public class CameraManager : MonoBehaviour
 
     private Vector3 trackedPosition;
     public Vector3 Position { get => transform.localPosition; set => trackedPosition = new Vector3(value.x, 0f, value.z); }
+
+    private float targetTrackHeight = 0f;
 
     public static CameraManager Instance { get; private set; }
 
@@ -105,6 +109,19 @@ public class CameraManager : MonoBehaviour
         entityCamera.gameObject.SetActive(true);
         trackedEntity = entity;
         trackedEntity.OnBeingDestroy += TrackedEntityDestroyed;
+        var collider = entity.GetComponent<BoxCollider>();//.bounds.size.y;
+        if (entity is VehicleEntity vehicle)
+        {
+            vehicleViewport.gameObject.SetActive(true);
+            vehicleViewport.SetTrackTo(vehicle);
+            targetTrackHeight = collider.bounds.size.y * .75f;
+            vehicle.SetModelVisibility(false);
+        }
+        else
+        {
+            vehicleViewport.gameObject.SetActive(false);
+            targetTrackHeight = collider.bounds.size.y;
+        }
     }
 
     private void TrackedEntityDestroyed()
@@ -123,11 +140,20 @@ public class CameraManager : MonoBehaviour
         if(trackedEntity is Entity entity)
             entity.OnBeingDestroy -= TrackedEntityDestroyed;
         trackedEntity = null;
+        if (vehicleViewport.gameObject.activeSelf)
+        {
+            vehicleViewport.StopTracking();
+            vehicleViewport.gameObject.SetActive(false);
+            if(trackedEntity is VehicleEntity vehicleEntity)
+            {
+                vehicleEntity.SetModelVisibility(true);
+            }
+        }
+        
     }
     public void FollowEntity(Entity entity)
     {
-        float height = entity.GetComponent<BoxCollider>().bounds.size.y;
-        transform.position = entity.transform.position + Vector3.up * height;
+        transform.position = entity.transform.position + Vector3.up * targetTrackHeight;
         transform.rotation = entity.transform.rotation;
     }
     

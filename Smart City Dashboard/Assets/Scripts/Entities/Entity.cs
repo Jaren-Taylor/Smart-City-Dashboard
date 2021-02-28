@@ -9,6 +9,9 @@ public abstract class Entity : MonoBehaviour
 
     public Action<Entity, float> OnReachedDestination;
 
+    [SerializeField]
+    private GameObject Visuals;
+
     public Action OnBeingDestroy;
 
     public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
@@ -80,6 +83,14 @@ public abstract class Entity : MonoBehaviour
     private void OnDestroy()
     {
         OnBeingDestroy?.Invoke();
+    }
+
+    public void SetModelVisibility(bool value)
+    {
+        if(Visuals is GameObject)
+        {
+            Visuals.SetActive(value);
+        }
     }
 
     /// <summary>
