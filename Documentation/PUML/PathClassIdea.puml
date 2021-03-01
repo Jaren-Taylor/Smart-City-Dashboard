@@ -1,18 +1,119 @@
 @startuml
-enum StreamStatus{
+enum StreamResponse {
     Success,
-    Denied,
-    EndOfStream
+    Refused,
+    EndOfStream,
+    Corrupted
 }
 
-class NodeStream{
-    -Buffer : List<NodeController>
-    -TilePoints : List<Vector2Int>
-    -PointingIndex : int
+class NodeStream {
+    -buffer : LinkedList<NodeController>
+    -path : LinkedList<Vector2Int>
+    -source : TileGrid
     -RegisterToTile(position : Vector2Int)
     -DeregisterFromTile(position : Vector2Int)
 
     +GetCurrent() : NodeController
-    +MoveNext() : StreamStatus
+    +MoveNext() : StreamResponse
+    +PeekNext(out position : Vector3) : StreamResponse
+    +IsEndOfStream() : bool
+    +IsCorrupted() : bool
 }
+
+class Path {
+    -stream : NodeStream
+    -currentlyTraversing : List<Vector3>
+
+    +IsValid() : bool
+    +ReachedDestination() : bool
+    +GetNextTarget(currentPosition : Vector3, timeDelta : float) : Vector3
+}
+
+class PathWalker {
+    -maxSpeed : float
+    -path : Path
+    -currentDestination : Vector2Int
+    +TrySetDestination(tileLocation : Vector2Int, targetUser : TargetUser)
+    -TryMoveAlongPath()
+}
+
+PathWalker <-down- Path : Has a
+Path <-down- NodeStream : Has a
+@enduml
+
+@startuml Path Flow
+actor EntityManager
+participant PathWalker
+participant Path
+participant NodeStream
+
+== Initialization ==
+
+EntityManager -> PathWalker : TrySetDestination()
+PathWalker -> PathWalker : Generates supermesh \n path through Pathfinding
+
+alt Path Found
+    PathWalker -> Path : Creates instance with supernode list
+    Path -> NodeStream : Creates instance with supernode list
+    NodeStream -> NodeStream : Trys to initialize buffer with inital data
+    alt Initial Data Valid
+        NodeStream -> NodeStream : Initializes
+    else Not able to bind to source
+        NodeStream -> NodeStream : Sets corrupted flag
+    end
+
+    PathWalker -> NodeStream : Check for corruption
+    alt No Corruption Found
+        PathWalker -> EntityManager : Returns true
+    else Corruption Found
+        PathWalker -> Path : Destroys object
+        PathWalker -> EntityManager : Returns false
+    end
+else No path Found
+    PathWalker -> EntityManager : Returns false
+end
+
+== One Frame of Movement ==
+
+PathWalker -> Path : Get Next Target
+
+Path -> NodeStream : Checks for corruption
+alt Is Corruption
+    Path -> PathWalker : Returns Pathwalkers position
+else No Corruption
+    alt PathWalker has reached last Target
+        Path -> Path : Advances bezier curve target
+        alt End of curve
+            Path -> Path : Generate new curve
+            loop Curve Is Valid 
+                Path -> NodeStream : Peek Next Node
+                alt Can get next node
+                    Path -> Path : Extend curve
+                    alt Curve Invalid
+                        Path -> Path : Remove last from curve, exit loop
+                    else 
+                        Path -> NodeStream : Advance Stream
+                    end
+                else 
+                    Path -> Path : Return last good path
+                end
+            end
+        end
+        Path -> PathWalker : Return new target
+    else
+        Path -> PathWalker : Return last target
+    end
+
+end
+
+alt Target Returned == Curent Position
+    PathWalker -> Path : Check Statuses
+    alt Reached Destination 
+        PathWalker -> PathWalker : Invoke Reached Destination Event
+    else If Path is Invalid and cannot be recreated
+        PathWalker -> PathWalker : Invoke Reached Destination Event \nHard Delete
+    end
+else Target is different
+    PathWalker -> PathWalker : Move Towards Position
+end
 @enduml
