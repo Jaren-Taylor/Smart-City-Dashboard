@@ -12,7 +12,6 @@ public abstract class Menu : MonoBehaviour
     public int ActiveTab = 0;
     [HideInInspector]
     public bool isOnScreen;
-    public List<Tab> Tabs;
 
     protected void Start()
     {

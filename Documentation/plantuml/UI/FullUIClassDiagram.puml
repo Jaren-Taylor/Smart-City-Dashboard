@@ -1,18 +1,22 @@
 @startuml
+
+hide empty members
+
 class UIManager {
     - Dictionary<KeyCode, Menu> keyToMenuDict
     - List<Menu> menus
     + Action<bool> OnUIToggle
+    + Action<int> OnTabSwitch
     + Menu EscapeMenu
     + Menu TildeMenu
     + Menu ActiveMenu
     - Start() : void
-    + OnUIToggleHandler() : void
-    + IsUIActive() : void
     + SwitchTabs() : void
     + ToggleMenu(KeyCode key) : void
     - TurnOffMenu(Menu menu) : void
     - TurnOnMenu(Menu menu) : void
+    + IsUIActive() : bool
+    + OnNumberKeyPress(int value) : void
 }
 
 class DashboardController {
@@ -20,44 +24,64 @@ class DashboardController {
     - HeatMap heatmap
     - Start() : void
     + CreateHeatMap() : void
+    - UpdateGraphic(HeatMap heatMap) : void
 }
 
 class Menu {
-    # RectTransform menuBounds;
-    - int activeTab;
-    + bool isOnScreen;
+    # List<Tab> tabs
+    # RectTransform menuBounds
+    + EUIPosition uiPosition
+    # float glideAmount
+    # int glideSpeed
+    + int activeTab
+    + bool isOnScreen
     # Start() : void
+    - void Update()
+    - InitializeTabsList() : void
+    - TryFetchTab(int i) : void
+    - DeactivateTabs() : void
+    - InitializeGlideAmount() : void
+    + ToggleMenuHandler() : void
+    # GlideTowardsDestination() : void
     + SwitchTabs() : void
-    + {abstract} ToggleMenuHandler() : void
+    + SwitchTab(int index) : void
+    + OnNumberKeyPress(int index) : void
 }
 
 class ModeMenu {
-    - float targetYPos
-    - Start() : void
-    - Update() : void
-    + ToggleMenuHandler() : void
+
 }
 
 class DashboardMenu {
-    - float targetXPos
     - Image heatmapImage
-    - HeatMap testMap
-    - Start() : void
-    - Update() : void
-    + ToggleMenuHandler() : void
     + UpdateSpriteFromTexture(Texture2D texture) : void
 }
 
 class Tab {
+    - Menu parent
+    - List<Button> buttons
+    - Start() : void
+    - InitializeButtonList() : void
+    - TryFetchButton() : void
+    + ButtonClick(int i) : void
     + DeActivate() : void
     + Activate() : void
     - SetTransparency(float a) : void
 }
 
+enum EUIPosition {
+    top
+    bottom
+    left
+    right
+}
+
 UIManager --o Menu
+Menu <|-- EUIPosition
 Menu <|-- DashboardMenu
 Menu <|-- ModeMenu
 DashboardController --> DashboardMenu
 DashboardMenu --> Tab
 ModeMenu --> Tab
+
 @enduml

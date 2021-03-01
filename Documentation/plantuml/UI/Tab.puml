@@ -1,8 +1,0 @@
-@startuml
-class Tab {
-    + DeActivate() : void
-    + Activate() : void
-    - SetTransparency(float a) : void
-}
-MonoBehaviour <|-- Tab
-@enduml

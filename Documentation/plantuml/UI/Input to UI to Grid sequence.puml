@@ -1,0 +1,10 @@
+@startuml
+
+InputManager -> UIManager : Key number
+UIManager -> ActiveMenu : Key number
+ActiveMenu -> ActiveTab : Key number
+ActiveTab -> Button : Button click
+Button -> GridManager : Control state
+GridManager -> GridController : Control state
+
+@enduml
