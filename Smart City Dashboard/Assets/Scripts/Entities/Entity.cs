@@ -17,7 +17,7 @@ public abstract class Entity : MonoBehaviour
     public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
 
     [SerializeField]
-    private Renderer renderer;
+    private Renderer childRenderer;
 
 
     /// <summary>
@@ -103,7 +103,7 @@ public abstract class Entity : MonoBehaviour
 
     protected void SetMaterial(Material material)
     {
-        renderer.material=material;
+        childRenderer.material=material;
 
     }
 

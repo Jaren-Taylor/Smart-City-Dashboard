@@ -34,7 +34,7 @@ public class EntityManager : MonoBehaviour
             //Debug.Log($"Entity Count: {Entities.Count}  SpawnRate: {1f/spawnDelay} TargetTotal: {TargetTotal}");
         }
 
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             RandomlySpawnVehicle(GetRandomVehicleType());
         }
@@ -44,7 +44,8 @@ public class EntityManager : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.E) && CameraManager.Instance.isFollowingEntity is false)
         {
-            CameraManager.Instance.StartFollowEntity(Entities[0]);
+            if(Entities.Count > 0)
+                CameraManager.Instance.StartFollowEntity(Entities[0]);
         }
         else if (Input.GetKeyDown(KeyCode.E) && CameraManager.Instance.isFollowingEntity is true)
         {

@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Visuals: {fileID: 178873065954095586}
-  renderer: {fileID: 3080853836326940106}
+  childRenderer: {fileID: 3080853836326940106}
 --- !u!54 &3675232731571026486
 Rigidbody:
   m_ObjectHideFlags: 0
