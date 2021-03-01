@@ -1,7 +1,5 @@
-<<<<<<< HEAD
-=======
+
 using NUnit.Framework;
->>>>>>> b53a54f119af99d11537d00654eeb13e89ac73d3
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +20,6 @@ public abstract class Menu : MonoBehaviour
     {
         // Assumed to be used in child classes for use in movement calculations
         menuBounds = gameObject.GetComponent<RectTransform>();
-<<<<<<< HEAD
         InitializeTabsList();
         DeactivateTabs();
         tabs[0].Activate();
@@ -140,10 +137,6 @@ public abstract class Menu : MonoBehaviour
         ActiveTab = ActiveTab == tabs.Count-1 ? 0 : ActiveTab+1;
         // activate new tab
         tabs[ActiveTab].Activate();
-=======
-        FetchTabs();
-        DeactivateTabs();
-        isOnScreen = false;
     }
 
     private void FetchTabs()
@@ -169,6 +162,7 @@ public abstract class Menu : MonoBehaviour
         }
         //
     }
+
     public void SwitchTabs()
     {
         // deactivate current tab
@@ -177,7 +171,6 @@ public abstract class Menu : MonoBehaviour
         ActiveTab = ActiveTab == Tabs.Count - 1 ? 0 : ActiveTab+1;
         // activate new tab
         Tabs[ActiveTab].Activate();
->>>>>>> b53a54f119af99d11537d00654eeb13e89ac73d3
     }
 
     /// <summary>

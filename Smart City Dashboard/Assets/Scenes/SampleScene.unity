@@ -216,7 +216,6 @@ Transform:
   m_Father: {fileID: 1199104632}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: 150, z: 0}
-<<<<<<< HEAD
 --- !u!1 &93544858 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1893807176909748105, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
@@ -272,8 +271,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
-=======
->>>>>>> b53a54f119af99d11537d00654eeb13e89ac73d3
 --- !u!1 &122971554
 GameObject:
   m_ObjectHideFlags: 0
@@ -3741,8 +3738,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991367724}
   m_CullTransparentMesh: 1
-<<<<<<< HEAD
-=======
 --- !u!225 &1991367728
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3775,7 +3770,6 @@ MonoBehaviour:
   ActiveTab: 0
   isOnScreen: 0
   Tabs: []
->>>>>>> b53a54f119af99d11537d00654eeb13e89ac73d3
 --- !u!1 &2029918574
 GameObject:
   m_ObjectHideFlags: 0
