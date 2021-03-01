@@ -938,6 +938,39 @@
                 },
                 {
                     "name": "",
+                    "id": "2fefac3b-e652-4f78-9684-2df9ba23480e",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetBuildState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eed4c4fa-c0d6-4108-a032-269fd484ddc3",
+                    "path": "<Keyboard>/5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetBuildState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "003b1e54-57c7-4ade-b294-2161683c9da2",
+                    "path": "<Keyboard>/6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetBuildState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "726de568-6907-4ccb-931d-cc0eadc25049",
                     "path": "<Keyboard>/c",
                     "interactions": "",

@@ -1,5 +1,3 @@
-
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,6 +37,10 @@ public abstract class Menu : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Fetch the Tab component from the ith transform child
+    /// </summary>
+    /// <param name="i"></param>
     private void TryFetchTab(int i)
     {
         if (transform.GetChild(i).TryGetComponent(out Tab tab))
@@ -137,40 +139,6 @@ public abstract class Menu : MonoBehaviour
         ActiveTab = ActiveTab == tabs.Count-1 ? 0 : ActiveTab+1;
         // activate new tab
         tabs[ActiveTab].Activate();
-    }
-
-    private void FetchTabs()
-    {
-        // Deactivate all but the first child tab
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            var child = transform.GetChild(i);
-            var tab = child.GetComponent<Tab>();
-            if (tab != null)
-            {
-                Tabs.Add(tab);
-            }
-        }
-        //
-    }
-    private void DeactivateTabs()
-    {
-        // Deactivate all but the first child tab
-        for (int i = 1; i < Tabs.Count; i++)
-        {
-            Tabs[i].DeActivate();
-        }
-        //
-    }
-
-    public void SwitchTabs()
-    {
-        // deactivate current tab
-        Tabs[ActiveTab].DeActivate();
-        // increment or reset counter
-        ActiveTab = ActiveTab == Tabs.Count - 1 ? 0 : ActiveTab+1;
-        // activate new tab
-        Tabs[ActiveTab].Activate();
     }
 
     /// <summary>
