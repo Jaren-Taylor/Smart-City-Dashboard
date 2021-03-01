@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +12,7 @@ public class Tab : MonoBehaviour
         parent = transform.parent.GetComponent<Menu>();
         if (parent == null) throw new System.Exception("Parent must have a Menu script!");
         InitializeButtonList();
+        if (TryGetComponent(out Button button)) button.onClick.AddListener(ActivateClickEvent);
     }
 
     /// <summary>
@@ -74,6 +73,11 @@ public class Tab : MonoBehaviour
             SetTransparency(1);
         }
     }
+
+    /// <summary>
+    /// Used in this GameObject Buttons' onClick() event. Look at Start()
+    /// </summary>
+    private void ActivateClickEvent() { parent.SwitchTab(this); }
 
     /// <summary>
     /// Sets the transparency of the tab's image
