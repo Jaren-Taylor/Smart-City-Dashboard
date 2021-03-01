@@ -7,6 +7,10 @@ public class CursorIndicator : MonoBehaviour
     [SerializeField]
     private Animator animator;
 
+    [SerializeField]
+    private GameObject CursorRoot;
+    private GameObject Icon;
+
     public readonly Vector2Int OffGrid = new Vector2Int(-1, -1);
 
     public void SetPosition(Vector2Int position)
@@ -17,4 +21,12 @@ public class CursorIndicator : MonoBehaviour
 
     public void OnClick() => animator.SetTrigger("OnAction");
     
+    public void SetIcon(string iconAddress)
+    {
+        if (Icon is GameObject) Destroy(Icon);
+
+        var iconPrefab = Resources.Load<GameObject>(iconAddress);
+        Icon = Instantiate(iconPrefab, CursorRoot.transform);
+        Icon.transform.localPosition += Vector3.up * 1.35f;
+    }
 }

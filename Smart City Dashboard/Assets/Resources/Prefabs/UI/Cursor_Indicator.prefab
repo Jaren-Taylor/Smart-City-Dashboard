@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 997541800818943175}
+  CursorRoot: {fileID: 997541800818943173}
 --- !u!1 &997541800818943173
 GameObject:
   m_ObjectHideFlags: 0

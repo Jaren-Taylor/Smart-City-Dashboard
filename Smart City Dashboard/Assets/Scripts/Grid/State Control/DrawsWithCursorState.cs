@@ -13,6 +13,8 @@ public abstract class DrawsWithCursorState : IGridControlState
     }
 
     public abstract void OnMouseDown(DigitalCursor location);
+    public abstract string GetIconPrefabAddress();
+
 
     public virtual void OnMouseEnterTile(DigitalCursor location)
     {
@@ -36,5 +38,6 @@ public abstract class DrawsWithCursorState : IGridControlState
         var prefab = Resources.Load<GameObject>(indicatorPrefabAddress);
         indicator = GameObject.Instantiate(prefab).GetComponent<CursorIndicator>();
         indicator.SetPosition(location.Position);
+        indicator.SetIcon(GetIconPrefabAddress());
     }
 }
