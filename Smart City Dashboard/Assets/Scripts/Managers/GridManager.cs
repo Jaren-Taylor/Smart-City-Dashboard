@@ -165,7 +165,8 @@ public class GridManager : MonoBehaviour
 
     // These functions are used on UI buttons onClick()
     public void SetPlaceRoadsState() => ChangeState(EGridControlState.PlaceRoads);
-    public void SetPlaceBuildingsState() => ChangeState(EGridControlState.PlaceHouse);
+    public void SetPlaceHouseState() => ChangeState(EGridControlState.PlaceHouse);
+    public void SetPlaceOfficeState() => ChangeState(EGridControlState.PlaceOffice);
     public void SetDeleteModeState() => ChangeState(EGridControlState.DeleteMode);
 
     // Update is called once per frame

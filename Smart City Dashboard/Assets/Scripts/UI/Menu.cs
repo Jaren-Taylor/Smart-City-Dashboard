@@ -12,6 +12,7 @@ public abstract class Menu : MonoBehaviour
     public int ActiveTab = 0;
     [HideInInspector]
     public bool isOnScreen;
+    public List<Tab> Tabs;
 
     protected void Start()
     {
@@ -36,6 +37,10 @@ public abstract class Menu : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Fetch the Tab component from the ith transform child
+    /// </summary>
+    /// <param name="i"></param>
     private void TryFetchTab(int i)
     {
         if (transform.GetChild(i).TryGetComponent(out Tab tab))
