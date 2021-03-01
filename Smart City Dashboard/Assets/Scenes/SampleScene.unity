@@ -216,6 +216,61 @@ Transform:
   m_Father: {fileID: 1199104632}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: 150, z: 0}
+--- !u!1 &93544858 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1893807176909748105, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+  m_PrefabInstance: {fileID: 5553123468487663466}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &93544859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93544858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5971bc59f6c23034bb18a1bcdc2a1858, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiPosition: 1
+  ActiveTab: 0
+  isOnScreen: 0
+--- !u!1 &115721956
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 115721957}
+  m_Layer: 0
+  m_Name: BackgroundPlaceholder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &115721957
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115721956}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5553123468487663467}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &122971554
 GameObject:
   m_ObjectHideFlags: 0
@@ -1992,9 +2047,9 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  NavPointPrefab: {fileID: 8178661970213022512, guid: dfbb7c6655777334b8ca3001a81c17e3, type: 3}
   TileMaterial: {fileID: 2100000, guid: edb32815f7d5d61419b7b11f774dc6cf, type: 2}
   TransparentMaterial: {fileID: 2100000, guid: 8caca4e70e716ae4490ee606d7ef5041, type: 2}
-  NavPointPrefab: {fileID: 8178661970213022512, guid: dfbb7c6655777334b8ca3001a81c17e3, type: 3}
 --- !u!1 &1094463530
 GameObject:
   m_ObjectHideFlags: 0
@@ -2198,7 +2253,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1122856876}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1068862571}
+        m_TargetAssemblyTypeName: GridManager, Assembly-CSharp
+        m_MethodName: SetPlaceBuildingsState
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1122856876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2551,6 +2618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 299274495cb6dcc419099474fc3633ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiPosition: 2
   ActiveTab: 0
   isOnScreen: 0
   Tabs: []
@@ -2643,7 +2711,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0d0e685986a69e4db07995fd1d1637e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EscapeMenu: {fileID: 2002934630}
+  EscapeMenu: {fileID: 93544859}
   TildeMenu: {fileID: 1193146153}
   ActiveMenu: {fileID: 0}
 --- !u!1 &1243110194
@@ -2728,7 +2796,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1243110197}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1068862571}
+        m_TargetAssemblyTypeName: GridManager, Assembly-CSharp
+        m_MethodName: SetPlaceRoadsState
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1243110197
 MonoBehaviour:
   m_ObjectHideFlags: 0

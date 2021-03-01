@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem.Controls;
 using static UnityEngine.InputSystem.InputAction;
 
 /// <summary>
@@ -103,9 +104,7 @@ public class InputManager : MonoBehaviour
     {
         if (context.started)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) OnNumberPressed?.Invoke(0);
-            else if (Input.GetKeyDown(KeyCode.Alpha2)) OnNumberPressed?.Invoke(1);
-            else if (Input.GetKeyDown(KeyCode.Alpha3)) OnNumberPressed?.Invoke(2);
+            OnNumberPressed?.Invoke(((KeyControl)context.control).keyCode - UnityEngine.InputSystem.Key.Digit1);
         }
     }
 

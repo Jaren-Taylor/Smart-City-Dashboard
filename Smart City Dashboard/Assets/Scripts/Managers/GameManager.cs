@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
         inputManager.OnPlaceTile += gridManager.PlaceHandler;
 
-        inputManager.OnNumberPressed += gridManager.StateNumberChangeHandler;
+        inputManager.OnNumberPressed += uiManager.OnNumberKeyPress;
 
         inputManager.OnCPressed += gridManager.ToggleCursor;
 
@@ -40,8 +40,6 @@ public class GameManager : MonoBehaviour
         inputManager.OnTabPressed += uiManager.SwitchTabs;
 
         uiManager.OnUIToggle += inputManager.IsUIActive;
-
-        uiManager.OnTabSwitch += gridManager.StateNumberChangeHandler;
     }
 
     public void HandleLog(int numer)
