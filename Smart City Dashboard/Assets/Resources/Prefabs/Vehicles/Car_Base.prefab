@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Visuals: {fileID: 2864492125536135898}
-  renderer: {fileID: 7117679183529502807}
+  childRenderer: {fileID: 7117679183529502807}
 --- !u!65 &5527014467204081315
 BoxCollider:
   m_ObjectHideFlags: 0

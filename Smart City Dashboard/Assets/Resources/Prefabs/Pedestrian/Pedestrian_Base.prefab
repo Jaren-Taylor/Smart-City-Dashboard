@@ -79,6 +79,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Visuals: {fileID: 2968138127408677263}
+  childRenderer: {fileID: 3616405441339416666}
 --- !u!65 &2656525351783805946
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -203,5 +204,10 @@ GameObject:
 --- !u!4 &2484616221988526901 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 62df10787af6ec04d9b7e1bb1ea091b0, type: 3}
+  m_PrefabInstance: {fileID: 2734133812063763678}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &3616405441339416666 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 62df10787af6ec04d9b7e1bb1ea091b0, type: 3}
   m_PrefabInstance: {fileID: 2734133812063763678}
   m_PrefabAsset: {fileID: 0}
