@@ -60,6 +60,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: -6478536213147159724, guid: ccf154fc78448614e949af6c3d2bfd9a, type: 3}
+  - {fileID: -6478536213147159724, guid: ccf154fc78448614e949af6c3d2bfd9a, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Visuals: {fileID: 178873065954095586}
+  renderer: {fileID: 3080853836326940106}
 --- !u!54 &3675232731571026486
 Rigidbody:
   m_ObjectHideFlags: 0

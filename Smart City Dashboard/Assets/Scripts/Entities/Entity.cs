@@ -16,6 +16,10 @@ public abstract class Entity : MonoBehaviour
 
     public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
 
+    [SerializeField]
+    private Renderer renderer;
+
+
     /// <summary>
     /// Sets the destination to the tile specified for the target specified
     /// </summary>
@@ -24,11 +28,15 @@ public abstract class Entity : MonoBehaviour
     /// <summary>
     /// Spawns Entity of type T on node from the address specificied
     /// </summary>
-    protected static T Spawn<T>(NodeController spawnNode, string prefabAddress) where T : Entity
+    protected static T Spawn<T>(NodeController spawnNode, string prefabAddress, string matAddress="") where T : Entity
     {
         var model = Resources.Load<GameObject>(prefabAddress);
         var entityGO = Instantiate(model, spawnNode.Position, Quaternion.identity);
         var entity = entityGO.GetComponent<T>();
+        if (matAddress!=""){
+            var loadedMat = Resources.Load<Material>(matAddress);
+            entity.SetMaterial(loadedMat);
+        }
         entity.pathWalker = entityGO.GetComponent<PathWalker>();
         entity.tag = "Entity";
         entity.pathWalker.SpawnPosition = spawnNode;
@@ -45,14 +53,14 @@ public abstract class Entity : MonoBehaviour
     /// <summary>
     /// Spawns Entity of type T on tile position from the address specificied
     /// </summary>
-    protected static T Spawn<T>(Vector2Int tilePosition, string prefabAddress) where T : Entity
+    protected static T Spawn<T>(Vector2Int tilePosition, string prefabAddress, string matAddress="") where T : Entity
     {
         Tile tile = GridManager.GetTile(tilePosition);
         NodeCollectionController.Direction spawnDirection = GetValidDirectionForTile(tile);
         NodeController spawnLocation = tile.NodeCollection.GetInboundNodeFrom(spawnDirection, 2);
 
         //Uses location found to spawn prefab
-        return Spawn<T>(spawnLocation, prefabAddress);
+        return Spawn<T>(spawnLocation, prefabAddress, matAddress);
     }
 
     /// <summary>
@@ -91,6 +99,12 @@ public abstract class Entity : MonoBehaviour
         {
             Visuals.SetActive(value);
         }
+    }
+
+    protected void SetMaterial(Material material)
+    {
+        renderer.material=material;
+
     }
 
     /// <summary>

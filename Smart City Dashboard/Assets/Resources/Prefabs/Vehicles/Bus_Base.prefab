@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Visuals: {fileID: 5047318373966247522}
+  renderer: {fileID: 4364299314123123409}
 --- !u!65 &-2423411102934023846
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -151,6 +152,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
+  - {fileID: -6478536213147159724, guid: ccf154fc78448614e949af6c3d2bfd9a, type: 3}
   - {fileID: -6478536213147159724, guid: ccf154fc78448614e949af6c3d2bfd9a, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0

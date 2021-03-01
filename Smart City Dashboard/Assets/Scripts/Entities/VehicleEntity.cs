@@ -19,15 +19,34 @@ public class VehicleEntity : Entity
         { VehicleType.Car, "Prefabs/Vehicles/Car_Base" }
     };
 
+    public static readonly Dictionary<VehicleColor, string> ColorLookup = new Dictionary<VehicleColor, string>()
+    {
+        {VehicleColor.Red, "Materials/Car_Red" },
+        {VehicleColor.Blue, "Materials/Car_Blue" },
+    };
+
+    public enum VehicleColor {
+        Red,
+        Blue
+    }
+
     public static VehicleEntity Spawn(Vector2Int tilePosition, VehicleType type)
     {
+        var matAddress = GetRandomColor();
         var address = ModelLookup[type];
-        return Spawn<VehicleEntity>(tilePosition, address);
+        return Spawn<VehicleEntity>(tilePosition, address, matAddress);
     }
     public static VehicleEntity Spawn(NodeController controller, VehicleType type)
     {
+        var matAddress = GetRandomColor();
         var address = ModelLookup[type];
-        return Spawn<VehicleEntity>(controller, address);
+        return Spawn<VehicleEntity>(controller, address, matAddress);
+    }
+
+    private static string GetRandomColor() {
+        int count=ColorLookup.Count;
+        int choice=UnityEngine.Random.Range(0,count);
+        return ColorLookup[(VehicleColor)choice];
     }
 
     public override bool TrySetDestination(Vector2Int tileLocation) => TrySetDestination(tileLocation, NodeCollectionController.TargetUser.Vehicles);
