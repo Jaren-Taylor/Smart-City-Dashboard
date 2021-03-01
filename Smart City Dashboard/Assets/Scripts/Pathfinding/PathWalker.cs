@@ -16,7 +16,7 @@ public class PathWalker : MonoBehaviour
 
     public NodeController SpawnPosition;
 
-    //private int layerMask = 1 << 7;
+    private int layerMask = 1 << 7;
     private float maxSpeed = .5f;
     private Path path;
 
@@ -96,11 +96,11 @@ public class PathWalker : MonoBehaviour
         {
             //TODO: Collision Check
             var timeDelta = Time.deltaTime;
-            if (Physics.Raycast(raycastSource.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, maxSpeed * .25f) ||
-                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit2, maxSpeed * .25f) ||
-                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit3, maxSpeed * .25f) ||
-                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, Quaternion.AngleAxis(30, Vector3.up) * transform.TransformDirection(Vector3.forward), out RaycastHit hit4, maxSpeed * .25f) ||
-                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, Quaternion.AngleAxis(30, Vector3.up) * transform.TransformDirection(Vector3.forward), out RaycastHit hit5, maxSpeed * .25f))
+            if (Physics.Raycast(raycastSource.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, maxSpeed * .25f, layerMask) ||
+                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit2, maxSpeed * .25f, layerMask) ||
+                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit3, maxSpeed * .25f, layerMask) ||
+                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, Quaternion.AngleAxis(30, Vector3.up) * transform.TransformDirection(Vector3.forward), out RaycastHit hit4, maxSpeed * .25f, layerMask) ||
+                Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, Quaternion.AngleAxis(30, Vector3.up) * transform.TransformDirection(Vector3.forward), out RaycastHit hit5, maxSpeed * .25f, layerMask))
             {
 
                 //Debug.Log("Draw hit distance: " + hit.distance);
