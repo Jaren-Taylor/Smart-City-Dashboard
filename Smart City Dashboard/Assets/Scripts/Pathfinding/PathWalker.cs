@@ -92,7 +92,7 @@ public class PathWalker : MonoBehaviour
     {
         var speed = maxSpeed;
 
-        if (false)
+        if (true)
         {
             //TODO: Collision Check
             var timeDelta = Time.deltaTime;
