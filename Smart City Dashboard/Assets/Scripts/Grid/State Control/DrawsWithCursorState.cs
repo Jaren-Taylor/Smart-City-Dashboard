@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class DrawsWithCursorState : IGridControlState
 {
-    private CursorIndicator indicator;
+    private CursorIndicator indicator = null;
     private readonly string indicatorPrefabAddress = "Prefabs/UI/Cursor_Indicator";
 
     public void ClickCursor()
@@ -16,17 +16,19 @@ public abstract class DrawsWithCursorState : IGridControlState
 
     public virtual void OnMouseEnterTile(DigitalCursor location)
     {
+        if (indicator is null) OnPush(location);
         indicator.SetPosition(location.Position);
     }
 
     public virtual void OnMouseExitTile(DigitalCursor location)
     {
+        if (indicator is null) OnPush(location);
         indicator.SetPosition(indicator.OffGrid);
     }
 
     public virtual void OnPop(DigitalCursor location)
     {
-        GameObject.Destroy(indicator.gameObject);
+        if(!(indicator is null)) GameObject.Destroy(indicator.gameObject);
     }
 
     public virtual void OnPush(DigitalCursor location)

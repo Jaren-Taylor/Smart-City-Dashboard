@@ -236,7 +236,6 @@ MonoBehaviour:
   uiPosition: 1
   ActiveTab: 0
   isOnScreen: 0
-  Tabs: []
 --- !u!1 &115721956
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,25 +860,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!1 &223715897
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 200333339}
-  - component: {fileID: 200333342}
-  - component: {fileID: 200333341}
-  - component: {fileID: 200333340}
-  m_Layer: 0
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!224 &200333339
 RectTransform:
   m_ObjectHideFlags: 0
@@ -949,6 +929,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 223715897}
   m_CullTransparentMesh: 1
+--- !u!1 &223715897
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 200333339}
+  - component: {fileID: 200333342}
+  - component: {fileID: 200333341}
+  - component: {fileID: 200333340}
+  m_Layer: 0
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &288929188
 GameObject:
   m_ObjectHideFlags: 0
@@ -2914,7 +2913,6 @@ MonoBehaviour:
   uiPosition: 2
   ActiveTab: 0
   isOnScreen: 0
-  Tabs: []
   heatmapImage: {fileID: 8904471728419388649}
 --- !u!114 &1193146154
 MonoBehaviour:
@@ -3816,7 +3814,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1788043363}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1068862571}
+        m_TargetAssemblyTypeName: GridManager, Assembly-CSharp
+        m_MethodName: SetPlaceCameraState
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1788043363
 MonoBehaviour:
   m_ObjectHideFlags: 0
