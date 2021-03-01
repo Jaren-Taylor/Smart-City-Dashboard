@@ -1,0 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FirstPersonViewport : MonoBehaviour
+{
+    [SerializeField]
+    private Animator animator;
+    private VehicleEntity mappingTarget;
+    private PathWalker walker;
+    private bool currentlyTracking = false;
+    private float currentAngle = 0f;
+    private float turnVelocity = 0f;
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(mappingTarget is VehicleEntity && walker is PathWalker) //It still exists
+        {
+            currentAngle = Mathf.SmoothDamp(currentAngle, walker.TurnDelta * 3f, ref turnVelocity, 0.3f);//(walker.TurnDelta + currentAngle) / 1.5f;
+            animator.SetFloat("WheelAngle", currentAngle.ClampTo(-1, 1));
+        }
+        else
+        {
+            StopTracking();
+        }
+    }
+
+    public void SetTrackTo(VehicleEntity entity)
+    {
+        if(entity is VehicleEntity)
+        {
+            mappingTarget = entity;
+            walker = entity.GetComponent<PathWalker>();
+            if(walker is PathWalker)
+            {
+                currentlyTracking = true;
+                currentAngle = 0f;
+            }
+        }
+    }
+
+    public void StopTracking()
+    {
+        mappingTarget = null;
+        walker = null;
+        currentlyTracking = false;
+    }
+}

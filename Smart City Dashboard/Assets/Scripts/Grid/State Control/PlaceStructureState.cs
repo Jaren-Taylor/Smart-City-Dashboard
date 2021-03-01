@@ -32,8 +32,8 @@ public class PlaceStructureState : IGridControlState
     {
         if (location != null && location.OnGrid)
         {
-            Tile tile = GridManager.Instance.GetTile(location.Position);
-            if(isValidToPlace(tile)) GridManager.Instance.MakePermanent(location.Position);
+            Tile tile = GridManager.GetTile(location.Position);
+            if(isValidToPlace(tile)) GridManager.Instance.MakePermanent(location.Position, true);
         }
     }
 

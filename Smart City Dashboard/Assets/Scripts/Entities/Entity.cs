@@ -1,95 +1,116 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity
+public abstract class Entity : MonoBehaviour
 {
-    Vector2Int pos; // Possibly useless
+    private PathWalker pathWalker;
 
-    Vector2Int spawnPos;
+    public Action<Entity, float> OnReachedDestination;
 
-    Vector2Int destinationPos;
+    [SerializeField]
+    private GameObject Visuals;
 
-    private ManagedGameObject managedObject;
-    private const string ManagedGameObjectLocation = "Prefabs/ManagedEntity";
+    public Action OnBeingDestroy;
 
-    //public Vector2Int requestTilePos(Vector2Int tilePos)
-    //{
+    public Vector2Int TilePosition => Vector2Int.RoundToInt(new Vector2(transform.position.x, transform.position.z));
 
-    //}
-    public Entity()
+    [SerializeField]
+    private Renderer renderer;
+
+
+    /// <summary>
+    /// Sets the destination to the tile specified for the target specified
+    /// </summary>
+    protected bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser) => pathWalker.TrySetDestination(tileLocation, targetUser);
+
+    /// <summary>
+    /// Spawns Entity of type T on node from the address specificied
+    /// </summary>
+    protected static T Spawn<T>(NodeController spawnNode, string prefabAddress, string matAddress="") where T : Entity
     {
-        this.managedObject = null;
-    }
-
-    public Entity(Vector2Int pos, ManagedGameObject model)
-    {
-        this.spawnPos = pos;
-        this.managedObject = model;
-    }
-
-    public Entity(Vector2Int pos, Vector2Int destination, ManagedGameObject model)
-    {
-
-        this.spawnPos = pos;
-        this.destinationPos = destination;
-        this.managedObject = model;
-
-    }
-
-    public Vector3 InstantiateEntity(Vector2Int point)
-    {
-        Vector3 position = new Vector3(point.x + .2f, .1f, point.y + .2f);
-        return InstantiateEntity(position);
-
-    }
-
-    public Vector3 InstantiateEntity(Vector3 point)
-    {
-        managedObject = Object.Instantiate(
-             Resources.Load<ManagedGameObject>(ManagedGameObjectLocation),
-             point,
-             Quaternion.identity);
-        AttachModelToManaged("Prefabs/Vehicles/Bus_Base");
-        return point;
-
-    }
-    protected void AttachModelToManaged(string prefabLocation)
-    {
-        GameObject prefab = Resources.Load<GameObject>(prefabLocation);
-        managedObject.InstantiateModel(prefab, Quaternion.Euler(-90, -90, -90));
+        var model = Resources.Load<GameObject>(prefabAddress);
+        var entityGO = Instantiate(model, spawnNode.Position, Quaternion.identity);
+        var entity = entityGO.GetComponent<T>();
+        if (matAddress!=""){
+            var loadedMat = Resources.Load<Material>(matAddress);
+            entity.SetMaterial(loadedMat);
+        }
+        entity.pathWalker = entityGO.GetComponent<PathWalker>();
+        entity.tag = "Entity";
+        entity.pathWalker.SpawnPosition = spawnNode;
+        entity.pathWalker.OnReachedDestination += entity.ReachedEndOfPath;
+        return entity;
     }
 
     /// <summary>
-    /// Add component to the object it is managing
+    /// Called when the path walker has reached the end of the path
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public T AddComponent<T>() where T : Component => managedObject.AddComponent<T>();
+    /// <param name="delay">How long should wait until destroy</param>
+    private void ReachedEndOfPath(float delay) => OnReachedDestination?.Invoke(this, delay);
 
     /// <summary>
-    /// Removes component from the object it is managing
+    /// Spawns Entity of type T on tile position from the address specificied
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public bool RemoveComponent<T>() where T : Component => managedObject.TryRemoveComponent<T>();
-
-    /// <summary>
-    /// Trys to remove component from the object it is managing
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="component"></param>
-    /// <returns></returns>
-    public bool TryGetComponent<T>(out T component) where T : Component
+    protected static T Spawn<T>(Vector2Int tilePosition, string prefabAddress, string matAddress="") where T : Entity
     {
-        component = GetComponent<T>();
-        return component != null;
+        Tile tile = GridManager.GetTile(tilePosition);
+        NodeCollectionController.Direction spawnDirection = GetValidDirectionForTile(tile);
+        NodeController spawnLocation = tile.NodeCollection.GetInboundNodeFrom(spawnDirection, 2);
+
+        //Uses location found to spawn prefab
+        return Spawn<T>(spawnLocation, prefabAddress, matAddress);
     }
 
     /// <summary>
-    /// Gets component from the object it is managing
+    /// Gets a direction to spawn the entity facing based on the tile it spawns on
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    private static NodeCollectionController.Direction GetValidDirectionForTile(Tile tile)
+    {
+        if (tile is BuildingTile building)
+        {
+            return (NodeCollectionController.Direction)building.currentFacing;
+        }
+        else if (tile is RoadTile road)
+        {
+            return GetValidRoadDirection(road);
+        }
+        throw new System.Exception("Invalid Tile Type...HOW?");
+    }
+
+    /// <summary>
+    /// Gets the direction to spawn the car based on the fact that it is on a road
+    /// </summary>
+    //TODO: Decide which side of the road to spawn on
+    private static NodeCollectionController.Direction GetValidRoadDirection(RoadTile road)
+    {
+        return NodeCollectionController.Direction.EastBound;
+    }
+
+    private void OnDestroy()
+    {
+        OnBeingDestroy?.Invoke();
+    }
+
+    public void SetModelVisibility(bool value)
+    {
+        if(Visuals is GameObject)
+        {
+            Visuals.SetActive(value);
+        }
+    }
+
+    protected void SetMaterial(Material material)
+    {
+        renderer.material=material;
+
+    }
+
+    /// <summary>
+    /// True if the destination was successfully set to the target tile
+    /// </summary>
+    /// <param name="tileLocation"></param>
     /// <returns></returns>
-    public T GetComponent<T>() where T : Component => managedObject?.GetComponent<T>();
+    public abstract bool TrySetDestination(Vector2Int tileLocation);
 }

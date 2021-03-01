@@ -17,6 +17,21 @@ public class DigitalCursor
     public readonly Vector2Int Position = new Vector2Int(-1, -1);
     public readonly Tile.Facing SubDirection = Tile.Facing.Top;
 
+    public enum Fake
+    {
+        Zero
+    }
+    public DigitalCursor(Fake defaultType)
+    {
+        switch (defaultType)
+        {
+            case Fake.Zero:
+                OnGrid = true;
+                HitPosition = Vector2.zero;
+                Position = Vector2Int.zero;
+                break;
+        }
+    }
     public DigitalCursor()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

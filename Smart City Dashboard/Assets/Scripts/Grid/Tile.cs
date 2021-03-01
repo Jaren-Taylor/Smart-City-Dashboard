@@ -7,6 +7,8 @@ using UnityEngine;
 [DataContract]
 public abstract class Tile
 {
+    public Action<Tile> OnTileDestroyed;
+
     public enum Facing
     {
         Left = 0,
@@ -66,6 +68,13 @@ public abstract class Tile
         isTransparent = value;
     }
 
+    private NodeCollectionController cachedCollection = null;
+
+
+#pragma warning disable UNT0008 // Null propagation on Unity objects
+    public NodeCollectionController NodeCollection => cachedCollection ??= GetComponent<PathfindingTileInterface>()?.NodeCollection;
+#pragma warning restore UNT0008 // Null propagation on Unity objects
+
     public Tile()
     {
         IsPermanent = false;
@@ -76,11 +85,14 @@ public abstract class Tile
         return base.ToString() + " (Perm: " + IsPermanent.ToString() + ")";
     }
 
-    public void MakePermanent()
+    public void MakePermanent(bool animateSpawn = false)
     {
-
         if (!IsPermanent) { 
             IsPermanent = true;
+            if (animateSpawn)
+            {
+                managedObject.AddComponentToManaged<SlideIntoPlace>();
+            }
             SpawnManagedNodes();
         }
     }
@@ -99,6 +111,9 @@ public abstract class Tile
     /// <returns></returns>
     public void DeleteManaged()
     {
+        IsPermanent = false;
+        OnTileDestroyed?.Invoke(this);
+
         managedObject?.DestroyTree();
         managedObject = null;
     }
@@ -121,15 +136,14 @@ public abstract class Tile
         SetTransparency(isTransparent);
         if (IsPermanent)
         {
-            SpawnManagedNodes();  
+            SpawnManagedNodes();
         }
         return CalculateAndSetModelFromNeighbors(neighbors);
     }
 
     private void SpawnManagedNodes()
     {
-        if(!managedObject.TryGetComponent<PathfindingNodeInterface>(out _)) managedObject.AddComponent<PathfindingNodeInterface>();
-
+        if(!managedObject.TryGetComponent<PathfindingTileInterface>(out _)) managedObject.AddComponent<PathfindingTileInterface>();
     }
 
 
@@ -186,8 +200,7 @@ public abstract class Tile
     /// <param name="rotation">Rotation to spawn model at</param>
     protected void AttachModelToManaged(string prefabLocation, Facing direction)
     {
-        GameObject prefab = Resources.Load<GameObject>(prefabLocation);
-        managedObject.InstantiateModel(prefab, FacingToQuaternion[direction]);
+        managedObject.InstantiateModel(prefabLocation, FacingToQuaternion[direction]);
     }
 
     /// <summary>

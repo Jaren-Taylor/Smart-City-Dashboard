@@ -29,7 +29,7 @@ public class GridController
         // controlGroups.Add(IGridControlGroups.Entities, new IGridControlState[3]);
         // controlGroups.Add(IGridControlGroups.Objects, new IGridControlState[3]);
         activeControlState = controlStates[initState];
-        state = initState;
+        //SetState(initState, new DigitalCursor(DigitalCursor.Fake.Zero));
     }
 
     /// <summary>
