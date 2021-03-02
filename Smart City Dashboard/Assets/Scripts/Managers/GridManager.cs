@@ -12,6 +12,7 @@ public class GridManager : MonoBehaviour
 
     private DigitalCursor cursor = null;
     private bool cursorEnabled = true; //When false, cursor will not be shown
+    private bool oldCursorEnabled;
     private bool clickRecieved = false; //When true, update function will pick this up and signal to its state controller
 
     private Vector2Int tileLoc;
@@ -31,8 +32,16 @@ public class GridManager : MonoBehaviour
 
     public bool CursorEnabled { get => cursorEnabled; set => SetCursor(value); }
 
-    // Used as an event handler
     public void ToggleCursor() { SetCursor(!cursorEnabled); }
+
+    // Used in Menu's Event Trigger components
+    public void OnEnteringUI() {
+        oldCursorEnabled = cursorEnabled;
+        SetCursor(false); 
+    }
+
+    // Used in Menu's Event Trigger components
+    public void OnExitingUI() { SetCursor(oldCursorEnabled); }
 
     private void SetCursor(bool value)
     {
@@ -207,8 +216,6 @@ public class GridManager : MonoBehaviour
             }
         }
 
-
-        if (Input.GetKeyDown(KeyCode.C)) CursorEnabled = !CursorEnabled; //If C pressed, cursor is disabled
         if (CursorEnabled && CameraManager.Instance.isFollowingEntity is false)
         {
             HandleCursorMovement(); //Updates state with cursor movement
