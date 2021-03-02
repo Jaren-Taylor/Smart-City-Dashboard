@@ -796,7 +796,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "SetBuildState",
+                    "name": "SetControlState",
                     "type": "Button",
                     "id": "c051ed58-00e6-46b4-bd8d-2756ed338f3d",
                     "expectedControlType": "Button",
@@ -910,7 +910,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SetBuildState",
+                    "action": "SetControlState",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -921,7 +921,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SetBuildState",
+                    "action": "SetControlState",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -932,7 +932,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SetBuildState",
+                    "action": "SetControlState",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -943,7 +943,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SetBuildState",
+                    "action": "SetControlState",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -954,7 +954,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SetBuildState",
+                    "action": "SetControlState",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -965,7 +965,51 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SetBuildState",
+                    "action": "SetControlState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e57788f-7ea6-4f24-aa42-4132943c3452",
+                    "path": "<Keyboard>/7",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetControlState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fad12111-e7ff-4f70-8580-d522aac1ca4a",
+                    "path": "<Keyboard>/8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetControlState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "075e3787-182f-4427-b39d-60d9a4acc45b",
+                    "path": "<Keyboard>/9",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetControlState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "69351a77-4568-4ced-b618-8bd1c1dd9e1f",
+                    "path": "<Keyboard>/0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetControlState",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
