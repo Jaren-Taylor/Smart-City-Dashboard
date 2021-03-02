@@ -18,6 +18,7 @@ public abstract class Entity : MonoBehaviour
 
     [SerializeField]
     private Renderer childRenderer;
+    public Material ChildMaterial => childRenderer.material;
 
 
     /// <summary>
@@ -91,7 +92,9 @@ public abstract class Entity : MonoBehaviour
     private void OnDestroy()
     {
         OnBeingDestroy?.Invoke();
+        Resources.UnloadUnusedAssets();
     }
+
 
     public void SetModelVisibility(bool value)
     {

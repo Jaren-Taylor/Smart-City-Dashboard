@@ -5,7 +5,10 @@ using UnityEngine;
 public class FirstPersonViewport : MonoBehaviour
 {
     [SerializeField]
+    private Renderer modelRenderer;
+    [SerializeField]
     private Animator animator;
+
     private VehicleEntity mappingTarget;
     private PathWalker walker;
     private bool currentlyTracking = false;
@@ -37,7 +40,21 @@ public class FirstPersonViewport : MonoBehaviour
                 currentlyTracking = true;
                 currentAngle = 0f;
             }
+            SetChildMaterial(entity.ChildMaterial);
+            
         }
+    }
+
+    private void SetChildMaterial(Material mat)
+    {
+        var matCopy = modelRenderer.materials;
+        matCopy[1] = mat;
+        modelRenderer.materials = matCopy;
+    }
+
+    private void OnDestroy()
+    {
+        Resources.UnloadUnusedAssets();
     }
 
     public void StopTracking()
