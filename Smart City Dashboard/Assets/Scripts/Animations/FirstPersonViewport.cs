@@ -52,6 +52,11 @@ public class FirstPersonViewport : MonoBehaviour
         modelRenderer.materials = matCopy;
     }
 
+    private void OnDestroy()
+    {
+        Resources.UnloadUnusedAssets();
+    }
+
     public void StopTracking()
     {
         mappingTarget = null;

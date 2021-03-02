@@ -92,7 +92,9 @@ public abstract class Entity : MonoBehaviour
     private void OnDestroy()
     {
         OnBeingDestroy?.Invoke();
+        Resources.UnloadUnusedAssets();
     }
+
 
     public void SetModelVisibility(bool value)
     {
