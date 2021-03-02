@@ -18,6 +18,7 @@ public abstract class Entity : MonoBehaviour
 
     [SerializeField]
     private Renderer childRenderer;
+    public Material ChildMaterial => childRenderer.material;
 
 
     /// <summary>

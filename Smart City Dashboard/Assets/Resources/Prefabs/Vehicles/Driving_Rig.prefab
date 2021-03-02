@@ -285,6 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9c3b3b95613c634582b1561ff257a9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modelRenderer: {fileID: 3701701605343125166}
   animator: {fileID: 5752779929151920665}
 --- !u!95 &5752779929151920665
 Animator:
@@ -417,7 +418,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: -6478536213147159724, guid: 8777a6c9ee94a0a42a61c8f707bf9525, type: 3}
-  - {fileID: 6036216787750448461, guid: 8777a6c9ee94a0a42a61c8f707bf9525, type: 3}
+  - {fileID: 2100000, guid: 02c4a784e43fb1944947ecf94497846c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
