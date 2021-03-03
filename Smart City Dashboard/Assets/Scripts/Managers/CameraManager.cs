@@ -11,7 +11,7 @@ public class CameraManager : MonoBehaviour
     public FirstPersonViewport vehicleViewport;
 
     [Range(0, 3)]
-    public int defaultRotation;
+    public int defaultRotation = 0;
 
     public Vector2 defaultPosition;
     public bool isFollowingEntity { get; private set; } = false;
@@ -31,6 +31,8 @@ public class CameraManager : MonoBehaviour
     private float targetTrackHeight = 0f;
 
     public static CameraManager Instance { get; private set; }
+    public Vector3 CameraRigReturnTransform { get; private set; }
+    public Quaternion CameraRigReturnRotation { get; private set; }
 
     void ResetSize() => Size = Config.defaultSize;
     void ResetPosition() => Position = defaultPosition;
@@ -102,6 +104,7 @@ public class CameraManager : MonoBehaviour
     }
     public void StartFollowEntity(Entity entity)
     {
+
         GridManager.Instance.CursorEnabled = false;
         isFollowingEntity = true;
         GridManager.Instance.GridSM.SuspendState(new DigitalCursor());
@@ -131,12 +134,11 @@ public class CameraManager : MonoBehaviour
 
     public void StopFollowEntity()
     {
+
         GridManager.Instance.CursorEnabled = true;
         entityCamera.gameObject.SetActive(false);
         mainCamera.gameObject.SetActive(true);
         GridManager.Instance.GridSM.ResumeState(new DigitalCursor());
-        ResetRotation();
-        ResetSize();
         isFollowingEntity = false;
         if(trackedEntity is Entity entity)
             entity.OnBeingDestroy -= TrackedEntityDestroyed;
@@ -150,12 +152,14 @@ public class CameraManager : MonoBehaviour
                 vehicleEntity.SetModelVisibility(true);
             }
         }
+        trackedPosition = transform.position;
+        mainCamera.orthographicSize = Config.minSize;
         
     }
     public void FollowEntity(Entity entity)
     {
         transform.position = entity.transform.position + Vector3.up * targetTrackHeight;
-        transform.rotation = entity.transform.rotation;
+        entityCamera.transform.rotation = entity.transform.rotation;
     }
     
 }
