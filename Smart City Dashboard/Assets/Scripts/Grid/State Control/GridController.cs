@@ -25,6 +25,7 @@ public class GridController
         controlStates.Add(EGridControlState.PlaceOffice,    new PlaceStructureState(BuildingTile.StructureType.Office));
         controlStates.Add(EGridControlState.PlaceCamera,    new PlaceSensorState<CameraSensor>());
         controlStates.Add(EGridControlState.DeleteMode,     new RemoveTileState());
+        controlStates.Add(EGridControlState.SelectEntity,   new SelectEntityState());
         // TODO
         // controlGroups.Add(IGridControlGroups.Sensors, new IGridControlState[3]);
         // controlGroups.Add(IGridControlGroups.Entities, new IGridControlState[3]);

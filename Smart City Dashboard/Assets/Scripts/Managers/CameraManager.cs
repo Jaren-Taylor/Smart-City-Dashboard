@@ -135,7 +135,8 @@ public class CameraManager : MonoBehaviour
         entityCamera.gameObject.SetActive(false);
         mainCamera.gameObject.SetActive(true);
         GridManager.Instance.GridSM.ResumeState(new DigitalCursor());
-        ResetCamera();
+        ResetRotation();
+        ResetSize();
         isFollowingEntity = false;
         if(trackedEntity is Entity entity)
             entity.OnBeingDestroy -= TrackedEntityDestroyed;
