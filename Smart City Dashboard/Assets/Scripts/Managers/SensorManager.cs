@@ -43,15 +43,6 @@ public class SensorManager : MonoBehaviour
             UpdateManagedServices();
             totalTime -= callDelay;
         }
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            var cursor = new DigitalCursor();
-            if (cursor.OnGrid)
-            {
-                TryCreateCameraAt(cursor.Position);
-            }
-        }
     }
 
     private void UpdateManagedServices()
@@ -84,27 +75,30 @@ public class SensorManager : MonoBehaviour
         return Vector2Int.RoundToInt(new Vector2(position.x, position.z));
     }
 
-    public static bool TryCreateCameraAt(Vector2Int tilePosition)
+    public static bool RemoveSensorAt(Vector2Int tilePosition, SensorType sensorType)
     {
-        return TryCreateSensorAt<CameraSensor>(tilePosition);
+        if (GridManager.GetTile(tilePosition) is Tile tile)
+        {
+            tile.RemoveSensor(sensorType);
+        }
+        return true;
     }
 
     public static bool RemoveSensorsAt(Vector2Int tilePosition)
     {
         if (GridManager.GetTile(tilePosition) is Tile tile)
         {
-            tile.RemoveComponent<CameraManager>();
+            tile.RemoveSensors();
         }
         return true;
     }
 
-    public static bool TryCreateSensorAt<T>(Vector2Int tilePosition) where T : Component
+    public static bool TryCreateSensorAt(Vector2Int tilePosition, SensorType sensorType)
     {
         //Makes sure the tile exists and doesn't have a T type sensor on the tile already
-        if(GridManager.GetTile(tilePosition) is Tile tile && !tile.TryGetComponent<T>(out _))
+        if(GridManager.GetTile(tilePosition) is Tile tile)
         {
-            tile.AddComponent<T>();
-            return true;
+            return tile.TryAddSensor(sensorType);
         }
         return false;
     }
