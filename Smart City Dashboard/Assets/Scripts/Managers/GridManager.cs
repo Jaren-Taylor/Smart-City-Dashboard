@@ -98,16 +98,18 @@ public class GridManager : MonoBehaviour
     private void GenerateMountainRange(GameObject mountainPrefab, Transform parent, int size, Vector3 rootPoint, Vector3 edgeNormal, Vector3 edgeDirection)
     {
         int tileRadius = 10;
-        float distanceRemaining = size + tileRadius * 2;
+        float distanceRemaining = size + tileRadius * 6;
         int tilesSpawned = 0;
         Vector3 rootPosition = rootPoint + edgeNormal * tileRadius + edgeDirection * tileRadius;
         while(distanceRemaining > 0)
         {
-            Vector3 p1 = rootPosition + tilesSpawned * edgeDirection * tileRadius * 2;
-            Vector3 p2 = p1 + edgeNormal * tileRadius * 2;
+            Vector3 p = rootPosition + tilesSpawned * edgeDirection * tileRadius * 2;
+            for (int i = 0; i < 4; i++)
+            {
+                Instantiate<GameObject>(mountainPrefab, p, GetRandomRotation(), parent).GetComponent<AdjustableMountain>().SetHeightScale(UnityEngine.Random.Range(0.75f, 1.25f));
+                p += edgeNormal * tileRadius * 2;
+            }
 
-            Instantiate<GameObject>(mountainPrefab, p1, GetRandomRotation(), parent).GetComponent<AdjustableMountain>().SetHeightScale(UnityEngine.Random.Range(0.75f, 1.25f));
-            Instantiate<GameObject>(mountainPrefab, p2, GetRandomRotation(), parent).GetComponent<AdjustableMountain>().SetHeightScale(UnityEngine.Random.Range(0.75f, 1.25f));
             tilesSpawned++;
             distanceRemaining -= tileRadius * 2;
         }
