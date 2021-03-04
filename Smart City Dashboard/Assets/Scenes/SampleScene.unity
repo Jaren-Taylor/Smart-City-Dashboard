@@ -600,19 +600,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 119993649}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1068862571}
-        m_TargetAssemblyTypeName: GridManager, Assembly-CSharp
-        m_MethodName: SetSelectEntityState
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &119993649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1626,7 +1614,7 @@ Transform:
   - {fileID: 2094236009}
   - {fileID: 161703414}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &363228921 stripped
 RectTransform:
@@ -2657,7 +2645,7 @@ Transform:
   - {fileID: 963194228}
   - {fileID: 179125994}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &596673281
 GameObject:
@@ -6611,7 +6599,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2062874346
 GameObject:
@@ -7563,7 +7551,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5553123468575959163, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5553123468575959163, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_AnchorMax.x
@@ -7844,6 +7832,20 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1893807176909748104, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
   m_PrefabInstance: {fileID: 5553123468487663466}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &7401459562774311719
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7925373191506422173}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 39.881767, y: -7.5575533, z: 17.325176}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!222 &7421803526643277563
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7852,6 +7854,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1926486208754622017}
   m_CullTransparentMesh: 1
+--- !u!1 &7925373191506422173
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7401459562774311719}
+  m_Layer: 0
+  m_Name: Red_Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!114 &8492514055841228527
 MonoBehaviour:
   m_ObjectHideFlags: 0

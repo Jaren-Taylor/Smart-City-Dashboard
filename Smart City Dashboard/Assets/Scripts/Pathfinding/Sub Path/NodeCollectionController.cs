@@ -11,6 +11,7 @@ public class NodeCollectionController : MonoBehaviour
 {
     [SerializeField]
     private NodeController[] NodeCollection;
+    private const string MODEL_LOCATION = "";
 
     public NodeController[] NodeCollectionReference => NodeCollection;
 
