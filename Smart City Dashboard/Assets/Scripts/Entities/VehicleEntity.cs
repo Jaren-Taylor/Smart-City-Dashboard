@@ -37,7 +37,6 @@ public class VehicleEntity : Entity
 
     public static readonly Dictionary<VehicleColor, int> ColorWeight = new Dictionary<VehicleColor, int>()
     {
-
         {VehicleColor.Black, 23 },
         {VehicleColor.White, 19 },
         {VehicleColor.Gray, 18 },

@@ -16,7 +16,7 @@ public class DigitalCursor
     public readonly Vector2 HitPosition = new Vector2(-1,-1);
     public readonly Vector2Int Position = new Vector2Int(-1, -1);
     public readonly Tile.Facing SubDirection = Tile.Facing.Top;
-
+    public readonly Ray ray;
     public enum Fake
     {
         Zero
@@ -34,7 +34,7 @@ public class DigitalCursor
     }
     public DigitalCursor()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, GroundMask))
         {
             HitPosition = new Vector2(hit.point.x, hit.point.z);
