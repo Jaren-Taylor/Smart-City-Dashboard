@@ -61,6 +61,12 @@ public abstract class Tile
     [DataMember(Name="IsTransparent")]
     private bool isTransparent = true;
 
+    [DataMember(Name="Sensors")]
+    private HashSet<SensorType> sensors = new HashSet<SensorType>();
+
+    [IgnoreDataMember]
+    private Dictionary<SensorType, GameObject> sensorDictionary = new Dictionary<SensorType, GameObject>();
+
     public void SetTransparency(bool value)
     {
         if (value) managedObject.SetModelMaterial(GridManager.Instance.TransparentMaterial);
@@ -78,6 +84,7 @@ public abstract class Tile
     public Tile()
     {
         IsPermanent = false;
+        
     }
 
     public override string ToString()
@@ -95,6 +102,54 @@ public abstract class Tile
             }
             SpawnManagedNodes();
         }
+    }
+
+    public void SpawnHeldSensors()
+    {
+        if (sensorDictionary is null) sensorDictionary = new Dictionary<SensorType, GameObject>();
+        if (sensors is null) sensors = new HashSet<SensorType>();
+        foreach(SensorType sensor in sensors)
+        {
+            if (!sensorDictionary.ContainsKey(sensor))
+            {
+                SpawnSensor(sensor);
+            }
+        }
+    }
+
+    private bool SpawnSensor(SensorType sensorType)
+    {
+        if (ManagedExists())
+        {
+            GameObject sensorRef = GameObject.Instantiate<GameObject>(sensorType.GetPrefab(), managedObject.transform);
+            sensorDictionary.Add(sensorType, sensorRef);
+            return true;
+        }
+        return false;
+    }
+
+    public bool TryAddSensor(SensorType sensorType)
+    {
+        if (!sensors.Contains(sensorType) && SpawnSensor(sensorType))
+        {
+            sensors.Add(sensorType);
+            return true;
+        }
+        return false;
+    }
+
+    public void RemoveSensor(SensorType sensorType)
+    {
+        if (sensors.Contains(sensorType))
+        {
+            sensors.Remove(sensorType);
+            if (sensorDictionary.TryGetValue(sensorType, out GameObject spawnedSensor)) GameObject.Destroy(spawnedSensor);
+        }
+    }
+
+    public void RemoveSensors()
+    {
+        foreach (SensorType sensor in sensors) RemoveSensor(sensor);
     }
 
     /// <summary>

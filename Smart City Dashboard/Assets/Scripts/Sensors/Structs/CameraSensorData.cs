@@ -7,15 +7,11 @@ public struct CameraSensorData
     public GameObject DetectedObject { get; }
     public Vector3 Position { get; }
     public Vector3 Velocity { get; }
-    public Vector3 SelfPostion { get; }
-    public Vector3 SelfVelocity { get; }
     
-    public CameraSensorData(GameObject detectedObject, Vector3 position, Vector3 velocity, Vector3 selfPostion, Vector3 selfVelocity)
+    public CameraSensorData(GameObject detectedObject, Vector3 position, Vector3 velocity)
     {
         DetectedObject = detectedObject;
         Position = position;
         Velocity = velocity;
-        SelfPostion = selfPostion;
-        SelfVelocity = selfVelocity;
     }
 }

@@ -21,6 +21,8 @@ public class RoadTile : Tile
         { TileType.RoadCorner, "Prefabs/Roads/Road_Corner"}
     };
 
+    public RoadTile() : base() { }
+
     public enum TileType { 
         Road0Way = 0,
         RoadEndcap = 1,
