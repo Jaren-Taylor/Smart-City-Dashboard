@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
     private List<Menu> menus = new List<Menu>();
     public Action<bool> OnUIToggle;
     public Action<int> OnTabSwitch;
-    public Menu EscapeMenu;
+    public Menu F1Menu;
     public Menu TildeMenu;
     // contains a dupe reference to the currently active menu
     [HideInInspector]
@@ -16,14 +16,14 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        keyToMenuDict.Add(KeyCode.Escape, EscapeMenu);
+        keyToMenuDict.Add(KeyCode.F1, F1Menu);
         keyToMenuDict.Add(KeyCode.BackQuote, TildeMenu);
     }
 
     public void SwitchTabs()
     {
         if (ActiveMenu != null) ActiveMenu.SwitchTabs();
-        if (ActiveMenu == EscapeMenu) // TODO this only works if ModeMenu is externally set as the escape menu
+        if (ActiveMenu == F1Menu) // TODO this only works if ModeMenu is externally set as the escape menu
         {
             OnTabSwitch?.Invoke(ActiveMenu.ActiveTab);
         }
@@ -82,7 +82,7 @@ public class UIManager : MonoBehaviour
             ActiveMenu.OnNumberKeyPress(value);
         }else
         {
-            EscapeMenu.OnNumberKeyPress(value);
+            F1Menu.OnNumberKeyPress(value);
         }
     }
 }

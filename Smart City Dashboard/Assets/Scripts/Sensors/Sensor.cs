@@ -93,4 +93,9 @@ public abstract class Sensor<T> : MonoBehaviour
     protected abstract T CollectData(GameObject sensedObject);
     public abstract void RegisterToManager(SensorManager sensor);
     public abstract void DeregisterFromManager(SensorManager sensor);
+
+    public override string ToString()
+    {
+        return "Generic Sensor";
+    }
 }

@@ -30,4 +30,9 @@ public class CameraSensor : Sensor<CameraSensorData>
             this.transform.position,
             ownerRigidBody?.velocity ?? Vector3.zero);
     }
+
+    public override string ToString()
+    {
+        return "Camera Sensor";
+    }
 }

@@ -177,7 +177,8 @@ public class GridManager : MonoBehaviour
     public void SetPlaceHouseState() => ChangeState(EGridControlState.PlaceHouse);
     public void SetPlaceOfficeState() => ChangeState(EGridControlState.PlaceOffice);
     public void SetPlaceCameraState() => ChangeState(EGridControlState.PlaceCamera);
-    public void SetDeleteModeState() => ChangeState(EGridControlState.DeleteMode);
+    public void SetDeleteTileState() => ChangeState(EGridControlState.DeleteTile);
+    public void SetDeleteSensorState() => ChangeState(EGridControlState.DeleteSensor);
 
     // Update is called once per frame
     void Update()
