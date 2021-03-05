@@ -4,6 +4,6 @@ public enum EGridControlState
     PlaceHouse,
     PlaceOffice,
     PlaceCamera,
-    DeleteTile,
-    DeleteSensor
+    DeleteMode,
+    SelectEntity
 }

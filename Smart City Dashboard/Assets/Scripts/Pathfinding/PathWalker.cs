@@ -16,7 +16,7 @@ public class PathWalker : MonoBehaviour
 
     public NodeController SpawnPosition;
 
-    private int layerMask = 1 << 7;
+    private readonly int layerMask = 1 << 7;
     private float maxSpeed = .5f;
     private Path path;
 

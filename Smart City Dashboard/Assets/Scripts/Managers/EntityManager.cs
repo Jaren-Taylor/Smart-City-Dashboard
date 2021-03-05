@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
 
 public class EntityManager : MonoBehaviour
@@ -45,7 +46,7 @@ public class EntityManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.E) && CameraManager.Instance.isFollowingEntity is false)
         {
             if(Entities.Count > 0)
-                CameraManager.Instance.StartFollowEntity(Entities[0]);
+                CameraManager.Instance.StartFollowEntity(Entities[UnityEngine.Random.Range(0, Entities.Count)]);
         }
         else if (Input.GetKeyDown(KeyCode.E) && CameraManager.Instance.isFollowingEntity is true)
         {

@@ -93,7 +93,7 @@ public class TileGrid
         foreach (var location in TileLocations)
         {
             grid[location].CreateManaged(location, GetNeighbors(location));
-
+            grid[location].SpawnHeldSensors();
         }
         //foreach (var buildingLocation in BuildingTiles)
     }

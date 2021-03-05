@@ -75,8 +75,56 @@ public class GridManager : MonoBehaviour
         Instance = this;
         
         ground = CreateGround();
-        
+
+        SurroundGround(gridSize);
+
         Grid.RefreshGrid();
+    }
+
+    private void SurroundGround(int gridSize)
+    {
+        var mountainPrefab = Resources.Load<GameObject>("Prefabs/SurroundingTiles/SurroundingTile");
+
+        var sourceGO = new GameObject("Surrounding Tiles");
+        sourceGO.transform.parent = this.transform;
+        sourceGO.transform.position = new Vector3(-0.5f, 0f, -0.5f);
+
+        GenerateMountainRange(mountainPrefab, sourceGO.transform, gridSize, sourceGO.transform.position, Vector3.left, Vector3.forward);
+        GenerateMountainRange(mountainPrefab, sourceGO.transform, gridSize, sourceGO.transform.position + Vector3.forward * gridSize, Vector3.forward, Vector3.right);
+        GenerateMountainRange(mountainPrefab, sourceGO.transform, gridSize, sourceGO.transform.position + Vector3.forward * gridSize + Vector3.right * gridSize, Vector3.right, Vector3.back);
+        GenerateMountainRange(mountainPrefab, sourceGO.transform, gridSize, sourceGO.transform.position + Vector3.right * gridSize, Vector3.back, Vector3.left);
+    }
+
+    private void GenerateMountainRange(GameObject mountainPrefab, Transform parent, int size, Vector3 rootPoint, Vector3 edgeNormal, Vector3 edgeDirection)
+    {
+        int tileRadius = 10;
+        float distanceRemaining = size + tileRadius * 6;
+        int tilesSpawned = 0;
+        Vector3 rootPosition = rootPoint + edgeNormal * tileRadius + edgeDirection * tileRadius;
+        while(distanceRemaining > 0)
+        {
+            Vector3 p = rootPosition + tilesSpawned * edgeDirection * tileRadius * 2;
+            for (int i = 0; i < 4; i++)
+            {
+                Instantiate<GameObject>(mountainPrefab, p, GetRandomRotation(), parent).GetComponent<AdjustableMountain>().SetHeightScale(UnityEngine.Random.Range(0.75f, 1.25f));
+                p += edgeNormal * tileRadius * 2;
+            }
+
+            tilesSpawned++;
+            distanceRemaining -= tileRadius * 2;
+        }
+    }
+
+    private Quaternion GetRandomRotation()
+    {
+        int choice = UnityEngine.Random.Range(0, 4);
+        return choice switch
+        {
+            0 => Quaternion.identity,
+            1 => Quaternion.Euler(0f, 90f, 0f),
+            2 => Quaternion.Euler(0f, 180f, 0f),
+            _ => Quaternion.Euler(0f, 270f, 0f),
+        };
     }
 
     private bool TryLoadFile()
@@ -177,8 +225,8 @@ public class GridManager : MonoBehaviour
     public void SetPlaceHouseState() => ChangeState(EGridControlState.PlaceHouse);
     public void SetPlaceOfficeState() => ChangeState(EGridControlState.PlaceOffice);
     public void SetPlaceCameraState() => ChangeState(EGridControlState.PlaceCamera);
-    public void SetDeleteTileState() => ChangeState(EGridControlState.DeleteTile);
-    public void SetDeleteSensorState() => ChangeState(EGridControlState.DeleteSensor);
+    public void SetDeleteModeState() => ChangeState(EGridControlState.DeleteMode);
+    public void SetSelectEntityState() => ChangeState(EGridControlState.SelectEntity);
 
     // Update is called once per frame
     void Update()

@@ -26,9 +26,12 @@ public class CameraSensor : Sensor<CameraSensorData>
     {
         return new CameraSensorData(sensedObject,
             sensedObject.transform.position,
-            sensedObject.GetComponent<Rigidbody>().velocity,
-            this.transform.position,
-            ownerRigidBody?.velocity ?? Vector3.zero);
+            sensedObject.GetComponent<Rigidbody>().velocity);
+    }
+
+    public override string GetSimpleName()
+    {
+        throw new System.NotImplementedException();
     }
 
     public override string ToString()

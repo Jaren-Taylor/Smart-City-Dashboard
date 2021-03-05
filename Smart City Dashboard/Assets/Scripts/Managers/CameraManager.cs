@@ -11,7 +11,7 @@ public class CameraManager : MonoBehaviour
     public FirstPersonViewport vehicleViewport;
 
     [Range(0, 3)]
-    public int defaultRotation;
+    public int defaultRotation = 0;
 
     public Vector2 defaultPosition;
     public bool isFollowingEntity { get; private set; } = false;
@@ -19,8 +19,8 @@ public class CameraManager : MonoBehaviour
     private Vector3 panVelocity = Vector3.zero;
     private float sizeVelocity = 0;
 
-    private float size;
-    public float Size { get => size; set => size = Mathf.Clamp(value, Config.minSize, Config.maxSize); }
+    private float trackedSize;
+    public float Size { get => trackedSize; set => trackedSize = Mathf.Clamp(value, Config.minSize, Config.maxSize); }
 
     private int rotation;
     public int Rotation { get => rotation; set => rotation = value; }
@@ -31,10 +31,18 @@ public class CameraManager : MonoBehaviour
     private float targetTrackHeight = 0f;
 
     public static CameraManager Instance { get; private set; }
+    public Vector3 CameraRigReturnTransform { get; private set; }
+    public Quaternion CameraRigReturnRotation { get; private set; }
 
     void ResetSize() => Size = Config.defaultSize;
     void ResetPosition() => Position = defaultPosition;
     void ResetRotation() => Rotation = defaultRotation;
+
+    private void HardSetPosition(Vector3 position)
+    {
+        Position = position;
+        transform.localPosition = trackedPosition;
+    }
 
     void ResetCamera()
     {
@@ -53,6 +61,8 @@ public class CameraManager : MonoBehaviour
     {
         entityCamera.gameObject.SetActive(false);
         ResetCamera();
+        int gridSize = GridManager.Instance.gridSize;
+        HardSetPosition(new Vector3(gridSize/2f, 0f, gridSize/2f));
     }
 
     void RotateLeft()
@@ -68,21 +78,30 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        ClampTrackedPosition();
         if (isFollowingEntity is false)
         {
             transform.localPosition = Vector3.SmoothDamp(transform.localPosition, trackedPosition, ref panVelocity, Config.smoothTime); ;
-            mainCamera.orthographicSize = Mathf.SmoothDamp(mainCamera.orthographicSize, size, ref sizeVelocity, Config.smoothTime);
+            mainCamera.orthographicSize = Mathf.SmoothDamp(mainCamera.orthographicSize, trackedSize, ref sizeVelocity, Config.smoothTime);
         }
-        if(isFollowingEntity is true)
+        if (isFollowingEntity is true)
         {
             FollowEntity(trackedEntity);
         }
     }
+
+    private void ClampTrackedPosition()
+    {
+        if (trackedPosition.x < -.5f) trackedPosition.x = -0.5f;
+        else if (trackedPosition.x > GridManager.Instance.gridSize - .5f) trackedPosition.x = GridManager.Instance.gridSize - .5f;
+        if (trackedPosition.z < -.5f) trackedPosition.z = -0.5f;
+        else if (trackedPosition.z > GridManager.Instance.gridSize - .5f) trackedPosition.z = GridManager.Instance.gridSize - .5f;
+    }
+
     internal void PanHandler(Vector3 panDelta)
     {
         Vector3 scaledDelta = panDelta * Time.deltaTime * Config.panSpeed;
-        trackedPosition += Quaternion.Euler(0, transform.rotation.eulerAngles.y + 45f, 0) * scaledDelta * (size / Config.minSize) * Config.panZoomSenstivity;
+        trackedPosition += Quaternion.Euler(0, transform.rotation.eulerAngles.y + 45f, 0) * scaledDelta * (trackedSize / Config.minSize) * Config.panZoomSenstivity;
 
     }
     internal void RotationHandler(float direction)
@@ -102,6 +121,7 @@ public class CameraManager : MonoBehaviour
     }
     public void StartFollowEntity(Entity entity)
     {
+
         GridManager.Instance.CursorEnabled = false;
         isFollowingEntity = true;
         GridManager.Instance.GridSM.SuspendState(new DigitalCursor());
@@ -131,11 +151,11 @@ public class CameraManager : MonoBehaviour
 
     public void StopFollowEntity()
     {
+
         GridManager.Instance.CursorEnabled = true;
         entityCamera.gameObject.SetActive(false);
         mainCamera.gameObject.SetActive(true);
         GridManager.Instance.GridSM.ResumeState(new DigitalCursor());
-        ResetCamera();
         isFollowingEntity = false;
         if(trackedEntity is Entity entity)
             entity.OnBeingDestroy -= TrackedEntityDestroyed;
@@ -149,12 +169,14 @@ public class CameraManager : MonoBehaviour
                 vehicleEntity.SetModelVisibility(true);
             }
         }
+        trackedPosition = transform.position;
+        mainCamera.orthographicSize = Config.minSize;
         
     }
     public void FollowEntity(Entity entity)
     {
         transform.position = entity.transform.position + Vector3.up * targetTrackHeight;
-        transform.rotation = entity.transform.rotation;
+        entityCamera.transform.rotation = entity.transform.rotation;
     }
     
 }
