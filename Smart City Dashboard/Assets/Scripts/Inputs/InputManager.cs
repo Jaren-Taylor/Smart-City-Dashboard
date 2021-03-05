@@ -18,7 +18,7 @@ public class InputManager : MonoBehaviour
 
     // Keyboard Actions
     public Action<int> OnNumberPressed;
-    public Action<KeyCode> OnEscapePressed;
+    public Action<KeyCode> OnF1Pressed;
     public Action<KeyCode> OnTildePressed;
     public Action OnCPressed;
     public Action OnTabPressed;
@@ -108,11 +108,11 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public void OnEscapeKeyPressed(CallbackContext context)
+    public void OnF1KeyPressed(CallbackContext context)
     {
         if (context.started)
         {
-            OnEscapePressed?.Invoke(KeyCode.Escape);
+            OnF1Pressed?.Invoke(KeyCode.F1);
         }
     }
 

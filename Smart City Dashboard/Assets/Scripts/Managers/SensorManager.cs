@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -84,13 +83,18 @@ public class SensorManager : MonoBehaviour
         return true;
     }
 
-    public static bool RemoveSensorsAt(Vector2Int tilePosition)
+    public void ShowSensorMenu(Vector2Int tilePosition)
     {
-        if (GridManager.GetTile(tilePosition) is Tile tile)
+
+    }
+
+    public static bool TryRemoveSensorsAt<T>(Vector2Int tilePosition) where T: Component
+    {
+        if (GridManager.GetTile(tilePosition) is Tile tile && !tile.TryGetComponent<T>(out _))
         {
             tile.RemoveSensors();
         }
-        return true;
+        return false;
     }
 
     public static bool TryCreateSensorAt(Vector2Int tilePosition, SensorType sensorType)

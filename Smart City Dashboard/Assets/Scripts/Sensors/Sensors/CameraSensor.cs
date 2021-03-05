@@ -33,4 +33,9 @@ public class CameraSensor : Sensor<CameraSensorData>
     {
         throw new System.NotImplementedException();
     }
+
+    public override string ToString()
+    {
+        return "Camera Sensor";
+    }
 }

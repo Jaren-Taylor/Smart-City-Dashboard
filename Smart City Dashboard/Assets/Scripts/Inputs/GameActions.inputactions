@@ -812,7 +812,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Escape",
+                    "name": "F1",
                     "type": "Button",
                     "id": "741b8dc4-4384-4854-8fe3-5c9afb76a233",
                     "expectedControlType": "Button",
@@ -1038,11 +1038,11 @@
                 {
                     "name": "",
                     "id": "a332412c-290d-4e8f-82ad-2f457ac01299",
-                    "path": "<Keyboard>/escape",
+                    "path": "<Keyboard>/f1",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Escape",
+                    "action": "F1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

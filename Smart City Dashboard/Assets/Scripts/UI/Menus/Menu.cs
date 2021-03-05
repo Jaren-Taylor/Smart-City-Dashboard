@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class Menu : MonoBehaviour
 {
+    [HideInInspector]
     public List<Tab> tabs = new List<Tab>();
     protected RectTransform menuBounds;
     public EUIPosition uiPosition = EUIPosition.Bottom;

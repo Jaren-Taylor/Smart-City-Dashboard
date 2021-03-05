@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 
         // UI events
 
-        inputManager.OnEscapePressed += uiManager.ToggleMenu;
+        inputManager.OnF1Pressed += uiManager.ToggleMenu;
 
         inputManager.OnTildePressed += uiManager.ToggleMenu;
 
