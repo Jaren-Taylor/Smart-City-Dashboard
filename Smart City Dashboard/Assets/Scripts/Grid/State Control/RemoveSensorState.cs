@@ -6,7 +6,8 @@ class RemoveSensorState : DrawsWithCursorState
 
     public override void OnMouseDown(DigitalCursor location)
     {
-        if (location.OnGrid && SensorManager.TryRemoveSensorsAt<CameraSensor>(location.Position))
+        // TODO: Add way to open sensor menu
+        if (location.OnGrid)
         {
             ClickCursor();
         }
