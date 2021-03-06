@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class UIElementManager : MonoBehaviour
 {
-    public string Header = "Header";
-    public TextMeshProUGUI headerObject = new TextMeshProUGUI();
     public static float Margin = 8;
     private static float halfMargin = Margin / 2;
 
-    public List<UIElement> elements;
+     
+    public List<UIElement> elements = new List<UIElement>();
 
-    private void Start()
+    public void AddElement(UIElement element)
     {
-        headerObject.text = Header;
-        headerObject.transform.position = new Vector3(Margin, 0, 0);
+
     }
 
     public void UpdateElementPositions()
