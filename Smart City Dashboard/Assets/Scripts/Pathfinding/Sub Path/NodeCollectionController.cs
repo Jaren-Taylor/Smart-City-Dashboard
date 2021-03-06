@@ -17,11 +17,13 @@ public class NodeCollectionController : MonoBehaviour
 
     private float time = 0f;
     private bool isLocked = true;
+    private Tile tile;
 
     public void Start()
     {
         time = UnityEngine.Random.Range(0f, 4f);
         isLocked = UnityEngine.Random.Range(0, 2) == 0;
+        tile = GridManager.GetTile(transform.position.ToGridInt());
     }
 
     public void Update()
@@ -138,8 +140,13 @@ public class NodeCollectionController : MonoBehaviour
     internal bool CanEnterFromPosition(Direction enterDirection, int position)
     {
         //return !isLocked; //For debug only
+        if (tile is RoadTile road && road.TrafficLight is TrafficLightController && road.TrafficLight.HasLight(enterDirection, out var light))
+        {
+            return (light == LightAnimationController.LightColor.Green);
+        }
+             
         
-        return position.IsBetween(0, 3); //TODO: Add something for traffic lights here
+        return true; //TODO: Add something for traffic lights here
     }
 
 

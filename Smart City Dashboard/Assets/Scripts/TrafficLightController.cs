@@ -141,6 +141,25 @@ public class TrafficLightController : MonoBehaviour
         return false;
     }
 
+    public bool HasLight(NodeCollectionController.Direction direction, out LightAnimationController.LightColor state)
+    {
+        if (TrafficLights.TryGetValue(direction, out var light))
+        {
+            state = light.State;
+            return true;
+        }
+        state = LightAnimationController.LightColor.Green;
+        return false;
+    }
+    private bool TryIsGreen(NodeCollectionController.Direction direction)
+    {
+        if (TrafficLights.TryGetValue(direction, out var value))
+        {
+            return value.State == LightAnimationController.LightColor.Green;
+        }
+        return false;
+    }
+
     private void TryTurnGreen(NodeCollectionController.Direction direction)
     {
         if (TrafficLights.TryGetValue(direction, out var value))
