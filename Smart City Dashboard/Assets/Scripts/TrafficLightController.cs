@@ -6,8 +6,14 @@ using UnityEngine;
 
 public class TrafficLightController : MonoBehaviour
 {
+    private float totalTime = 0f;
+    private float switchDelay = 5f;
     private Dictionary<NodeCollectionController.Direction, LightAnimationController> TrafficLights = new Dictionary<NodeCollectionController.Direction, LightAnimationController>();
-    
+    private bool isEastWest = false;
+    private bool isTransitioning = false;
+    private bool isInitialized = false;
+
+
     /// <summary>
     /// From a given set of directions, instantiates the appropriate traffic light and returns the attached script.
     /// </summary>
@@ -60,6 +66,94 @@ public class TrafficLightController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(! isInitialized)
+            InitializeLights();
         
+        totalTime += Time.deltaTime;
+        if (totalTime > switchDelay)
+        {
+            if (!isTransitioning)
+            {
+                isTransitioning = true;
+                if (isEastWest)
+                {                    
+                    TryTurnRed(NodeCollectionController.Direction.EastBound);
+                    TryTurnRed(NodeCollectionController.Direction.WestBound);
+                }
+                else
+                {
+                    TryTurnRed(NodeCollectionController.Direction.NorthBound);
+                    TryTurnRed(NodeCollectionController.Direction.SouthBound);
+
+                }
+            }
+            else
+            {
+                if (isEastWest)
+                {
+                    if (TryIsRed(NodeCollectionController.Direction.EastBound) || TryIsRed(NodeCollectionController.Direction.WestBound) )
+                    {
+                        isEastWest = false;
+                        TryTurnGreen(NodeCollectionController.Direction.NorthBound);
+                        TryTurnGreen(NodeCollectionController.Direction.SouthBound);
+                        isTransitioning = false;
+                        totalTime = 0;
+                    }
+
+                }
+                else
+                {
+                    if (TryIsRed(NodeCollectionController.Direction.NorthBound) || TryIsRed(NodeCollectionController.Direction.SouthBound))
+                    {
+                        isEastWest = true;
+                        TryTurnGreen(NodeCollectionController.Direction.EastBound);
+                        TryTurnGreen(NodeCollectionController.Direction.WestBound);
+                        isTransitioning = false;
+                        totalTime = 0;
+                    }                    
+                }
+
+            }
+        }
+    }
+
+    private void InitializeLights()
+    {
+        isInitialized = true;
+        if (isEastWest)
+        {
+            TryTurnGreen(NodeCollectionController.Direction.EastBound);
+            TryTurnGreen(NodeCollectionController.Direction.WestBound);
+        }
+        else
+        {
+            TryTurnGreen(NodeCollectionController.Direction.NorthBound);
+            TryTurnGreen(NodeCollectionController.Direction.SouthBound);
+        }
+    }
+
+    private bool TryIsRed(NodeCollectionController.Direction direction)
+    {
+        if (TrafficLights.TryGetValue(direction, out var value))
+        {
+            return value.State == LightAnimationController.LightColor.Red;
+        }
+        return false;
+    }
+
+    private void TryTurnGreen(NodeCollectionController.Direction direction)
+    {
+        if (TrafficLights.TryGetValue(direction, out var value))
+        {
+            value.TurnGreen();
+        }
+    }
+
+    private void TryTurnRed(NodeCollectionController.Direction direction)
+    {
+        if (TrafficLights.TryGetValue(direction, out var value))
+        {
+            value.TurnRed();
+        }
     }
 }
