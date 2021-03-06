@@ -53,7 +53,7 @@ public abstract class Tile
     };
 
     private const string ManagedGameObjectLocation = "Prefabs/ManagedTile";
-    private ManagedGameObject managedObject = null;
+    protected ManagedGameObject managedObject = null;
 
     [DataMember(Name="IsPermanent")]
     public bool IsPermanent { get; private set; }
@@ -256,7 +256,9 @@ public abstract class Tile
     protected void AttachModelToManaged(string prefabLocation, Facing direction)
     {
         managedObject.InstantiateModel(prefabLocation, FacingToQuaternion[direction]);
+        
     }
+    
 
     /// <summary>
     /// Given the neighbors and the position, will use decide which model should be created as well a how to orient it.

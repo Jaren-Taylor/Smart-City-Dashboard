@@ -13,7 +13,7 @@ public class TestTrafficLights : MonoBehaviour
             NodeCollectionController.Direction.NorthBound,
             NodeCollectionController.Direction.WestBound
         };
-        TrafficLightController.CreateLight(this.transform, list);
+        TrafficLightController.CreateLight(list , this.transform);
     }
 
     // Update is called once per frame

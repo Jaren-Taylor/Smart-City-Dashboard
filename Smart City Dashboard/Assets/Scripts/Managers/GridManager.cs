@@ -319,6 +319,7 @@ public class GridManager : MonoBehaviour
     {
         Grid[point]?.MakePermanent(animateSpawn);
         Grid[point]?.SetTransparency(false);
+        UpdateNeighbors(point);
     }
 
     /// <summary>
