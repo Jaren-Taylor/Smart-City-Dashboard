@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,11 +6,15 @@ using UnityEngine;
 public class LightAnimationController : MonoBehaviour
 {
     [SerializeField]
-    private LightColor State;
+    public LightColor State { get; private set; }
     [SerializeField]
     private Material[] LightAddresses;
     [SerializeField]
     private MeshRenderer Mesh;
+    private bool TransformToRed = false;
+    private float totalTime = 0f;
+    private readonly float lightDelay = 1f;
+    Action onTurnRed;
     public enum LightColor
     {
         Red,
@@ -26,13 +31,23 @@ public class LightAnimationController : MonoBehaviour
             state %= 3;
             yield return new WaitForSeconds(delta);
         }
-        
-        
     }
 
     private void Start()
     {
         ChangeLightState(LightColor.Red);
+    }
+    public void TurnRed()
+    {
+        totalTime = 0;
+        TransformToRed = true;
+        ChangeLightState(LightColor.Yellow);
+    }
+
+    public void TurnGreen()
+    {
+        TransformToRed = false;
+        ChangeLightState(LightColor.Green);
     }
 
     private void ChangeLightState(LightColor nextState)
@@ -60,8 +75,21 @@ public class LightAnimationController : MonoBehaviour
                 break;
         }
         Mesh.materials = mats;
-   
+    }
+    private void Update()
+    {
+
+        if (TransformToRed)
+        {
+            totalTime += Time.deltaTime;
+            if (totalTime >= lightDelay)
+            {
+                ChangeLightState(LightColor.Red);
+                TransformToRed = false;
+            }
+                
+        }
     }
 
-   
+
 }

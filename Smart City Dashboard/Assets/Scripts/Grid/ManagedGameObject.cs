@@ -89,7 +89,7 @@ public class ManagedGameObject : MonoBehaviour
     /// </summary>
     /// <param name="prefabAddress">Prefab to be instanced (will be copied if already instantiated)</param>
     /// <param name="rotation">Rotation for instanced model</param>
-    public void InstantiateModel(string prefabAddress, Quaternion? rotation = null)
+    public void InstantiateModel(string prefabAddress,Quaternion? rotation = null)
     {
         if (ModelExists && CompareAgainstCurrentModel(prefabAddress, rotation)) return;
         DestroyModel();
@@ -100,7 +100,6 @@ public class ManagedGameObject : MonoBehaviour
         childModel.name = childModel.name.Replace("(Clone)", "");
         currentPrefabAddress = prefabAddress;
         ApplyCachedMaterial();
-        
     }
 
     private bool CompareAgainstCurrentModel(string prefabAddress, Quaternion? rotation)

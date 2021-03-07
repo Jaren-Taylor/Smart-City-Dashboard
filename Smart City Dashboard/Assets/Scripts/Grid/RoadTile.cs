@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+using UnityEngine.PlayerLoop;
 
 [DataContract]
 /// <summary>
@@ -11,6 +12,8 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class RoadTile : Tile
 {
+    public TrafficLightController TrafficLight { get; private set; } = null;
+    private List<NodeCollectionController.Direction> directions = null;
     public static readonly Dictionary<TileType, string> ModelLookup = new Dictionary<TileType, string>()
     {
         { TileType.Road0Way, "Prefabs/Roads/Road_0_Way"},
@@ -43,6 +46,7 @@ public class RoadTile : Tile
 
     protected override bool CalculateAndSetModelFromNeighbors(NeighborInfo neighbors)
     {
+        directions = new List<NodeCollectionController.Direction>();
         int count = 0;
         bool left = false, right = false, top = false, bottom = false;
 
@@ -114,14 +118,28 @@ public class RoadTile : Tile
                 {
                     rotation = Facing.Bottom;
                 }
+               
                 break;
             // 4 way
             case 4:
                 Type = TileType.Road4Way;
                 break;
         }
-        
         AttachModelToManaged(ModelLookup[Type], rotation); //Tells parent to construct the model in the orientation 
+        UpdateTrafficLight(neighbors);
         return false;
+    }
+
+    private void UpdateTrafficLight(NeighborInfo neighbors)
+    {
+        directions.Clear();
+        int count = 0;
+        if(TrafficLight != null) { GameObject.Destroy(TrafficLight.gameObject); }
+        if (neighbors.left is RoadTile road && road.IsPermanent ) { count++; directions.Add(NodeCollectionController.Direction.EastBound); }
+        if (neighbors.right is RoadTile road2 && road2.IsPermanent) { count++; directions.Add(NodeCollectionController.Direction.WestBound); }
+        if (neighbors.top is RoadTile road3 && road3.IsPermanent) { count++; directions.Add(NodeCollectionController.Direction.SouthBound); }
+        if (neighbors.bottom is RoadTile road4 && road4.IsPermanent) { count++; directions.Add(NodeCollectionController.Direction.NorthBound); }
+        if(count >= 3) { TrafficLight = TrafficLightController.CreateLight(directions, managedObject.transform);}
+        
     }
 }
