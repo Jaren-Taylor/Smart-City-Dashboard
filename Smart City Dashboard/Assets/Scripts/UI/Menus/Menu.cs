@@ -7,7 +7,7 @@ public abstract class Menu : MonoBehaviour
     public List<Tab> tabs = new List<Tab>();
     protected RectTransform menuBounds;
     public EUIPosition uiPosition = EUIPosition.Bottom;
-    protected float glideAmount;
+    protected float destination;
     protected int glideSpeed = 25;
     [HideInInspector]
     public int ActiveTab = 0;
@@ -27,7 +27,7 @@ public abstract class Menu : MonoBehaviour
     }
 
     /// <summary>
-    /// If needed, glide the menu into/out of place
+    /// If needed, glides the menu into/out of place
     /// </summary>
     private void Update()
     {
@@ -36,11 +36,11 @@ public abstract class Menu : MonoBehaviour
         {
             case EUIPosition.Top:
             case EUIPosition.Bottom:
-                if (transform.position.y != glideAmount) GlideTowardsDestination();
+                if (transform.position.y != destination) GlideTowardsDestination();
                 break;
             case EUIPosition.Left:
             case EUIPosition.Right:
-                if (transform.position.x != glideAmount) GlideTowardsDestination();
+                if (transform.position.x != destination) GlideTowardsDestination();
                 break;
         }
     }
@@ -55,20 +55,30 @@ public abstract class Menu : MonoBehaviour
         switch (uiPosition)
         {
             case EUIPosition.Top:
-                newPosition.y += (glideAmount - newPosition.y) / glideSpeed;
-                break;
             case EUIPosition.Bottom:
-                newPosition.y += (glideAmount - newPosition.y) / glideSpeed;
+                newPosition.y += YGlideAmount(newPosition.y);
                 break;
             case EUIPosition.Left:
-                newPosition.x += (glideAmount - newPosition.x) / glideSpeed;
-                break;
             case EUIPosition.Right:
-                newPosition.x += (glideAmount - newPosition.x) / glideSpeed;
+                newPosition.x += XGlideAmount(newPosition.x);
                 break;
         }
         transform.position = newPosition;
     }
+
+    /// <summary>
+    /// Calculates the distance between the destination and current position, then divides by the glideSpeed
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    private float YGlideAmount(float y) => (destination - y) / glideSpeed;
+
+    /// <summary>
+    /// Calculates the distance between the destination and current position, then divides by the glideSpeed
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    private float XGlideAmount(float x) => (destination - x) / glideSpeed;
 
     /// <summary>
     /// Quickly move the menu in and out of view
@@ -80,16 +90,16 @@ public abstract class Menu : MonoBehaviour
         switch (uiPosition)
         {
             case EUIPosition.Top:
-                newPosition.y += glideAmount - newPosition.y;
+                newPosition.y += destination - newPosition.y;
                 break;
             case EUIPosition.Bottom:
-                newPosition.y += glideAmount - newPosition.y;
+                newPosition.y += destination - newPosition.y;
                 break;
             case EUIPosition.Left:
-                newPosition.x += glideAmount - newPosition.x;
+                newPosition.x += destination - newPosition.x;
                 break;
             case EUIPosition.Right:
-                newPosition.x += glideAmount - newPosition.x;
+                newPosition.x += destination - newPosition.x;
                 break;
         }
         transform.position = newPosition;
@@ -103,16 +113,16 @@ public abstract class Menu : MonoBehaviour
         switch (uiPosition)
         {
             case EUIPosition.Top:
-                glideAmount = +menuBounds.rect.height;
+                destination = +menuBounds.rect.height;
                 break;
             case EUIPosition.Bottom:
-                glideAmount = -menuBounds.rect.height;
+                destination = -menuBounds.rect.height;
                 break;
             case EUIPosition.Left:
-                glideAmount = -menuBounds.rect.width;
+                destination = -menuBounds.rect.width;
                 break;
             case EUIPosition.Right:
-                glideAmount = +menuBounds.rect.width;
+                destination = +menuBounds.rect.width;
                 break;
         }
     }
@@ -199,7 +209,7 @@ public abstract class Menu : MonoBehaviour
         }
         isOnScreen = !isOnScreen;
         // move the menu offscreen
-        glideAmount += movementDelta;
+        destination += movementDelta;
     }
 
     /// <summary>

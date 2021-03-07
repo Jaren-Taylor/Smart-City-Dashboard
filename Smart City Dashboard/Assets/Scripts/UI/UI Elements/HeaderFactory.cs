@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class Header : UIElement
+public class HeaderFactory : UIFactory
 {
     public static readonly string prefabAddress = "Prefabs/UI/UI Elements/Header";
     public static readonly int height = 20;
@@ -9,7 +9,7 @@ public class Header : UIElement
 
     public new static GameObject Spawn(Transform parent, string text) 
     {
-        GameObject header = UIElement.Spawn(parent, prefabAddress);
+        GameObject header = UIFactory.Spawn(parent, prefabAddress);
         TextMeshProUGUI TMProText = header.GetComponent<TextMeshProUGUI>();
         TMProText.text = text;
         return header;
