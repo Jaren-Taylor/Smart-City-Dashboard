@@ -17,6 +17,9 @@ public class UIElementManager : MonoBehaviour
         UpdatePositions();
     }
 
+    /// <summary>
+    /// Updates each GameObjects position on the screen
+    /// </summary>
     private void UpdatePositions()
     {
         foreach (GameObject element in elements)
@@ -35,6 +38,10 @@ public class UIElementManager : MonoBehaviour
     /// <returns></returns>
     private Vector3 GlideAmount(Vector3 destination, Vector3 localPosition) => new Vector3((destination.x - localPosition.x) / GlideSpeed, (destination.y - localPosition.y) / GlideSpeed, 0);
 
+    /// <summary>
+    /// Add a GameObject to the manager's system. GameObject is assumed to contain a RectTransform
+    /// </summary>
+    /// <param name="element"></param>
     public void Add(GameObject element)
     {
         var rectTransform = element.GetComponent<RectTransform>();
@@ -43,12 +50,21 @@ public class UIElementManager : MonoBehaviour
         positionCursor -= new Vector3 (0, rectTransform.rect.height + Margin, 0);
     }
 
+    /// <summary>
+    /// Adds the GameObject to the RectTransform and destination dictonaries. the positionCursor is used for its destination
+    /// </summary>
+    /// <param name="element"></param>
+    /// <param name="rectTransform"></param>
     private void AddToDictionaries(GameObject element, RectTransform rectTransform)
     {
         rectTransforms.Add(element, rectTransform);
         destinations.Add(element, new Vector3(positionCursor.x, positionCursor.y, positionCursor.z));
     }
 
+    /// <summary>
+    /// Removes a GameObject from the manager's system
+    /// </summary>
+    /// <param name="element"></param>
     public void Remove(GameObject element)
     {
         UpdateDictionaryPositions(element);
@@ -56,14 +72,20 @@ public class UIElementManager : MonoBehaviour
         elements.Remove(element);
     }
 
-    private void ResetPositionCursor() => positionCursor = new Vector3(Margin, -Margin, 0);
-
+    /// <summary>
+    /// Removes a GameObject from each dictionary the manager uses
+    /// </summary>
+    /// <param name="element"></param>
     private void RemoveFromDictionaries(GameObject element)
     {
         rectTransforms.Remove(element);
         destinations.Remove(element);
     }
 
+    /// <summary>
+    /// Only used for when a GameObject is removed from the manager, and the dictionaries need to be updated
+    /// </summary>
+    /// <param name="elementRemoved"></param>
     private void UpdateDictionaryPositions(GameObject elementRemoved)
     {
         int indexRemoved = elements.IndexOf(elementRemoved);
