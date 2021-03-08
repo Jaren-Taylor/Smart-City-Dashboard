@@ -10,7 +10,7 @@ public class UITester : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            SimpleCard.Spawn(manager, Color.blue, "Hello World");
+            SimpleCard.Spawn(gameObject.transform, Color.blue, "Hello\n World " + i).transform.SetParent(transform);
         }
     }
 }

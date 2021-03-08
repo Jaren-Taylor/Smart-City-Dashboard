@@ -282,7 +282,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -530,8 +530,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 468.29175, y: -148.87036}
-  m_SizeDelta: {x: -1048.2422, y: -284.3214}
+  m_AnchoredPosition: {x: 601, y: -137.97}
+  m_SizeDelta: {x: -1037.1556, y: -275.9323}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1696684147
 MonoBehaviour:
@@ -542,10 +542,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 1696684145}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5222e93bc2a4f2b40912195194b18381, type: 3}
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 1696684150}
+  m_Padding:
+    m_Left: 4
+    m_Right: 4
+    m_Top: 4
+    m_Bottom: 4
+  m_ChildAlignment: 0
+  m_Spacing: 4
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!114 &1696684148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -593,10 +606,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1696684145}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ac1179529e2acf449752971657ec213, type: 3}
+  m_Script: {fileID: 11500000, guid: 5222e93bc2a4f2b40912195194b18381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elements: []
+  manager: {fileID: 0}
 --- !u!1 &1819938456
 GameObject:
   m_ObjectHideFlags: 0
