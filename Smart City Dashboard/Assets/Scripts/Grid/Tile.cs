@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using UnityEngine;
 
@@ -63,6 +64,8 @@ public abstract class Tile
 
     [DataMember(Name="Sensors")]
     private HashSet<SensorType> sensors = new HashSet<SensorType>();
+
+    public IReadOnlyCollection<SensorType> Sensors => sensors.ToList().AsReadOnly();
 
     [IgnoreDataMember]
     private Dictionary<SensorType, GameObject> sensorDictionary = new Dictionary<SensorType, GameObject>();
@@ -143,7 +146,11 @@ public abstract class Tile
         if (sensors.Contains(sensorType))
         {
             sensors.Remove(sensorType);
-            if (sensorDictionary.TryGetValue(sensorType, out GameObject spawnedSensor)) GameObject.Destroy(spawnedSensor);
+            if (sensorDictionary.TryGetValue(sensorType, out GameObject spawnedSensor))
+            {
+                GameObject.Destroy(spawnedSensor);
+                sensorDictionary.Remove(sensorType);
+            }
         }
     }
 

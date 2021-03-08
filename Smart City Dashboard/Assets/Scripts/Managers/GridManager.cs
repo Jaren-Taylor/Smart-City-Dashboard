@@ -12,6 +12,7 @@ public class GridManager : MonoBehaviour
 
     private DigitalCursor cursor = null;
     private bool cursorEnabled = true; //When false, cursor will not be shown
+
     private bool oldCursorEnabled;
     private bool clickRecieved = false; //When true, update function will pick this up and signal to its state controller
 
@@ -225,6 +226,7 @@ public class GridManager : MonoBehaviour
     public void SetPlaceCameraState() => ChangeState(EGridControlState.PlaceCamera);
     public void SetDeleteTileState() => ChangeState(EGridControlState.DeleteTile);
     public void SetSelectEntityState() => ChangeState(EGridControlState.SelectEntity);
+    public void SetExamineTileState() => ChangeState(EGridControlState.ExamineTile);
 
     // Update is called once per frame
     void Update()
@@ -285,7 +287,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    
+
     /// <summary>
     /// Gets tile from location
     /// </summary>

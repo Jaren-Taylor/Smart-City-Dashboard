@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     private Dictionary<KeyCode, MenuType> keyToMenuDict = new Dictionary<KeyCode, MenuType>();
     private Dictionary<MenuType, IFocusableWindow> enumToMenu = new Dictionary<MenuType, IFocusableWindow>();
     private List<IFocusableWindow> menus = new List<IFocusableWindow>();
+
     public Action<bool> OnUIToggle;
     public Action<int> OnTabSwitch;
     public Menu F1Menu;
@@ -16,8 +17,12 @@ public class UIManager : MonoBehaviour
     [HideInInspector]
     public IFocusableWindow ActiveMenu;
 
+    public static UIManager Instance;
+
     private void Start()
     {
+        Instance = this;
+
         enumToMenu.Add(MenuType.Dashboard, TildeMenu);
         enumToMenu.Add(MenuType.GridState, F1Menu);
         enumToMenu.Add(MenuType.TileSensorPopup, TileSensorPreview);
@@ -101,6 +106,12 @@ public class UIManager : MonoBehaviour
         {
             F1Menu.OnNumberKeyPress(value);
         }
+    }
+
+    internal void InspectTile(Vector2Int position)
+    {
+        TileSensorPreview.FocusTile(position);
+        if (!menus.Contains(TileSensorPreview)) ToggleSensorPopup();
     }
 }
 

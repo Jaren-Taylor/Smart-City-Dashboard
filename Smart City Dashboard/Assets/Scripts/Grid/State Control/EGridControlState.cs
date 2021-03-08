@@ -5,5 +5,6 @@ public enum EGridControlState
     PlaceOffice,
     PlaceCamera,
     DeleteTile,
-    SelectEntity
+    SelectEntity,
+    ExamineTile
 }

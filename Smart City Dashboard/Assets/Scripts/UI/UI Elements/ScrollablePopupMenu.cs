@@ -20,7 +20,7 @@ public class ScrollablePopupMenu : MonoBehaviour
     {
         foreach(Transform child in menuContent.transform)
         {
-            Destroy(child);
+            Destroy(child.gameObject);
         }
     }
 

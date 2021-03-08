@@ -25,6 +25,8 @@ public class CursorIndicator : MonoBehaviour
     {
         if (Icon is GameObject) Destroy(Icon);
 
+        if (iconAddress == "") return;
+
         var iconPrefab = Resources.Load<GameObject>(iconAddress);
         Icon = Instantiate(iconPrefab, CursorRoot.transform);
         Icon.transform.localPosition += Vector3.up * 1.35f;
