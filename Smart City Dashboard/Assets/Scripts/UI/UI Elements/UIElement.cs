@@ -4,17 +4,12 @@ using UnityEngine.Events;
 
 public class UIElement : MonoBehaviour
 {
-    public Action OnClick;
-    public Action<UIElement> OnDestroyElement;
+    public Action<UIElement> OnClick;
+    public void DestroyUIElement() => Destroy(gameObject);
 
     private void OnMouseDown()
     {
-        OnClick?.Invoke();
-    }
-
-    private void OnDestroy()
-    {
-        OnDestroyElement?.Invoke(this);
+        OnClick?.Invoke(this);
     }
 
     /// <summary>

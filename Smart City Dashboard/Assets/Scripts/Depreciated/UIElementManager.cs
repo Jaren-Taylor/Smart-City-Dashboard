@@ -45,7 +45,7 @@ public class UIElementManager : MonoBehaviour
     public void Add(UIElement element)
     {
         var rectTransform = element.GetComponent<RectTransform>();
-        element.OnDestroyElement += Remove;
+        //element.OnDestroyElement += Remove;
         elements.Add(element);
         AddToDictionaries(element, rectTransform);
         positionCursor -= new Vector3 (0, rectTransform.rect.height + Margin, 0);
