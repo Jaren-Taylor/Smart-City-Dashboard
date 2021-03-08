@@ -144,9 +144,7 @@ public class NodeCollectionController : MonoBehaviour
         {
             return (light == LightAnimationController.LightColor.Green);
         }
-             
-        
-        return true; //TODO: Add something for traffic lights here
+        return true; 
     }
 
 

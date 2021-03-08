@@ -1500,7 +1500,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1068862571}
         m_TargetAssemblyTypeName: GridManager, Assembly-CSharp
-        m_MethodName: SetDeleteSensorState
+        m_MethodName: SetExamineTileState
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1987,6 +1987,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 397630999}
   m_CullTransparentMesh: 1
+--- !u!114 &404229148 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+  m_PrefabInstance: {fileID: 5553123468487663466}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4241bd0f5f5e0534386ed9545d94b0f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &422546763
 GameObject:
   m_ObjectHideFlags: 0
@@ -7673,8 +7684,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 899236476638597531, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597531, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597531, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 899236476638597531, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_SizeDelta.x
@@ -7690,15 +7709,67 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 899236476638597531, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 143.48206
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1230303453}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1068862571}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleSensorPopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnExitingUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: GridManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476638597535, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: OnCloseMenu.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 899236476719543312, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 899236476719543319, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 186.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476719543319, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 899236476719543319, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 93.173
       objectReference: {fileID: 0}
     - target: {fileID: 899236476719543319, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -8120,6 +8191,34 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3333517763493273818, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3333517763493273818, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3333517763493273818, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 404229148}
+    - target: {fileID: 3333517763493273818, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3333517763493273818, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CloseMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3333517763493273818, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ScrollablePopupMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3333517763493273818, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 3596979733241104337, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 43
@@ -8149,6 +8248,14 @@ PrefabInstance:
       value: Heatmap Image
       objectReference: {fileID: 0}
     - target: {fileID: 3966960417182220997, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3966960417182220997, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3966960417182220997, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
@@ -8174,11 +8281,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3966960417182220997, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 114.789246
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3966960417182220997, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -145.53674
       objectReference: {fileID: 0}
     - target: {fileID: 3976042474513020422, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: m_text
@@ -8342,7 +8449,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7114856621200254509, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: OnRemoveClicked.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7114856621200254509, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: OnRemoveClicked.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -8355,7 +8462,7 @@ PrefabInstance:
     - target: {fileID: 7114856621200254509, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: OnRemoveClicked.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1230303453}
+      objectReference: {fileID: 1068862571}
     - target: {fileID: 7114856621200254509, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: OnRemoveClicked.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -8370,7 +8477,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7114856621200254509, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: OnRemoveClicked.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ToggleSensorPopup
+      value: OnExitingUI
       objectReference: {fileID: 0}
     - target: {fileID: 7114856621200254509, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: OnRemoveClicked.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
@@ -8378,7 +8485,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7114856621200254509, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: OnRemoveClicked.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UIManager, Assembly-CSharp
+      value: GridManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7114856621200254509, guid: 12eda182d08f69949917a208778c8bf7, type: 3}
       propertyPath: OnRemoveClicked.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
