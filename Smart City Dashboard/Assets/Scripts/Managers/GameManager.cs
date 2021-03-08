@@ -33,9 +33,9 @@ public class GameManager : MonoBehaviour
 
         // UI events
 
-        inputManager.OnF1Pressed += uiManager.ToggleMenu;
+        inputManager.OnF1Pressed += uiManager.ReceiveMenuKey;
 
-        inputManager.OnTildePressed += uiManager.ToggleMenu;
+        inputManager.OnTildePressed += uiManager.ReceiveMenuKey;
 
         inputManager.OnTabPressed += uiManager.SwitchTabs;
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Menu : MonoBehaviour
+public abstract class Menu : MonoBehaviour, ITabbedMenu, IFocusableWindow
 {
     [HideInInspector]
     public List<Tab> tabs = new List<Tab>();
@@ -11,8 +11,8 @@ public abstract class Menu : MonoBehaviour
     protected int glideSpeed = 25;
     [HideInInspector]
     public int ActiveTab = 0;
-    [HideInInspector]
-    public bool isOnScreen;
+
+    private bool isOnScreen;
 
     protected void Start()
     {
@@ -234,5 +234,13 @@ public abstract class Menu : MonoBehaviour
         {
             tabs.Add(tab);
         }
+    }
+
+    /// <summary>
+    /// Returns true if window is fully visible on screen
+    /// </summary>
+    public bool IsFullyVisible()
+    {
+        return isOnScreen;
     }
 }

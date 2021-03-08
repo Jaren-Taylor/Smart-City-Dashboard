@@ -48,17 +48,15 @@ public class GridManager : MonoBehaviour
         if (value == cursorEnabled) return;
         if (value)
         {
-            cursor = null;
+            cursor = new DigitalCursor();
             cursorEnabled = true;
+            GridSM.ResumeState(cursor);
         } 
         else
         {
-            if (cursor != null)
-            {
-                RemoveTileIfTemporary(cursor.Position);
-                cursorEnabled = false;
-                cursor = null;
-            }
+            GridSM.SuspendState(cursor);
+            cursorEnabled = false;
+            cursor = null;
         }
     }
 
