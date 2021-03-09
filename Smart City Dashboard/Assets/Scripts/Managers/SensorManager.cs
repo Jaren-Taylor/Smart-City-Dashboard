@@ -111,7 +111,21 @@ public class SensorManager : MonoBehaviour
 
     private void OnReceiveTrafficData(List<TrafficLightSensorData> sensorData)
     {
-        foreach (var data in sensorData) Debug.Log(data.EstimatedDirection + " | stop time: " + data.StopTime + " | Entity: " + data.Entity);
+        var foundDirections = new HashSet<NodeCollectionController.Direction>();
+        Vector2Int? tile = null;
+        foreach (var data in sensorData)
+        {
+            if (data.Entity == NodeCollectionController.TargetUser.Vehicles && !foundDirections.Contains(data.EstimatedDirection))
+            {
+                foundDirections.Add(data.EstimatedDirection);
+                tile = data.TilePosition;
+            }
+        }
+
+        if(foundDirections.Count > 0 && GridManager.GetTile(tile.Value) is RoadTile road)
+        {
+            foreach (var dir in foundDirections) road.TrafficLight.VehicleFoundInDirection(dir);
+        }
     }
 
     public void OnReceiveCameraData(List<CameraSensorData> sensorData)

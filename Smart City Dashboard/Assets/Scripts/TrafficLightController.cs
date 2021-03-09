@@ -1,14 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class TrafficLightController : MonoBehaviour
 {
     private float totalTime = 0f;
-    private float switchDelay = 5f;
+    private float switchDelay = 10f;
     private Dictionary<NodeCollectionController.Direction, LightAnimationController> TrafficLights = new Dictionary<NodeCollectionController.Direction, LightAnimationController>();
+    private SortedDictionary<NodeCollectionController.Direction, float> TrafficLightDownTime = new SortedDictionary<NodeCollectionController.Direction, float>(); 
     private bool isEastWest = false;
     private bool isTransitioning = false;
     private bool isInitialized = false;
@@ -55,28 +57,26 @@ public class TrafficLightController : MonoBehaviour
         var lightController = Instantiate(lightPrefab, Vector3.zero, rotation, spanWire.transform).GetComponent<LightAnimationController>();
         lightController.transform.localPosition = Vector3.zero;
         spanWire.TrafficLights.Add(direction, lightController);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        spanWire.TrafficLightDownTime.Add(direction, 0f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(! isInitialized)
+        if (!isInitialized)
             InitializeLights();
-        
-        totalTime += Time.deltaTime;
-        if (totalTime > switchDelay)
+
+        float timeDelta = Time.deltaTime;
+        totalTime += timeDelta;
+        CheckForSmartTrafficOverride();
+        IncrementTrafficTimers(timeDelta);
+        if (totalTime >= switchDelay)
         {
             if (!isTransitioning)
             {
                 isTransitioning = true;
                 if (isEastWest)
-                {                    
+                {
                     TryTurnRed(NodeCollectionController.Direction.EastBound);
                     TryTurnRed(NodeCollectionController.Direction.WestBound);
                 }
@@ -91,7 +91,7 @@ public class TrafficLightController : MonoBehaviour
             {
                 if (isEastWest)
                 {
-                    if (TryIsRed(NodeCollectionController.Direction.EastBound) || TryIsRed(NodeCollectionController.Direction.WestBound) )
+                    if (TryIsRed(NodeCollectionController.Direction.EastBound) || TryIsRed(NodeCollectionController.Direction.WestBound))
                     {
                         isEastWest = false;
                         TryTurnGreen(NodeCollectionController.Direction.NorthBound);
@@ -110,11 +110,54 @@ public class TrafficLightController : MonoBehaviour
                         TryTurnGreen(NodeCollectionController.Direction.WestBound);
                         isTransitioning = false;
                         totalTime = 0;
-                    }                    
+                    }
                 }
 
             }
         }
+    }
+
+    private void CheckForSmartTrafficOverride()
+    {
+        
+
+        if (isTransitioning ||
+            totalTime < 4f) return;
+
+        //Sort the kvp by the smallest value and return the sorted keys in order
+        var sortedDirections = (from kvp in TrafficLightDownTime orderby kvp.Value ascending select kvp.Key).ToList();
+
+
+
+        if ((TrafficLightDownTime[sortedDirections[0]] > 0.1f) ||
+            (isEastWest && (sortedDirections[0] == NodeCollectionController.Direction.EastBound || sortedDirections[0] == NodeCollectionController.Direction.WestBound)) ||
+            (!isEastWest && (sortedDirections[0] == NodeCollectionController.Direction.NorthBound || sortedDirections[0] == NodeCollectionController.Direction.SouthBound))) return;
+
+        switch (sortedDirections[0])
+        {
+            case NodeCollectionController.Direction.EastBound: case NodeCollectionController.Direction.WestBound:
+                if ((TrafficLightDownTime.TryGetValue(NodeCollectionController.Direction.NorthBound, out float northTime) && northTime < 0.1f) ||
+                    (TrafficLightDownTime.TryGetValue(NodeCollectionController.Direction.SouthBound, out float southTime) && southTime < 0.1f)) return;
+                
+                //Debug.Log($"Switch early for: {sortedDirections[0]} | Early by {switchDelay - totalTime} seconds.");
+                totalTime = switchDelay; //Switch light directions
+                break;
+            default:
+                if ((TrafficLightDownTime.TryGetValue(NodeCollectionController.Direction.WestBound, out float westBound) && westBound < 0.1f) ||
+                    (TrafficLightDownTime.TryGetValue(NodeCollectionController.Direction.EastBound, out float eastBound) && eastBound < 0.1f)) return;
+
+                //Debug.Log($"Switch early for: {sortedDirections[0]} | Early by {switchDelay - totalTime} seconds.");
+                totalTime = switchDelay; //Switch light directions
+                break;
+        }
+
+
+        
+    }
+
+    private void IncrementTrafficTimers(float timeDelta)
+    {
+        foreach (var key in TrafficLightDownTime.Keys.ToList()) TrafficLightDownTime[key] += timeDelta;
     }
 
     private void InitializeLights()
@@ -129,6 +172,14 @@ public class TrafficLightController : MonoBehaviour
         {
             TryTurnGreen(NodeCollectionController.Direction.NorthBound);
             TryTurnGreen(NodeCollectionController.Direction.SouthBound);
+        }
+    }
+
+    public void VehicleFoundInDirection(NodeCollectionController.Direction direction)
+    {
+        if (TrafficLightDownTime.ContainsKey(direction))
+        {
+            TrafficLightDownTime[direction] = 0f;
         }
     }
 

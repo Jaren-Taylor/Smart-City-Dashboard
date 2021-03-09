@@ -18,14 +18,14 @@ public class TrafficLightSensor : Sensor<TrafficLightSensorData>
             NodeCollectionController.Direction? estimatedDirection = walker.LastMoveDelta.ToDirection();
             if (estimatedDirection is null)
             {
-                return new TrafficLightSensorData(GuessDirection(sensedObject.transform.position.ToGrid()), walker.CurrentStopTime, walker.User);
+                return new TrafficLightSensorData(tilePosition, GuessDirection(sensedObject.transform.position.ToGrid()), walker.CurrentStopTime, walker.User);
             }
-            else return new TrafficLightSensorData(estimatedDirection.Value, walker.CurrentStopTime, walker.User);
+            else return new TrafficLightSensorData(tilePosition, estimatedDirection.Value, walker.CurrentStopTime, walker.User);
         }
         else
         {
             Debug.LogWarning("No Pathwalker, we just guessing what it is.");
-            return new TrafficLightSensorData(GuessDirection(sensedObject.transform.position.ToGrid()), 0f, NodeCollectionController.TargetUser.Both);
+            return new TrafficLightSensorData(tilePosition, GuessDirection(sensedObject.transform.position.ToGrid()), 0f, NodeCollectionController.TargetUser.Both);
         }
         
     }
