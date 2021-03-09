@@ -32,6 +32,11 @@ public class PathWalker : MonoBehaviour
 
     public Action<float> OnReachedDestination;
 
+    public NodeCollectionController.TargetUser User => userType;
+    public float CurrentStopTime => stopTime;
+    public Vector3 LastMoveDelta { get; private set; } = Vector3.zero;
+
+
     public bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser)
     {
         currentDestination = tileLocation;
@@ -76,6 +81,7 @@ public class PathWalker : MonoBehaviour
             else
             {
                 //Just wait ¯\_(-.-)_/¯
+                stopTime += Time.deltaTime;
             }
         }
         else
@@ -115,6 +121,7 @@ public class PathWalker : MonoBehaviour
 
             if (stopTime > trafficTolerance) DestroyPath(0f);
         }
+        LastMoveDelta = Vector3.Normalize(position - transform.position);
         transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
     }
     private void DestroyPath(float delay)

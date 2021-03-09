@@ -16,6 +16,7 @@ public class SensorManager : MonoBehaviour
     }
 
     public HashSet<CameraSensor> CameraSet = new HashSet<CameraSensor>();
+    public HashSet<TrafficLightSensor> TrafficLightSet = new HashSet<TrafficLightSensor>();
     public static SensorManager Instance { get; private set; }
 
     private HeatMap heatMap;
@@ -62,16 +63,60 @@ public class SensorManager : MonoBehaviour
         else Instance = this;
     }
 
-    public void OnReceiveCameraData(List<CameraSensorData> sensorData)
+    public void RegisterToManager(ISensor sensor)
     {
-        foreach (var data in sensorData) TrackedPoints.Add(ToMapBounds(data.Position));
-
-        //Debug.Log($"Sensor Data Reveived! Sensor: {sensorData[0].SelfPostion} Size: {sensorData.Count}");
+        if (sensor is CameraSensor camera)
+        {
+            if (!CameraSet.Contains(camera))
+            {
+                CameraSet.Add(camera);
+                camera.DataCollected += OnReceiveCameraData;
+            }
+            else throw new Exception("Camera already registered");
+        }
+        else if (sensor is TrafficLightSensor trafficLight)
+        {
+            if (!TrafficLightSet.Contains(trafficLight))
+            {
+                TrafficLightSet.Add(trafficLight);
+                trafficLight.DataCollected += OnReceiveTrafficData;
+            }
+            else throw new Exception("Traffic Light already registered");
+        }
+        else throw new Exception("Sensor regstriation not implemented yet");
     }
 
-    private static Vector2Int ToMapBounds(Vector3 position)
+    public void DeregisterFromManager(ISensor sensor)
     {
-        return Vector2Int.RoundToInt(new Vector2(position.x, position.z));
+        if (sensor is CameraSensor camera)
+        {
+            if (CameraSet.Contains(camera))
+            {
+                CameraSet.Remove(camera);
+                camera.DataCollected -= OnReceiveCameraData;
+            }
+            else throw new Exception("Camera already deregistered");
+        }
+        else if (sensor is TrafficLightSensor trafficLight)
+        {
+            if (TrafficLightSet.Contains(trafficLight))
+            {
+                TrafficLightSet.Remove(trafficLight);
+                trafficLight.DataCollected -= OnReceiveTrafficData;
+            }
+            else throw new Exception("Traffic Light already deregistered");
+        }
+        else throw new Exception("Sensor deregstriation not implemented yet");
+    }
+
+    private void OnReceiveTrafficData(List<TrafficLightSensorData> sensorData)
+    {
+        foreach (var data in sensorData) Debug.Log(data.EstimatedDirection + " | stop time: " + data.StopTime + " | Entity: " + data.Entity);
+    }
+
+    public void OnReceiveCameraData(List<CameraSensorData> sensorData)
+    {
+        foreach (var data in sensorData) TrackedPoints.Add(data.Position.ToGridInt());
     }
 
     public static bool RemoveSensorAt(Vector2Int tilePosition, SensorType sensorType)
@@ -81,20 +126,6 @@ public class SensorManager : MonoBehaviour
             tile.RemoveSensor(sensorType);
         }
         return true;
-    }
-
-    public void ShowSensorMenu(Vector2Int tilePosition)
-    {
-
-    }
-
-    public static bool TryRemoveSensorsAt<T>(Vector2Int tilePosition) where T: Component
-    {
-        if (GridManager.GetTile(tilePosition) is Tile tile && !tile.TryGetComponent<T>(out _))
-        {
-            tile.RemoveSensors();
-        }
-        return false;
     }
 
     public static bool TryCreateSensorAt(Vector2Int tilePosition, SensorType sensorType)

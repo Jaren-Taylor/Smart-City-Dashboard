@@ -15,7 +15,4 @@ public abstract class Sensor<T> : ISensor
 
 
     protected abstract T CollectData(GameObject sensedObject);
-    public abstract void RegisterToManager(SensorManager sensor);
-    public abstract void DeregisterFromManager(SensorManager sensor);
-    public abstract string GetSimpleName();
 }

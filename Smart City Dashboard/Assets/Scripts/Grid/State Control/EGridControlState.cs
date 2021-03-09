@@ -6,5 +6,6 @@ public enum EGridControlState
     PlaceCamera,
     DeleteTile,
     SelectEntity,
-    ExamineTile
+    ExamineTile,
+    PlaceSmartTrafficLight
 }

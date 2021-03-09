@@ -24,6 +24,7 @@ public class GridController
         controlStates.Add(EGridControlState.PlaceHouse,     new PlaceStructureState(BuildingTile.StructureType.House));
         controlStates.Add(EGridControlState.PlaceOffice,    new PlaceStructureState(BuildingTile.StructureType.Office));
         controlStates.Add(EGridControlState.PlaceCamera,    new PlaceSensorState(SensorType.Camera));
+        controlStates.Add(EGridControlState.PlaceSmartTrafficLight, new PlaceSensorState(SensorType.TrafficLight));
         controlStates.Add(EGridControlState.ExamineTile,    new ExamineTileSensorsState());
         controlStates.Add(EGridControlState.DeleteTile,     new RemoveTileState());
         controlStates.Add(EGridControlState.SelectEntity,   new SelectEntityState());

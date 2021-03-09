@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,4 +20,6 @@ public static class Vector3Exensions
 
     public static Vector2Int ToGridInt(this Vector3 position) => Vector2Int.RoundToInt(new Vector2(position.x, position.z));
     public static Vector2 ToGrid(this Vector3 position) => new Vector2(position.x, position.z);
+
+    public static NodeCollectionController.Direction? ToDirection(this Vector3 delta) => delta.ToGrid().ToDirection();
 }

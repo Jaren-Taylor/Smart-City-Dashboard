@@ -12,8 +12,6 @@ public class SensorSocket : MonoBehaviour
 
     //Used to sense objects in collider
     private HashSet<GameObject> objectsInCollider;
-    private Rigidbody sensorRigidBody;
-    private Collider sensorShape;
 
     //Called whenever a sensor inside this socket is removed
     public Action<ISensor> SensorDetached;
@@ -29,12 +27,21 @@ public class SensorSocket : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (!TryGetComponent(out sensorShape)) Debug.LogError("No collider attached to sensor socket");
-        if (!TryGetComponent(out sensorRigidBody)) Debug.LogError("No rigidbody attached to sensor socket");
-        sensorShape.isTrigger = true;
+        SetupColliders(); //Gets all attached colliders and prepares them to be used
+
         objectsInCollider = new HashSet<GameObject>();
 
         AttachSensor(sensorType);
+    }
+
+    private void SetupColliders()
+    {
+        var colliders = GetComponents<Collider>();
+        if (colliders is null || colliders.Length == 0) Debug.LogError("No collider attached to sensor socket");
+        foreach (var collider in colliders)
+        {
+            collider.isTrigger = true;
+        }
     }
 
     // Update is called once per frame
@@ -65,7 +72,7 @@ public class SensorSocket : MonoBehaviour
 
     private void OnDestroy()
     {
-        sensor.DeregisterFromManager(SensorManager.Instance);
+        SensorManager.Instance.DeregisterFromManager(sensor);
         SensorDetached?.Invoke(sensor);
     }
 
@@ -81,6 +88,9 @@ public class SensorSocket : MonoBehaviour
             case SensorType.Camera:
                 AttachSensor(new CameraSensor());
                 break;
+            case SensorType.TrafficLight:
+                AttachSensor(new TrafficLightSensor(transform.position.ToGridInt()));
+                break;
             default:
                 throw new Exception("Sensor type not yet implemented");
         }
@@ -90,7 +100,7 @@ public class SensorSocket : MonoBehaviour
     {
         if (!(sensor is null))
         {
-            sensor.RegisterToManager(SensorManager.Instance);
+            SensorManager.Instance.RegisterToManager(sensor);
             this.sensor = sensor;
         }
         else

@@ -4,7 +4,8 @@ using UnityEngine;
 [Serializable]
 public enum SensorType
 {
-    Camera
+    Camera,
+    TrafficLight
 }
 
 
@@ -19,6 +20,7 @@ public static class SensorTypeExtensions
         sensor switch
         {
             SensorType.Camera => "Prefabs/Sensors/CameraSensor",
+            SensorType.TrafficLight => "Prefabs/Sensors/TrafficLightSensor",
             _ => throw new System.Exception("Sensor type not implemented yet")
         };
 }
