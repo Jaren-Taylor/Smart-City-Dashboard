@@ -428,3 +428,15 @@ public class NodeCollectionController : MonoBehaviour
         }
     }
 }
+
+public static class DirectionExtensions
+{
+    public static NodeCollectionController.Direction Oppisite(this NodeCollectionController.Direction direction) => direction switch
+    {
+        NodeCollectionController.Direction.EastBound => NodeCollectionController.Direction.WestBound,
+        NodeCollectionController.Direction.WestBound => NodeCollectionController.Direction.EastBound,
+        NodeCollectionController.Direction.NorthBound => NodeCollectionController.Direction.SouthBound,
+        NodeCollectionController.Direction.SouthBound => NodeCollectionController.Direction.NorthBound,
+        _ => throw new Exception("Unknown direction"),
+    };
+}

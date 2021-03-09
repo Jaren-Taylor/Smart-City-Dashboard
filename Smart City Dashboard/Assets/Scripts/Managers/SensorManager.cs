@@ -115,7 +115,7 @@ public class SensorManager : MonoBehaviour
         Vector2Int? tile = null;
         foreach (var data in sensorData)
         {
-            if (data.Entity == NodeCollectionController.TargetUser.Vehicles && !foundDirections.Contains(data.EstimatedDirection))
+            if (data.Entity == NodeCollectionController.TargetUser.Vehicles && data.IsInbound && !foundDirections.Contains(data.EstimatedDirection))
             {
                 foundDirections.Add(data.EstimatedDirection);
                 tile = data.TilePosition;

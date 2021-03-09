@@ -119,8 +119,6 @@ public class TrafficLightController : MonoBehaviour
 
     private void CheckForSmartTrafficOverride()
     {
-        
-
         if (isTransitioning ||
             totalTime < 4f) return;
 

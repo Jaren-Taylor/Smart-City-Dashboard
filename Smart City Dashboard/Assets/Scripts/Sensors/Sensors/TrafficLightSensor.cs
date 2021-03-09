@@ -13,22 +13,39 @@ public class TrafficLightSensor : Sensor<TrafficLightSensorData>
 
     protected override TrafficLightSensorData CollectData(GameObject sensedObject)
     {
+        var (direction, isInbound) = EstimateDirection(sensedObject.transform.position.ToGrid());
+
+
+
         if (sensedObject.TryGetComponent<PathWalker>(out var walker))
         {
-            NodeCollectionController.Direction? estimatedDirection = walker.LastMoveDelta.ToDirection();
-            if (estimatedDirection is null)
-            {
-                return new TrafficLightSensorData(tilePosition, GuessDirection(sensedObject.transform.position.ToGrid()), walker.CurrentStopTime, walker.User);
-            }
-            else return new TrafficLightSensorData(tilePosition, estimatedDirection.Value, walker.CurrentStopTime, walker.User);
+            return new TrafficLightSensorData(tilePosition, direction, isInbound, walker.CurrentStopTime, walker.User);
         }
         else
         {
-            Debug.LogWarning("No Pathwalker, we just guessing what it is.");
-            return new TrafficLightSensorData(tilePosition, GuessDirection(sensedObject.transform.position.ToGrid()), 0f, NodeCollectionController.TargetUser.Both);
+            Debug.LogWarning("No Pathwalker, we're just guessing what it is.");
+            return new TrafficLightSensorData(tilePosition, direction, isInbound, 0f, NodeCollectionController.TargetUser.Both);
         }
         
     }
+
+    private (NodeCollectionController.Direction direction, bool inbound) EstimateDirection(Vector2 position)
+    {
+        Vector2 delta = position - tilePosition;
+        var directionFromCenter = delta.ToDirection().Value;
+        bool inbound = GetInboundFromRelativeDirection(directionFromCenter, delta);
+        if (inbound) return (directionFromCenter.Oppisite(), inbound);
+        else return (directionFromCenter, inbound);
+    }
+
+    private bool GetInboundFromRelativeDirection(NodeCollectionController.Direction direction, Vector2 delta) => direction switch
+    {
+        NodeCollectionController.Direction.EastBound => delta.y >= 0,
+        NodeCollectionController.Direction.WestBound => delta.y <= 0,
+        NodeCollectionController.Direction.NorthBound => delta.x <= 0,
+        NodeCollectionController.Direction.SouthBound => delta.x >= 0,
+        _ => false
+    };
 
     private NodeCollectionController.Direction GuessDirection(Vector2 position)
     {
