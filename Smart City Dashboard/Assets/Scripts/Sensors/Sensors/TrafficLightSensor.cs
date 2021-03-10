@@ -59,4 +59,9 @@ public class TrafficLightSensor : Sensor<TrafficLightSensorData>
     {
         return $"Smart Traffic Light [{tilePosition.x},{tilePosition.y}]";
     }
+
+    protected override (string msg, SensorStatus status) GetStatus(List<TrafficLightSensorData> collectedData)
+    {
+        throw new System.NotImplementedException();
+    }
 }

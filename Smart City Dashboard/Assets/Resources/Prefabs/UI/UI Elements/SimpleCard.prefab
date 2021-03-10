@@ -68,6 +68,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  bkgImage: {fileID: 3171580364600269816}
   header: {fileID: 3739677406805279846}
   closeButton: {fileID: 4846721870965153543}
 --- !u!222 &4556175355833253291

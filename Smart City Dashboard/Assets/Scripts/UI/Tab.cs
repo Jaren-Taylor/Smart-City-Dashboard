@@ -6,6 +6,7 @@ public class Tab : MonoBehaviour
 {
     private TabbedMenu parent;
     private List<Button> buttons = new List<Button>();
+    public bool IsTabEnabled { get; private set; } = false;
 
     private void Start()
     {
@@ -58,6 +59,7 @@ public class Tab : MonoBehaviour
             transform.GetChild(i).gameObject.SetActive(false);
             // make transparent
             SetTransparency(0.5f);
+            IsTabEnabled = false;
         }
     }
 
@@ -71,6 +73,7 @@ public class Tab : MonoBehaviour
             transform.GetChild(i).gameObject.SetActive(true);
             // make fully visible
             SetTransparency(1);
+            IsTabEnabled = true;
         }
     }
 

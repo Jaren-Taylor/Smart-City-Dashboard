@@ -11,6 +11,9 @@ public class SimpleCard : UIElement
 
     //public Button CloseButton;
 
+
+    [SerializeField]
+    private Image bkgImage;
     [SerializeField]
     private Header header;
     [SerializeField]
@@ -20,6 +23,8 @@ public class SimpleCard : UIElement
     {
         OnRemoveClicked?.Invoke(this);
     }
+
+    public void SetColor(Color color) => bkgImage.color = color;
 
     public void SetText(string text) => header.TMPText.text = text;
 
@@ -42,7 +47,7 @@ public class SimpleCard : UIElement
     {
         SimpleCard simpleCard = Spawn(parent, prefabAddress).GetComponent<SimpleCard>();
         simpleCard.SetText(text);
-        simpleCard.GetComponent<Image>().color = backgroundColor;
+        simpleCard.SetColor(backgroundColor);
        
         return simpleCard;
     }

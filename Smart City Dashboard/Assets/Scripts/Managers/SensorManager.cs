@@ -89,6 +89,7 @@ public class SensorManager : MonoBehaviour
             else throw new Exception("Traffic Light already registered");
         }
         else throw new Exception("Sensor regstriation not implemented yet");
+        sensorLogger.RegisterSensor(sensor);
     }
 
     public void DeregisterFromManager(ISensor sensor)
@@ -112,6 +113,7 @@ public class SensorManager : MonoBehaviour
             else throw new Exception("Traffic Light already deregistered");
         }
         else throw new Exception("Sensor deregstriation not implemented yet");
+        sensorLogger.DeregisterSensor(sensor);
     }
 
     private void OnReceiveTrafficData(List<TrafficLightSensorData> sensorData)
