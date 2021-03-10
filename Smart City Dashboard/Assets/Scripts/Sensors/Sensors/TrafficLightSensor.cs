@@ -62,6 +62,6 @@ public class TrafficLightSensor : Sensor<TrafficLightSensorData>
 
     protected override (string msg, SensorStatus status) GetStatus(List<TrafficLightSensorData> collectedData)
     {
-        throw new System.NotImplementedException();
+        return ("Test", SensorStatus.Fine);
     }
 }

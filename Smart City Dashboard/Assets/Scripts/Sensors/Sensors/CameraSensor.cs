@@ -19,6 +19,6 @@ public class CameraSensor : Sensor<CameraSensorData>
 
     protected override (string msg, SensorStatus status) GetStatus(List<CameraSensorData> collectedData)
     {
-        throw new System.NotImplementedException();
+        return ("Test", SensorStatus.Fine);
     }
 }

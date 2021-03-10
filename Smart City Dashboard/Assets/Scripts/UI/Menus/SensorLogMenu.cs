@@ -51,5 +51,4 @@ public class SensorLogMenu : MonoBehaviour
     {
         return;
     }
-
 }

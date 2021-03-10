@@ -16,6 +16,11 @@ public class ScrollablePopupMenu : MonoBehaviour
         return SimpleCard.Spawn(menuContent.transform, color, text);
     }
 
+    public SimpleCard AddNewItem(Material material, string text)
+    {
+        return SimpleCard.Spawn(menuContent.transform, material, text);
+    }
+
     public void Clear()
     {
         foreach(Transform child in menuContent.transform)

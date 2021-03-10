@@ -8,8 +8,8 @@ public abstract class Sensor<T> : ISensor
     public Action<List<T>> DataCollected;
     public Action<ISensor> StatusUpdated { get; set; }
 
-    private string lastStatus = "";
-    private SensorStatus statusEnum = SensorStatus.Fine;
+    protected string lastStatus = "";
+    protected SensorStatus statusEnum = SensorStatus.Fine;
 
 
     public void CollectDataFrom(HashSet<GameObject> sensedObjects)
@@ -29,5 +29,5 @@ public abstract class Sensor<T> : ISensor
     protected abstract (string msg, SensorStatus status) GetStatus(List<T> collectedData);
     protected abstract T CollectData(GameObject sensedObject);
 
-    public (string msg, SensorStatus status) Status() => (lastStatus, statusEnum);
+    public (string msg, SensorStatus status) Status() => ($"{ToString()}: {lastStatus}", statusEnum);
 }

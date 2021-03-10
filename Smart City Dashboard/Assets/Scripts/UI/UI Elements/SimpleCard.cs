@@ -7,10 +7,9 @@ public class SimpleCard : UIElement
 {
     public UnityEvent<UIElement> OnRemoveClicked;
 
+    private static GameObject simpleCardPrefab = null;
+
     public static readonly string prefabAddress = "Prefabs/UI/UI Elements/SimpleCard";
-
-    //public Button CloseButton;
-
 
     [SerializeField]
     private Image bkgImage;
@@ -24,9 +23,17 @@ public class SimpleCard : UIElement
         OnRemoveClicked?.Invoke(this);
     }
 
-    public void SetColor(Color color) => bkgImage.color = color;
+    public void SetColor(Color color)
+    {
+        if(bkgImage.color != color) bkgImage.color = color;
+    }
 
-    public void SetText(string text) => header.TMPText.text = text;
+    public void SetMaterial(Material material) => bkgImage.material = material;
+
+    public void SetText(string text)
+    {
+        if(header.TMPText.text != text) header.TMPText.text = text;
+    }
 
     /// <summary>
     /// Spawn a SimpleCard with a generic GameObject as the parent
@@ -45,11 +52,26 @@ public class SimpleCard : UIElement
     /// <returns></returns>
     public static SimpleCard Spawn(Transform parent, Color backgroundColor, string text)
     {
-        SimpleCard simpleCard = Spawn(parent, prefabAddress).GetComponent<SimpleCard>();
+        SimpleCard simpleCard = CopyPrefabToParent(parent);
         simpleCard.SetText(text);
         simpleCard.SetColor(backgroundColor);
        
         return simpleCard;
+    }
+
+    public static SimpleCard Spawn(Transform parent, Material backgroundMaterial, string text)
+    {
+        SimpleCard simpleCard = CopyPrefabToParent(parent);
+        simpleCard.SetText(text);
+        simpleCard.SetMaterial(backgroundMaterial);
+
+        return simpleCard;
+    }
+
+    private static SimpleCard CopyPrefabToParent(Transform parent)
+    {
+        if (simpleCardPrefab == null) simpleCardPrefab = Resources.Load<GameObject>(prefabAddress);
+        return Instantiate(simpleCardPrefab, parent.position, Quaternion.identity, parent).GetComponent<SimpleCard>();
     }
 
     private void Start()

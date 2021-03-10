@@ -5,7 +5,10 @@ using UnityEngine.Events;
 public class UIElement : MonoBehaviour
 {
     public Action<UIElement> OnClick;
-    public void DestroyUIElement() => Destroy(gameObject);
+    public void DestroyUIElement()
+    {
+        if(gameObject != null) Destroy(gameObject);
+    }
 
     private void OnMouseDown()
     {

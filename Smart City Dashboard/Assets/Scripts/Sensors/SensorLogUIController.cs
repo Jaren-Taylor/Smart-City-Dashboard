@@ -28,6 +28,13 @@ public class SensorLogUIController : MonoBehaviour
                 SetActiveListenMode(true);
                 stage = ListeningStage.ChangeOnly;
                 break;
+            case ListeningStage.ChangeOnly:
+                if(!tab.IsTabEnabled)
+                {
+                    SetActiveListenMode(false);
+                    stage = ListeningStage.Disabled;
+                }
+                break;
         } 
     }
 
@@ -35,10 +42,12 @@ public class SensorLogUIController : MonoBehaviour
     {
         if (stage == ListeningStage.FullRefresh && enable)
         {
+            foreach (var sensor in sensors) ListenToSensor(sensor);
             //Register to all sensor status change thingy
         }
         else if (stage == ListeningStage.ChangeOnly && !enable)
         {
+            foreach (var sensor in sensors) StopListeningToSensor(sensor);
             //Deregister from all sensor status change thingy
         }
         else throw new Exception($"Can't set listening mode to {enable} while in {stage} state");
@@ -47,7 +56,7 @@ public class SensorLogUIController : MonoBehaviour
     internal void RegisterSensor(ISensor sensor)
     {
         sensors.Add(sensor);
-        sensor.StatusUpdated += UpdateSensorStatus;
+        
         log.AddSensor(sensor);
     }
 
@@ -56,6 +65,10 @@ public class SensorLogUIController : MonoBehaviour
         sensors.Remove(sensor);
         log.RemoveSensor(sensor);
     }
+
+    private void ListenToSensor(ISensor sensor) => sensor.StatusUpdated += UpdateSensorStatus;
+
+    private void StopListeningToSensor(ISensor sensor) => sensor.StatusUpdated -= UpdateSensorStatus;
 
     private void FullRefreshLog()
     {
