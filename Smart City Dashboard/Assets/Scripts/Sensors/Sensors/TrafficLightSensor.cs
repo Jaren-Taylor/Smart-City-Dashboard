@@ -19,12 +19,12 @@ public class TrafficLightSensor : Sensor<TrafficLightSensorData>
 
         if (sensedObject.TryGetComponent<PathWalker>(out var walker))
         {
-            return new TrafficLightSensorData(tilePosition, direction, isInbound, walker.CurrentStopTime, walker.User);
+            return new TrafficLightSensorData(this, tilePosition, direction, isInbound, walker.CurrentStopTime, walker.User);
         }
         else
         {
             Debug.LogWarning("No Pathwalker, we're just guessing what it is.");
-            return new TrafficLightSensorData(tilePosition, direction, isInbound, 0f, NodeCollectionController.TargetUser.Both);
+            return new TrafficLightSensorData(this, tilePosition, direction, isInbound, 0f, NodeCollectionController.TargetUser.Both);
         }
         
     }

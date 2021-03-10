@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class SensorManager : MonoBehaviour
 {
+    [SerializeField]
+    private SensorLogUIController sensorLogger;
+
+
     public Action<HeatMap> OnHeatMapUpdated;
+   // public Action<List<>>
 
     private float totalTime = 0f;
     private float callDelay;

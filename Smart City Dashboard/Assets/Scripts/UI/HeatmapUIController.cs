@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DashboardController : MonoBehaviour
+public class HeatmapUIController : MonoBehaviour
 {
     private HeatMap heatmap;
     [SerializeField]
@@ -26,4 +26,7 @@ public class DashboardController : MonoBehaviour
         heatmap = new HeatMap(width, height);
         dashboardMenu.UpdateSpriteFromTexture(heatmap.CreatePNG());
     }
+
+
+
 }

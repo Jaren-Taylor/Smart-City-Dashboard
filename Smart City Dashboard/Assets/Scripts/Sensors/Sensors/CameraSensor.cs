@@ -6,7 +6,8 @@ public class CameraSensor : Sensor<CameraSensorData>
 {
     protected override CameraSensorData CollectData(GameObject sensedObject)
     {
-        return new CameraSensorData(sensedObject,
+        return new CameraSensorData(this,
+            sensedObject,
             sensedObject.transform.position,
             sensedObject.GetComponent<Rigidbody>().velocity);
     }
