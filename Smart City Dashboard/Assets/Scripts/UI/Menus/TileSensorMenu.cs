@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class TileSensorMenu : MonoBehaviour, IFocusableWindow
 {
+    public Color CardColor;
     [SerializeField]
     private ScrollablePopupMenu menu;
 
@@ -58,7 +59,7 @@ public class TileSensorMenu : MonoBehaviour, IFocusableWindow
 
     private void AddSensorToMenu(SensorType sensor)
     {
-        var card = menu.AddNewItem(Color.blue, sensor.ToString());
+        var card = menu.AddNewItem(CardColor, sensor.ToString());
         card.OnRemoveClicked.AddListener((_) => focusedTile.RemoveSensor(sensor));
     }
 }
