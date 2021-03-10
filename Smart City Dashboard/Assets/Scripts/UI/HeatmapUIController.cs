@@ -1,32 +1,30 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HeatmapUIController : MonoBehaviour
 {
     private HeatMap heatmap;
     [SerializeField]
-    private DashboardMenu dashboardMenu;
+    private Image heatmapImage;
 
     private void Start()
     {
         SensorManager.Instance.OnHeatMapUpdated += UpdateGraphic;
-
-        //CreateHeatMap(100, 100);
     }
 
     private void UpdateGraphic(HeatMap heatMap)
     {
-        dashboardMenu.UpdateSpriteFromTexture(heatMap.CreatePNG());
+        UpdateSpriteFromTexture(heatMap.CreatePNG());
     }
 
     public void CreateHeatMap(int width, int height)
     {
         heatmap = new HeatMap(width, height);
-        dashboardMenu.UpdateSpriteFromTexture(heatmap.CreatePNG());
+        UpdateSpriteFromTexture(heatmap.CreatePNG());
     }
 
-
-
+    public void UpdateSpriteFromTexture(Texture2D texture)
+    {
+        heatmapImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 1));
+    }
 }

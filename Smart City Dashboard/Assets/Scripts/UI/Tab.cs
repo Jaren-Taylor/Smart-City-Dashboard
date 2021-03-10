@@ -4,15 +4,15 @@ using UnityEngine.UI;
 
 public class Tab : MonoBehaviour
 {
-    private Menu parent;
+    private TabbedMenu parent;
     private List<Button> buttons = new List<Button>();
 
     private void Start()
     {
-        parent = transform.parent.GetComponent<Menu>();
-        if (parent == null) throw new System.Exception("Parent must have a Menu script!");
-        InitializeButtonList();
+        parent = transform.parent.GetComponent<TabbedMenu>();
+        if (parent is null) throw new System.Exception("Parent must have a TabbedMenu script!");
         if (TryGetComponent(out Button button)) button.onClick.AddListener(ActivateClickEvent);
+        InitializeButtonList();
     }
 
     /// <summary>

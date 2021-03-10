@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour
 
     public Action<bool> OnUIToggle;
     public Action<int> OnTabSwitch;
-    public Menu F1Menu;
+    public TabbedMenu F1Menu;
     public Menu TildeMenu;
     public TileSensorMenu TileSensorPreview; 
     // contains a dupe reference to the currently active menu
@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
 
     public void SwitchTabs()
     {
-        if (ActiveMenu is Menu tabbedMenu)
+        if (ActiveMenu is TabbedMenu tabbedMenu)
         {
             tabbedMenu.SwitchTabs();
             if(tabbedMenu == F1Menu) // TODO this only works if ModeMenu is externally set as the escape menu

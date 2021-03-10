@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Menu : MonoBehaviour, ITabbedMenu, IFocusableWindow
+public abstract class Menu : MonoBehaviour, IFocusableWindow
 {
     [HideInInspector]
-    public List<Tab> tabs = new List<Tab>();
     protected RectTransform menuBounds;
     public EUIPosition uiPosition = EUIPosition.Bottom;
     protected float destination;
     protected int glideSpeed = 25;
-    [HideInInspector]
-    public int ActiveTab = 0;
 
     private bool isOnScreen;
 
@@ -18,9 +15,6 @@ public abstract class Menu : MonoBehaviour, ITabbedMenu, IFocusableWindow
     {
         // Assumed to be used in child classes for use in movement calculations
         menuBounds = gameObject.GetComponent<RectTransform>();
-        InitializeTabsList();
-        DeactivateTabs();
-        tabs[0].Activate();
         InitializeGlideAmount();
         JumpToDestination();
         isOnScreen = false;
@@ -41,6 +35,28 @@ public abstract class Menu : MonoBehaviour, ITabbedMenu, IFocusableWindow
             case EUIPosition.Left:
             case EUIPosition.Right:
                 if (transform.position.x != destination) GlideTowardsDestination();
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Set the Menu's glide amount based on its EUIPosition
+    /// </summary>
+    private void InitializeGlideAmount()
+    {
+        switch (uiPosition)
+        {
+            case EUIPosition.Top:
+                destination = +menuBounds.rect.height;
+                break;
+            case EUIPosition.Bottom:
+                destination = -menuBounds.rect.height;
+                break;
+            case EUIPosition.Left:
+                destination = -menuBounds.rect.width;
+                break;
+            case EUIPosition.Right:
+                destination = +menuBounds.rect.width;
                 break;
         }
     }
@@ -106,89 +122,6 @@ public abstract class Menu : MonoBehaviour, ITabbedMenu, IFocusableWindow
     }
 
     /// <summary>
-    /// Set the Menu's glide amount based on its EUIPosition
-    /// </summary>
-    private void InitializeGlideAmount()
-    {
-        switch (uiPosition)
-        {
-            case EUIPosition.Top:
-                destination = +menuBounds.rect.height;
-                break;
-            case EUIPosition.Bottom:
-                destination = -menuBounds.rect.height;
-                break;
-            case EUIPosition.Left:
-                destination = -menuBounds.rect.width;
-                break;
-            case EUIPosition.Right:
-                destination = +menuBounds.rect.width;
-                break;
-        }
-    }
-
-    /// <summary>
-    /// Deactivates all tabs
-    /// </summary>
-    private void DeactivateTabs()
-    {
-        for (int i = 0; i < tabs.Count; i++)
-        {
-            tabs[i].DeActivate();
-        }
-    }
-
-    /// <summary>
-    /// Switches to the next tab. If on the last tab, warps back to the 1st tab
-    /// </summary>
-    public void SwitchTabs()
-    {
-        // deactivate current tab
-        tabs[ActiveTab].DeActivate();
-        // increment or reset counter
-        ActiveTab = ActiveTab == tabs.Count-1 ? 0 : ActiveTab+1;
-        // activate new tab
-        tabs[ActiveTab].Activate();
-    }
-
-    /// <summary>
-    /// Switch to the ith tab
-    /// </summary>
-    /// <param name="index"></param>
-    public void SwitchTab(int index)
-    {
-        if (index >= 0 && index < tabs.Count)
-        {
-            tabs[ActiveTab].DeActivate();
-            ActiveTab = index;
-            tabs[index].Activate();
-        } else
-        {
-            throw new System.Exception("Tab index out of bounds "+index);
-        }
-    }
-
-    /// <summary>
-    /// Switch to a given Tab instance
-    /// </summary>
-    /// <param name="index"></param>
-    public void SwitchTab(Tab tab)
-    {
-        tabs[ActiveTab].DeActivate();
-        ActiveTab = tabs.IndexOf(tab);
-        tabs[ActiveTab].Activate();
-    }
-
-    /// <summary>
-    /// Communicates to a child Tab that a number key was pressed
-    /// </summary>
-    /// <param name="index"></param>
-    public void OnNumberKeyPress(int index)
-    {
-        tabs[ActiveTab].ButtonClick(index);
-    }
-
-    /// <summary>
     /// Opens and closes the menu
     /// </summary>
     public virtual void ToggleMenuHandler()
@@ -213,34 +146,15 @@ public abstract class Menu : MonoBehaviour, ITabbedMenu, IFocusableWindow
     }
 
     /// <summary>
-    /// Searches transform children for objects with Tab components, and adds them to the List tabs
-    /// </summary>
-    private void InitializeTabsList()
-    {
-        tabs.Clear();
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            TryFetchTab(i);
-        }
-    }
-
-    /// <summary>
-    /// Fetch the Tab component from the ith transform child
-    /// </summary>
-    /// <param name="i"></param>
-    private void TryFetchTab(int i)
-    {
-        if (transform.GetChild(i).TryGetComponent(out Tab tab))
-        {
-            tabs.Add(tab);
-        }
-    }
-
-    /// <summary>
     /// Returns true if window is fully visible on screen
     /// </summary>
     public bool IsFullyVisible()
     {
         return isOnScreen;
+    }
+
+    public void OnNumberKeyPress(int value)
+    {
+        return;
     }
 }
