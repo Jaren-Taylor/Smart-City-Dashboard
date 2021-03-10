@@ -122,7 +122,7 @@ public abstract class Tile
 
     private bool SpawnSensor(SensorType sensorType)
     {
-        if (ManagedExists())
+        if (ManagedExists() && IsSensorAllowed(sensorType))
         {
             GameObject sensorRef = GameObject.Instantiate<GameObject>(sensorType.GetPrefab(), managedObject.transform);
             sensorDictionary.Add(sensorType, sensorRef);
@@ -130,6 +130,8 @@ public abstract class Tile
         }
         return false;
     }
+
+    protected virtual bool IsSensorAllowed(SensorType sensorType) => false;
 
     public bool TryAddSensor(SensorType sensorType)
     {

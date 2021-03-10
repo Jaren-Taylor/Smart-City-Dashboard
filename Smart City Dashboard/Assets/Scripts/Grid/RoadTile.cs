@@ -142,4 +142,18 @@ public class RoadTile : Tile
         if (count >= 3) { TrafficLight = TrafficLightController.CreateLight(directions, managedObject.transform); }
         //else TrafficLight = null;
     }
+
+    protected override bool IsSensorAllowed(SensorType sensor)
+    {
+        return sensor switch
+        {
+            SensorType.TrafficLight => Type switch
+            {
+                TileType.Road3Way => true,
+                TileType.Road4Way => true,
+                _ => false,
+            },
+            _ => true,
+        };
+    }
 }
