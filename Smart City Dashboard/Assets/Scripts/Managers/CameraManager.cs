@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    //remove this after camera testing
-    public GameObject TestGameObject;
 
     public Camera mainCamera;
     public Camera entityCamera;
@@ -110,14 +108,14 @@ public class CameraManager : MonoBehaviour
             FollowEntity(trackedEntity);
         }
 
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            if (isLockedToPosition is false)
-                TrackObject(TestGameObject, Config.minSize, true);
-            else
-                StopTrackObject();
-        }
+        //example of how to call the focued camera using a keypress. Broken without a direct reference to an object. 
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    if (isLockedToPosition is false)
+        //        TrackObject(TestGameObject, Config.minSize, true);
+        //    else
+        //        StopTrackObject();
+        //}
     }
 
     private bool HasReachedTrackedObject()
