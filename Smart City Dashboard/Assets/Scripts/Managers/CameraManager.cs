@@ -5,17 +5,23 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
+    //remove this after camera testing
+    public GameObject TestGameObject;
+
     public Camera mainCamera;
     public Camera entityCamera;
 
     public FirstPersonViewport vehicleViewport;
-    public Action<GameObject> OnReachedTarget;
+    public Action<Vector3> OnReachedTarget;
 
     [Range(0, 3)]
     public int defaultRotation = 0;
 
     public Vector2 defaultPosition;
     public bool isFollowingEntity { get; private set; } = false;
+    private bool isLockedToPosition = false;
+    private bool isTrackingToObject = false;
+    private Vector3 previousTrackedPosition;
     private Entity trackedEntity;
     private Vector3 panVelocity = Vector3.zero;
     private float sizeVelocity = 0;
@@ -27,9 +33,12 @@ public class CameraManager : MonoBehaviour
     public int Rotation { get => rotation; set => rotation = value; }
 
     private Vector3 trackedPosition;
+
     public Vector3 Position { get => transform.localPosition; set => trackedPosition = new Vector3(value.x, 0f, value.z); }
 
     private float targetTrackHeight = 0f;
+    private Quaternion trackedRotation = Quaternion.Euler(45, 45, 0);
+    private float tiltVelocity = 0f;
 
     public static CameraManager Instance { get; private set; }
     public Vector3 CameraRigReturnTransform { get; private set; }
@@ -84,11 +93,36 @@ public class CameraManager : MonoBehaviour
         {
             transform.localPosition = Vector3.SmoothDamp(transform.localPosition, trackedPosition, ref panVelocity, Config.smoothTime); ;
             mainCamera.orthographicSize = Mathf.SmoothDamp(mainCamera.orthographicSize, trackedSize, ref sizeVelocity, Config.smoothTime);
+            if (mainCamera.transform.localRotation.eulerAngles.x != trackedRotation.eulerAngles.x)
+            {
+                float xAngle = Mathf.SmoothDampAngle(mainCamera.transform.localRotation.eulerAngles.x, trackedRotation.eulerAngles.x, ref tiltVelocity, Config.smoothTime);
+                mainCamera.transform.localRotation = Quaternion.Euler(xAngle, mainCamera.transform.localRotation.eulerAngles.y, mainCamera.transform.localRotation.eulerAngles.z);
+            }
+            if (isTrackingToObject && isLockedToPosition && HasReachedTrackedObject())
+            {
+                OnReachedTarget?.Invoke(transform.position);
+                isTrackingToObject = false;
+                Debug.Log("I HAVE ARRIVED");
+            }
         }
         if (isFollowingEntity is true)
         {
             FollowEntity(trackedEntity);
         }
+
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            if (isLockedToPosition is false)
+                TrackObject(TestGameObject, Config.minSize, true);
+            else
+                StopTrackObject();
+        }
+    }
+
+    private bool HasReachedTrackedObject()
+    {
+        return Vector3.Distance(trackedPosition, transform.localPosition) < .15f && Math.Abs(trackedSize - mainCamera.orthographicSize) < .1f && Quaternion.Angle(trackedRotation, mainCamera.transform.localRotation) < 1f;
     }
 
     private void ClampTrackedPosition()
@@ -182,8 +216,21 @@ public class CameraManager : MonoBehaviour
 
     public void TrackObject(GameObject gameObject, float zoomLevel, bool isTopDown)
     {
-        //OnReachedTarget?.Invoke(gameObject);
-        throw new NotImplementedException();
+        trackedPosition = gameObject.transform.position;
+        Size = zoomLevel;
+        isLockedToPosition = true;
+        isTrackingToObject = true;
+        if (isTopDown)
+        {
+            trackedRotation = Quaternion.Euler(90, 45, 0);
+        }
     }
-    
+    private void StopTrackObject()
+    {
+        trackedRotation = Quaternion.Euler(45, 45, 0);
+        isLockedToPosition = false;
+        isTrackingToObject = false;
+        ResetSize();
+    }
+
 }
