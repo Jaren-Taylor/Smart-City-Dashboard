@@ -9,6 +9,7 @@ public class CameraManager : MonoBehaviour
     public Camera entityCamera;
 
     public FirstPersonViewport vehicleViewport;
+    public Action<GameObject> OnReachedTarget;
 
     [Range(0, 3)]
     public int defaultRotation = 0;
@@ -177,6 +178,12 @@ public class CameraManager : MonoBehaviour
     {
         transform.position = entity.transform.position + Vector3.up * targetTrackHeight;
         entityCamera.transform.rotation = entity.transform.rotation;
+    }
+
+    public void TrackObject(GameObject gameObject, float zoomLevel, bool isTopDown)
+    {
+        //OnReachedTarget?.Invoke(gameObject);
+        throw new NotImplementedException();
     }
     
 }
