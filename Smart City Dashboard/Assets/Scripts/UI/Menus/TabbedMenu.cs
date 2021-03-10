@@ -73,7 +73,7 @@ public class TabbedMenu : Menu
     /// Communicates to a child Tab that a number key was pressed
     /// </summary>
     /// <param name="index"></param>
-    public void OnNumberKeyPress(int index)
+    public override void OnNumberKeyPress(int index)
     {
         Tabs[ActiveTab].ButtonClick(index);
     }

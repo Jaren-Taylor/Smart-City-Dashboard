@@ -153,7 +153,7 @@ public abstract class Menu : MonoBehaviour, IFocusableWindow
         return isOnScreen;
     }
 
-    public void OnNumberKeyPress(int value)
+    public virtual void OnNumberKeyPress(int value)
     {
         return;
     }

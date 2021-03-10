@@ -19,7 +19,6 @@ public class CameraManager : MonoBehaviour
     public bool isFollowingEntity { get; private set; } = false;
     private bool isLockedToPosition = false;
     private bool isTrackingToObject = false;
-    private Vector3 previousTrackedPosition;
     private Entity trackedEntity;
     private Vector3 panVelocity = Vector3.zero;
     private float sizeVelocity = 0;

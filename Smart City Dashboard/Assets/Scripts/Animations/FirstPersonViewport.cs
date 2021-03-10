@@ -11,7 +11,8 @@ public class FirstPersonViewport : MonoBehaviour
 
     private VehicleEntity mappingTarget;
     private PathWalker walker;
-    private bool currentlyTracking = false;
+    [HideInInspector]
+    public bool CurrentlyTracking { get; private set; } = false;
     private float currentAngle = 0f;
     private float turnVelocity = 0f;
 
@@ -37,7 +38,7 @@ public class FirstPersonViewport : MonoBehaviour
             walker = entity.GetComponent<PathWalker>();
             if(walker is PathWalker)
             {
-                currentlyTracking = true;
+                CurrentlyTracking = true;
                 currentAngle = 0f;
             }
             SetChildMaterial(entity.ChildMaterial);
@@ -61,6 +62,6 @@ public class FirstPersonViewport : MonoBehaviour
     {
         mappingTarget = null;
         walker = null;
-        currentlyTracking = false;
+        CurrentlyTracking = false;
     }
 }
