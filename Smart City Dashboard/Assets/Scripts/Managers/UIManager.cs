@@ -32,17 +32,6 @@ public class UIManager : MonoBehaviour
         keyToMenuDict.Add(KeyCode.BackQuote, MenuType.Dashboard);
     }
 
-    /// <summary>
-    /// Switches menu tabs only if a menu is open
-    /// </summary>
-    public void NextTab()
-    {
-        if (ActiveMenu != null && ActiveMenu.TabGroup != null)
-        {
-            ActiveMenu.TabGroup.NextTab();
-        }
-    }
-
     public void ReceiveMenuKey(KeyCode key)
     {
         if (keyToMenuDict.ContainsKey(key)) {
@@ -103,12 +92,28 @@ public class UIManager : MonoBehaviour
 
     public void OnNumberKeyPress(int value)
     {
-        if (ActiveMenu != null && ActiveMenu is GlideMenu tabbedMenu)
+        if (ActiveMenu != null && ActiveMenu.TabGroup != null)
         {
-            if (tabbedMenu.TabGroup != null) tabbedMenu.TabGroup.OnNumberKeyPress(value);
-        }else
+            ActiveMenu.TabGroup.OnNumberKeyPress(value);
+        }
+        else
         {
             F1Menu.TabGroup.OnNumberKeyPress(value);
+        }
+    }
+
+    /// <summary>
+    /// Switches menu tabs only if a menu is open
+    /// </summary>
+    public void NextTab()
+    {
+        if (ActiveMenu != null && ActiveMenu.TabGroup != null)
+        {
+            ActiveMenu.TabGroup.NextTab();
+        }
+        else
+        {
+            F1Menu.TabGroup.NextTab();
         }
     }
 

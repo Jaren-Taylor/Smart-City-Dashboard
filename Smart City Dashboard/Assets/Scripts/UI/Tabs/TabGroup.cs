@@ -1,28 +1,49 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TabGroup : MonoBehaviour
 {
     [HideInInspector]
     public List<TabButton> TabButtons;
+    public List<GameObject> Pages;
+    public List<PageControls> PageControls = new List<PageControls>();
+    private PageControls activeControls;
     public Sprite tabIdle;
     public Sprite tabHover;
     public Sprite tabActive;
-    public List<GameObject> ObjectsToSwap;
+    private TabButton ActiveTab;
 
-    [HideInInspector]
-    public TabButton ActiveTab;
-
+    /// <summary>
+    /// Subscribes a TabButton to this TabGroup
+    /// </summary>
+    /// <param name="button"></param>
     public void Subscribe(TabButton button)
     {
-        if(TabButtons == null)
+        if (TabButtons == null)
         {
             TabButtons = new List<TabButton>();
         }
         TabButtons.Add(button);
+        if (ActiveTab == null && button.transform.GetSiblingIndex() < TabButtons.Count) 
+        { 
+            OnTabSelected(button);
+        }
+        else if(ActiveTab != null && button.transform.GetSiblingIndex() < ActiveTab.transform.GetSiblingIndex())
+        {
+            OnTabSelected(button);
+        }
+        TabButtons.Sort(CompareIndexes);
     }
 
+    public static int CompareIndexes(TabButton button1, TabButton button2)
+    {
+        return button1.transform.GetSiblingIndex() - button2.transform.GetSiblingIndex();
+    }
+
+    /// <summary>
+    /// Changes the hovered TabButtons sprite the Tab Hover sprite
+    /// </summary>
+    /// <param name="button"></param>
     public void OnTabEnter(TabButton button)
     {
         ResetTabs();
@@ -32,11 +53,19 @@ public class TabGroup : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Resets the TabButtons sprites to their defaults
+    /// </summary>
+    /// <param name="button"></param>
     public void OnTabExit(TabButton button)
     {
         ResetTabs();
     }
 
+    /// <summary>
+    /// Selects a TabButton
+    /// </summary>
+    /// <param name="button"></param>
     public void OnTabSelected(TabButton button)
     {
         ActiveTab = button;
@@ -45,6 +74,9 @@ public class TabGroup : MonoBehaviour
         SwitchToTab(button.transform.GetSiblingIndex());
     }
 
+    /// <summary>
+    /// Resets each TabButtons sprites, except the active TabButton
+    /// </summary>
     public void ResetTabs()
     {
         foreach (TabButton button in TabButtons)
@@ -54,30 +86,13 @@ public class TabGroup : MonoBehaviour
         }
     }
 
-    /*private void Start()
-    {
-        DeactivateTabs();
-        if (TabButtons.Count > 0) TabButtons[0].Activate();
-    }*/
-
-    /// <summary>
-    /// Deactivates all tabs
-    /// </summary>
-    /*private void DeactivateTabs()
-    {
-        for (int i = 0; i < TabButtons.Count; i++)
-        {
-            TabButtons[i].DeActivate();
-        }
-    }
-*/
     /// <summary>
     /// Switches to the next TabButton. If on the last tab, warps back to the 1st tab
     /// </summary>
     public void NextTab()
     {
         int index = ActiveTab.transform.GetSiblingIndex();
-        if (index == ObjectsToSwap.Count - 1)
+            if (index == Pages.Count - 1)
         {
             OnTabSelected(TabButtons[0]);
         }
@@ -95,20 +110,25 @@ public class TabGroup : MonoBehaviour
     {
         if (index >= 0 && index < TabButtons.Count)
         {
-            for (int i = 0; i < ObjectsToSwap.Count; i++)
+            for (int i = 0; i < Pages.Count; i++)
             {
                 if (i == index)
                 {
-                    ObjectsToSwap[i].SetActive(true);
+                    Pages[i].SetActive(true);
+                    if (i < PageControls.Count)
+                    {
+                        activeControls = PageControls[i];
+                    }
+                    else
+                    {
+                        activeControls = null;
+                    }
                 }
                 else
                 {
-                    ObjectsToSwap[i].SetActive(false);
+                    Pages[i].SetActive(false);
                 }
             }
-            //TabButtons[ActiveTab].DeActivate();
-            //ActiveTab = index;
-            //TabButtons[index].Activate();
         }
         else
         {
@@ -117,11 +137,14 @@ public class TabGroup : MonoBehaviour
     }
 
     /// <summary>
-    /// Communicates to a TabButton that a number key was pressed
+    /// Invokes the ith Number key button listed in the active PageControls component
     /// </summary>
     /// <param name="index"></param>
     public void OnNumberKeyPress(int index)
     {
-        TabButtons[ActiveTab.transform.GetSiblingIndex()].ButtonClick(index);
+        if (activeControls != null)
+        {
+            activeControls.NumberKeyButtons[index].onClick.Invoke();
+        }
     }
 }

@@ -32,7 +32,7 @@ public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHa
 
     public virtual void Toggle()
     {
-        if (gameObject.activeSelf)
+        if (IsOpen())
             Close();
         else
             Open();

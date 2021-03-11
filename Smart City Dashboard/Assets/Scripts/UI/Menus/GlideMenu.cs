@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GlideMenu : Menu
 {
+    public bool DeactivateOnClose = true;
     [SerializeField]
     private EUIPosition uiPosition = EUIPosition.Bottom;
     [SerializeField]
@@ -44,7 +45,7 @@ public class GlideMenu : Menu
                 break;
         }
         // Turn off when we reach our 
-        if (transform.position.IsBasicallyEqualTo(closedPosition)) gameObject.SetActive(false);
+        if (DeactivateOnClose && BasicallyAtClosedPosition()) gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -76,6 +77,11 @@ public class GlideMenu : Menu
         if (!gameObject.activeSelf) gameObject.SetActive(true);
     }
 
+    public override bool IsOpen()
+    {
+        return destination == openPosition;
+    }
+
     /// <summary>
     /// Closes the menu
     /// </summary>
@@ -91,7 +97,7 @@ public class GlideMenu : Menu
     {
         transform.position = closedPosition;
         destination = closedPosition;
-        gameObject.SetActive(false);
+        if (DeactivateOnClose) gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -107,6 +113,15 @@ public class GlideMenu : Menu
             EUIPosition.Right =>  new Vector2(Canvas.transform.RectTransform().rect.width, openPosition.y),
             _ => Vector2.zero,
         };
+    }
+
+    /// <summary>
+    /// Calculates if its basically at the closed position, duh
+    /// </summary>
+    /// <returns></returns>
+    private bool BasicallyAtClosedPosition()
+    {
+        return transform.position.IsBasicallyEqualTo(closedPosition);
     }
 
     /// <summary>
