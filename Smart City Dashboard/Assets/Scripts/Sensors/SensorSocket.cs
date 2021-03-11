@@ -86,7 +86,7 @@ public class SensorSocket : MonoBehaviour
         switch (value)
         {
             case SensorType.Camera:
-                AttachSensor(new CameraSensor());
+                AttachSensor(new CameraSensor(transform.position.ToGridInt()));
                 break;
             case SensorType.TrafficLight:
                 AttachSensor(new TrafficLightSensor(transform.position.ToGridInt()));

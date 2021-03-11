@@ -98,8 +98,8 @@ public class CameraManager : MonoBehaviour
             if (isTrackingToObject && isLockedToPosition && HasReachedTrackedObject())
             {
                 OnReachedTarget?.Invoke(transform.position);
+                OnReachedTarget = null;
                 isTrackingToObject = false;
-                Debug.Log("I HAVE ARRIVED");
             }
         }
         if (isFollowingEntity is true)
@@ -184,13 +184,15 @@ public class CameraManager : MonoBehaviour
     public void StopFollowEntity()
     {
 
-        GridManager.Instance.CursorEnabled = true;
         entityCamera.gameObject.SetActive(false);
         mainCamera.gameObject.SetActive(true);
-        GridManager.Instance.GridSM.ResumeState(new DigitalCursor());
         isFollowingEntity = false;
+        GridManager.Instance.GridSM.ResumeState(new DigitalCursor());
+        GridManager.Instance.CursorEnabled = true;
+        
         if(trackedEntity is Entity entity)
             entity.OnBeingDestroy -= TrackedEntityDestroyed;
+
         trackedEntity = null;
         if (vehicleViewport.gameObject.activeSelf)
         {
@@ -211,9 +213,9 @@ public class CameraManager : MonoBehaviour
         entityCamera.transform.rotation = entity.transform.rotation;
     }
 
-    public void TrackObject(GameObject gameObject, float zoomLevel, bool isTopDown)
+    public void TrackPosition(Vector3 position, float zoomLevel, bool isTopDown)
     {
-        trackedPosition = gameObject.transform.position;
+        trackedPosition = position;
         Size = zoomLevel;
         isLockedToPosition = true;
         isTrackingToObject = true;
@@ -221,6 +223,11 @@ public class CameraManager : MonoBehaviour
         {
             trackedRotation = Quaternion.Euler(90, 45, 0);
         }
+    }
+
+    public void TrackObject(GameObject gameObject, float zoomLevel, bool isTopDown)
+    {
+        TrackPosition(gameObject.transform.position, zoomLevel, isTopDown);
     }
     private void StopTrackObject()
     {

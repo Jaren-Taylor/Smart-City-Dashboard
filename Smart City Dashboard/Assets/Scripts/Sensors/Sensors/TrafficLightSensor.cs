@@ -4,12 +4,7 @@ using UnityEngine;
 
 public class TrafficLightSensor : Sensor<TrafficLightSensorData>
 {
-    private readonly Vector2Int tilePosition;
-
-    public TrafficLightSensor(Vector2Int tilePosition)
-    {
-        this.tilePosition = tilePosition;
-    }
+    public TrafficLightSensor(Vector2Int tilePosition) : base(tilePosition) { }
 
     protected override TrafficLightSensorData CollectData(GameObject sensedObject)
     {
@@ -19,19 +14,19 @@ public class TrafficLightSensor : Sensor<TrafficLightSensorData>
 
         if (sensedObject.TryGetComponent<PathWalker>(out var walker))
         {
-            return new TrafficLightSensorData(this, tilePosition, direction, isInbound, walker.CurrentStopTime, walker.User);
+            return new TrafficLightSensorData(this, GetTilePosition(), direction, isInbound, walker.CurrentStopTime, walker.User);
         }
         else
         {
             Debug.LogWarning("No Pathwalker, we're just guessing what it is.");
-            return new TrafficLightSensorData(this, tilePosition, direction, isInbound, 0f, NodeCollectionController.TargetUser.Both);
+            return new TrafficLightSensorData(this, GetTilePosition(), direction, isInbound, 0f, NodeCollectionController.TargetUser.Both);
         }
         
     }
 
     private (NodeCollectionController.Direction direction, bool inbound) EstimateDirection(Vector2 position)
     {
-        Vector2 delta = position - tilePosition;
+        Vector2 delta = position - GetTilePosition();
         var directionFromCenter = delta.ToDirection().Value;
         bool inbound = GetInboundFromRelativeDirection(directionFromCenter, delta);
         if (inbound) return (directionFromCenter.Oppisite(), inbound);
@@ -49,7 +44,7 @@ public class TrafficLightSensor : Sensor<TrafficLightSensorData>
 
     private NodeCollectionController.Direction GuessDirection(Vector2 position)
     {
-        Vector2 delta = (position - tilePosition) * -1f;
+        Vector2 delta = (position - GetTilePosition()) * -1f;
         var direction = delta.ToDirection();
         if (direction is null) throw new System.Exception("I just can't figure it out.");
         return direction.Value;
@@ -57,6 +52,11 @@ public class TrafficLightSensor : Sensor<TrafficLightSensorData>
 
     public override string ToString()
     {
-        return $"Smart Traffic Light [{tilePosition.x},{tilePosition.y}]";
+        return $"Smart Traffic Light [{GetTilePosition()}]";
+    }
+
+    protected override (string msg, SensorStatus status) GetStatus(List<TrafficLightSensorData> collectedData)
+    {
+        return ("Test", SensorStatus.Fine);
     }
 }
