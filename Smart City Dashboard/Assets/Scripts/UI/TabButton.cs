@@ -1,17 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class Tab : MonoBehaviour
+[RequireComponent(typeof(Image))]
+public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
 {
-    private TabController parent;
+    public TabGroup TabGroup;
+    [HideInInspector]
+    public Image background;
+
     private List<Button> buttons = new List<Button>();
     public bool IsTabEnabled { get; private set; } = false;
 
     private void Start()
     {
-        parent = transform.parent.GetComponent<TabController>();
-        if (parent is null) throw new System.Exception("Parent must have a TabbedMenu script!");
+        background = GetComponent<Image>();
+        TabGroup.Subscribe(this);
+        if (TabGroup is null) throw new System.Exception("Parent must have a TabbedMenu script!");
         if (TryGetComponent(out Button button)) button.onClick.AddListener(ActivateClickEvent);
         InitializeButtonList();
     }
@@ -52,7 +58,7 @@ public class Tab : MonoBehaviour
     /// <summary>
     /// Deactivates each transform child and sets tab transparency to 0.5f
     /// </summary>
-    public void DeActivate()
+/*    public void DeActivate()
     {
         for (int i = 1; i < transform.childCount; i++)
         {
@@ -61,12 +67,12 @@ public class Tab : MonoBehaviour
             SetTransparency(0.5f);
             IsTabEnabled = false;
         }
-    }
+    }*/
 
     /// <summary>
     /// Activates each transform child and sets tab transparency to 1
     /// </summary>
-    public void Activate()
+/*    public void Activate()
     {
         for (int i = 1; i < transform.childCount; i++)
         {
@@ -76,11 +82,11 @@ public class Tab : MonoBehaviour
             IsTabEnabled = true;
         }
     }
-
+*/
     /// <summary>
     /// Used in this GameObject Buttons' onClick() event. Look at Start()
     /// </summary>
-    private void ActivateClickEvent() { parent.SwitchTab(this); }
+    private void ActivateClickEvent() { TabGroup.OnTabSelected(this); }
 
     /// <summary>
     /// Sets the transparency of the tab's image
@@ -92,5 +98,20 @@ public class Tab : MonoBehaviour
         Color color = image.color;
         color.a = a;
         image.color = color;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        TabGroup.OnTabEnter(this);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        TabGroup.OnTabSelected(this);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        TabGroup.OnTabExit(this);
     }
 }

@@ -37,9 +37,13 @@ public class GameManager : MonoBehaviour
 
         inputManager.OnTildePressed += uiManager.ReceiveMenuKey;
 
-        inputManager.OnTabPressed += uiManager.SwitchTabs;
+        inputManager.OnTabPressed += uiManager.NextTab;
 
-        uiManager.OnUIToggle += inputManager.IsUIActive;
+        uiManager.OnUIToggle += inputManager.AllowCameraPan;
+
+        uiManager.OnEnteringUI += gridManager.SuspendCursor;
+
+        uiManager.OnExitingUI += gridManager.ResumeCursor;
     }
 
     public void HandleLog(int numer)

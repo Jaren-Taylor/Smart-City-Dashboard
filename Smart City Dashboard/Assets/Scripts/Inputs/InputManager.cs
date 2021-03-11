@@ -27,14 +27,14 @@ public class InputManager : MonoBehaviour
     public Action OnEndPlaceTile;
 
     private bool isMoving = false;
-    private bool isUIActive = false;
+    private bool isPanActive = false;
     Vector3 moveBy;
 
     private void Update()
     {
         if(isMoving == true)
         {
-            if (!isUIActive) OnCameraPan.Invoke(moveBy);
+            if (!isPanActive) OnCameraPan.Invoke(moveBy);
         }
     }
 
@@ -140,7 +140,7 @@ public class InputManager : MonoBehaviour
     }
 
     // Used as an event handler in Game manager. This way UI manager can talk to this manager
-    public void IsUIActive(bool active) {
-        isUIActive = active; 
+    public void AllowCameraPan(bool active) {
+        isPanActive = active; 
     }
 }

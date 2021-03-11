@@ -2,23 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GlideMenu : MonoBehaviour, IWindow
+public class GlideMenu : Menu
 {
-    public Canvas Canvas;
-    public TabController TabController;
-    private bool isOpen;
-    protected Rect menuBounds;
-    public EUIPosition uiPosition = EUIPosition.Bottom;
-    protected int glideSpeed = 25;
+    [SerializeField]
+    private EUIPosition uiPosition = EUIPosition.Bottom;
+    [SerializeField]
+    private Canvas Canvas;
+    private Rect menuBounds;
     private Vector2 closedPosition;
     private Vector2 openPosition;
-    protected Vector2 destination;
+    private int glideSpeed = 25;
+    private Vector2 destination;
 
     private void Start()
     {
         // Assumed to be used in child classes for use in movement calculations
         menuBounds = gameObject.GetComponent<RectTransform>().rect;
-        //
+        // 
         openPosition = transform.position;
         closedPosition = CalculateClosedPosition();
         InstantlyClose();
@@ -41,14 +41,16 @@ public class GlideMenu : MonoBehaviour, IWindow
                 if (transform.position.x != destination.x) GlideTowardsDestination();
                 break;
             default:
-                return;
+                break;
         }
+        // Turn off when we reach our 
+        if (transform.position.IsBasicallyEqualTo(closedPosition)) gameObject.SetActive(false);
     }
 
     /// <summary>
     /// Glide the menu in and out of view
     /// </summary>
-    protected virtual void GlideTowardsDestination()
+    private void GlideTowardsDestination()
     {
         // Move towards destination portions at a time
         Vector3 newPosition = transform.position;
@@ -69,20 +71,17 @@ public class GlideMenu : MonoBehaviour, IWindow
     /// <summary>
     /// Opens the menu
     /// </summary>
-    public void Open() {
+    public override void Open() {
         destination = openPosition;
-        Debug.Log(destination.ToString());
-        isOpen = true;
+        if (!gameObject.activeSelf) gameObject.SetActive(true);
     }
 
     /// <summary>
     /// Closes the menu
     /// </summary>
-    public void Close()
+    public override void Close()
     {
         destination = closedPosition;
-        Debug.Log(destination.ToString());
-        isOpen = false;
     }
 
     /// <summary>
@@ -92,18 +91,8 @@ public class GlideMenu : MonoBehaviour, IWindow
     {
         transform.position = closedPosition;
         destination = closedPosition;
+        gameObject.SetActive(false);
     }
-
-    /// <summary>
-    /// Toggles the menu to open or close, based on its current state
-    /// </summary>
-    public void Toggle() { if (isOpen) Close(); else Open(); }
-
-    /// <summary>
-    /// Returns whether or not the menu is open
-    /// </summary>
-    /// <returns></returns>
-    public bool IsOpen() => isOpen;
 
     /// <summary>
     /// Set the Menu's glide amount based on its EUIPosition

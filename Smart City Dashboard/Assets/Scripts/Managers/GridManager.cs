@@ -35,14 +35,14 @@ public class GridManager : MonoBehaviour
 
     public void ToggleCursor() { SetCursor(!cursorEnabled); }
 
-    // Used in Menu's Event Trigger components
-    public void OnEnteringUI() {
+    public void SuspendCursor() {
         oldCursorEnabled = cursorEnabled;
         SetCursor(false); 
     }
 
-    // Used in Menu's Event Trigger components
-    public void OnExitingUI() { SetCursor(oldCursorEnabled); }
+    public void ResumeCursor() { 
+        SetCursor(oldCursorEnabled); 
+    }
 
     private void SetCursor(bool value)
     {
