@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TabbedMenu : Menu
+public class TabController : MonoBehaviour
 {
     public List<Tab> Tabs;
     [HideInInspector]
     public int ActiveTab = 0;
 
-    private new void Start()
+    private void Start()
     {
-        base.Start();
         DeactivateTabs();
         if (Tabs.Count > 0) Tabs[0].Activate();
     }
@@ -73,7 +72,7 @@ public class TabbedMenu : Menu
     /// Communicates to a child Tab that a number key was pressed
     /// </summary>
     /// <param name="index"></param>
-    public override void OnNumberKeyPress(int index)
+    public void OnNumberKeyPress(int index)
     {
         Tabs[ActiveTab].ButtonClick(index);
     }

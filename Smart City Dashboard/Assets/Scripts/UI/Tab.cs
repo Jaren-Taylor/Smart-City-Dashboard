@@ -4,13 +4,13 @@ using UnityEngine.UI;
 
 public class Tab : MonoBehaviour
 {
-    private TabbedMenu parent;
+    private TabController parent;
     private List<Button> buttons = new List<Button>();
     public bool IsTabEnabled { get; private set; } = false;
 
     private void Start()
     {
-        parent = transform.parent.GetComponent<TabbedMenu>();
+        parent = transform.parent.GetComponent<TabController>();
         if (parent is null) throw new System.Exception("Parent must have a TabbedMenu script!");
         if (TryGetComponent(out Button button)) button.onClick.AddListener(ActivateClickEvent);
         InitializeButtonList();

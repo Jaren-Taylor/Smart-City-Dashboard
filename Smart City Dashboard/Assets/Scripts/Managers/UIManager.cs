@@ -5,18 +5,17 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     private Dictionary<KeyCode, MenuType> keyToMenuDict = new Dictionary<KeyCode, MenuType>();
-    private Dictionary<MenuType, IFocusableWindow> enumToMenu = new Dictionary<MenuType, IFocusableWindow>();
-    private List<IFocusableWindow> menus = new List<IFocusableWindow>();
+    private Dictionary<MenuType, IWindow> enumToMenu = new Dictionary<MenuType, IWindow>();
+    private List<IWindow> menus = new List<IWindow>();
 
     public Action<bool> OnUIToggle;
     public Action<int> OnTabSwitch;
-    public TabbedMenu F1Menu;
-    public Menu TildeMenu;
-    public TileSensorMenu TileSensorPreview;
-    //public SensorInfoMenu SensorInfoMenuInstance;
+    public GlideMenu F1Menu;
+    public GlideMenu TildeMenu;
+    public TileSensorMenu TileSensorPreview; 
     // contains a dupe reference to the currently active menu
     [HideInInspector]
-    public IFocusableWindow ActiveMenu;
+    public IWindow ActiveMenu;
 
     public static UIManager Instance;
 
@@ -35,12 +34,12 @@ public class UIManager : MonoBehaviour
 
     public void SwitchTabs()
     {
-        if (ActiveMenu is TabbedMenu tabbedMenu)
+        if (ActiveMenu is GlideMenu tabbedMenu)
         {
-            tabbedMenu.SwitchTabs();
+            tabbedMenu.TabController.SwitchTabs();
             if(tabbedMenu == F1Menu) // TODO this only works if ModeMenu is externally set as the escape menu
             {
-                OnTabSwitch?.Invoke(tabbedMenu.ActiveTab);
+                OnTabSwitch?.Invoke(tabbedMenu.TabController.ActiveTab);
             }
         }
     }
@@ -58,9 +57,9 @@ public class UIManager : MonoBehaviour
 
     public void ToggleMenu(MenuType menuType)
     {
-        IFocusableWindow menu = enumToMenu[menuType];
+        IWindow menu = enumToMenu[menuType];
         // check if we'll be turning the menu off or on
-        if (menu.IsFullyVisible())
+        if (menu.IsOpen())
         {
             TurnOffMenu(menu);
         }
@@ -68,11 +67,11 @@ public class UIManager : MonoBehaviour
         {
             TurnOnMenu(menu);
         }
-        menu.ToggleMenuHandler();
+        menu.Toggle();
         OnUIToggle?.Invoke(IsUIActive());
     }
 
-    private void TurnOffMenu(IFocusableWindow menu)
+    private void TurnOffMenu(IWindow menu)
     {
         menus.Remove(menu);
         // only re-set ActiveMenu if the menu being turned off was the ActiveMenu
@@ -84,7 +83,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void TurnOnMenu(IFocusableWindow menu)
+    private void TurnOnMenu(IWindow menu)
     {
         menus.Add(menu);
         ActiveMenu = menu;
@@ -94,19 +93,19 @@ public class UIManager : MonoBehaviour
     {
         foreach (var menu in menus)
         {
-            if (menu.IsFullyVisible()) return true;
+            if (menu.IsOpen()) return true;
         }
         return false;
     }
 
     public void OnNumberKeyPress(int value)
     {
-        if (ActiveMenu != null)
+        if (ActiveMenu != null && ActiveMenu is GlideMenu tabbedMenu)
         {
-            ActiveMenu.OnNumberKeyPress(value);
+            if (tabbedMenu.TabController != null) tabbedMenu.TabController.OnNumberKeyPress(value);
         }else
         {
-            F1Menu.OnNumberKeyPress(value);
+            F1Menu.TabController.OnNumberKeyPress(value);
         }
     }
 

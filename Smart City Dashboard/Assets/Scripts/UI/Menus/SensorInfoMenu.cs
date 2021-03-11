@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SensorInfoMenu : MonoBehaviour,IFocusableWindow
+public class SensorInfoMenu : MonoBehaviour
 {
     public bool IsFullyVisible()
     {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileSensorMenu : MonoBehaviour, IFocusableWindow
+public class TileSensorMenu : MonoBehaviour, IWindow
 {
     public Color CardColor;
     [SerializeField]
@@ -11,26 +11,22 @@ public class TileSensorMenu : MonoBehaviour, IFocusableWindow
 
     private Tile focusedTile = null;
 
-    public bool IsFullyVisible()
-    {
-        return gameObject.activeSelf;
-    }
-
-    public void OnNumberKeyPress(int value)
-    {
-        return;
-    }
-
-    public void ToggleMenuHandler()
-    {
-        gameObject.SetActive(!gameObject.activeSelf);
-    }
-
     // Start is called before the first frame update
     void Start()
     {
         gameObject.SetActive(false);
     }
+
+    public bool IsOpen()
+    {
+        return gameObject.activeSelf;
+    }
+
+    public void Open() => gameObject.SetActive(true);
+
+    public void Close() => gameObject.SetActive(false);
+
+    public void Toggle() => gameObject.SetActive(!gameObject.activeSelf);
 
     internal void FocusTile(Vector2Int position)
     {
