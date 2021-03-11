@@ -10,7 +10,7 @@ public class SensorLogUIController : MonoBehaviour
     private ListeningStage stage = ListeningStage.Disabled;
 
     [SerializeField]
-    private Tab tab;
+    private TabButton tab;
 
     [SerializeField]
     private SensorLogMenu log;

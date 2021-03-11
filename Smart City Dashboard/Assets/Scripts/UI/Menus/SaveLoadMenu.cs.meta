@@ -1,15 +1,11 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Smart City Dashboard/Assets/Scripts/UI/Menus/SaveLoadMenu.cs.meta
 guid: a6979ce62dc8a354797bc19abe4d5429
-=======
-guid: 2ae6bf0e4564f074996bf11e5920dece
->>>>>>> e95b91765a5c17ef2b57a878e66ad43540d141c5:Smart City Dashboard/Assets/Scripts/UI/Menus/SensorLogMenu.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
   executionOrder: 0
-  icon: {instanceID: 0}
+  icon: {fileID: 2800000, guid: 8c5e14a528c6fa74b818b993990dfc07, type: 3}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

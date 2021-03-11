@@ -5,17 +5,17 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     private Dictionary<KeyCode, MenuType> keyToMenuDict = new Dictionary<KeyCode, MenuType>();
-    private Dictionary<MenuType, IWindow> enumToMenu = new Dictionary<MenuType, IWindow>();
-    private List<IWindow> menus = new List<IWindow>();
+    private Dictionary<MenuType, Menu> enumToMenu = new Dictionary<MenuType, Menu>();
+    private List<Menu> menus = new List<Menu>();
 
     public Action<bool> OnUIToggle;
-    public Action<int> OnTabSwitch;
-    public GlideMenu F1Menu;
-    public GlideMenu TildeMenu;
+    public Action OnEnteringUI;
+    public Action OnExitingUI;
+    public Menu F1Menu;
+    public Menu TildeMenu;
     public TileSensorMenu TileSensorPreview; 
-    // contains a dupe reference to the currently active menu
     [HideInInspector]
-    public IWindow ActiveMenu;
+    public Menu ActiveMenu;
 
     public static UIManager Instance;
 
@@ -32,18 +32,6 @@ public class UIManager : MonoBehaviour
         keyToMenuDict.Add(KeyCode.BackQuote, MenuType.Dashboard);
     }
 
-    public void SwitchTabs()
-    {
-        if (ActiveMenu is GlideMenu tabbedMenu)
-        {
-            tabbedMenu.TabController.SwitchTabs();
-            if(tabbedMenu == F1Menu) // TODO this only works if ModeMenu is externally set as the escape menu
-            {
-                OnTabSwitch?.Invoke(tabbedMenu.TabController.ActiveTab);
-            }
-        }
-    }
-
     public void ReceiveMenuKey(KeyCode key)
     {
         if (keyToMenuDict.ContainsKey(key)) {
@@ -57,7 +45,7 @@ public class UIManager : MonoBehaviour
 
     public void ToggleMenu(MenuType menuType)
     {
-        IWindow menu = enumToMenu[menuType];
+        Menu menu = enumToMenu[menuType];
         // check if we'll be turning the menu off or on
         if (menu.IsOpen())
         {
@@ -71,7 +59,7 @@ public class UIManager : MonoBehaviour
         OnUIToggle?.Invoke(IsUIActive());
     }
 
-    private void TurnOffMenu(IWindow menu)
+    private void TurnOffMenu(Menu menu)
     {
         menus.Remove(menu);
         // only re-set ActiveMenu if the menu being turned off was the ActiveMenu
@@ -83,12 +71,16 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void TurnOnMenu(IWindow menu)
+    private void TurnOnMenu(Menu menu)
     {
         menus.Add(menu);
         ActiveMenu = menu;
     }
 
+    /// <summary>
+    /// Returns true if any Menu is open
+    /// </summary>
+    /// <returns></returns>
     public bool IsUIActive()
     {
         foreach (var menu in menus)
@@ -100,12 +92,28 @@ public class UIManager : MonoBehaviour
 
     public void OnNumberKeyPress(int value)
     {
-        if (ActiveMenu != null && ActiveMenu is GlideMenu tabbedMenu)
+        if (ActiveMenu != null && ActiveMenu.TabGroup != null)
         {
-            if (tabbedMenu.TabController != null) tabbedMenu.TabController.OnNumberKeyPress(value);
-        }else
+            ActiveMenu.TabGroup.OnNumberKeyPress(value);
+        }
+        else
         {
-            F1Menu.TabController.OnNumberKeyPress(value);
+            F1Menu.TabGroup.OnNumberKeyPress(value);
+        }
+    }
+
+    /// <summary>
+    /// Switches menu tabs only if a menu is open
+    /// </summary>
+    public void NextTab()
+    {
+        if (ActiveMenu != null && ActiveMenu.TabGroup != null)
+        {
+            ActiveMenu.TabGroup.NextTab();
+        }
+        else
+        {
+            F1Menu.TabGroup.NextTab();
         }
     }
 
@@ -114,6 +122,16 @@ public class UIManager : MonoBehaviour
         TileSensorPreview.FocusTile(position);
         if (!menus.Contains(TileSensorPreview)) ToggleSensorPopup();
     }
+
+    /// <summary>
+    /// Called whenever the pointer hovers over a Menu
+    /// </summary>
+    public void OnPointerEnter() => OnEnteringUI?.Invoke();
+
+    /// <summary>
+    /// Called whenever the pointer hovers off of a Menu
+    /// </summary>
+    public void OnPointerExit() => OnExitingUI?.Invoke();
 }
 
 public enum MenuType
