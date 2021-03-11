@@ -7,6 +7,8 @@ public class SensorLogMenu : MonoBehaviour
 {
     [SerializeField]
     private ScrollablePopupMenu menu;
+    [SerializeField]
+    private SensorInfoMenu sensorInfoMenu;
 
     private ISensor targetedSensor;
 
@@ -29,6 +31,7 @@ public class SensorLogMenu : MonoBehaviour
         {
             var tilePosition = sensor.GetTilePosition();
             CameraManager.Instance.OnReachedTarget += ReachedSensor;
+            CameraManager.Instance.OnReachedTarget += sensorInfoMenu.SetVisible;
             targetedSensor = sensor;
             CameraManager.Instance.TrackPosition(tilePosition.ToGridVector3(), Config.minSize, true);
         }

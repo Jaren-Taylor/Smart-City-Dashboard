@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public CameraManager cameraManager;
     public GridManager gridManager;
     public UIManager uiManager;
+    public SensorInfoMenu sensorInfoMenu;
 
     void Start()
     {
@@ -39,7 +40,13 @@ public class GameManager : MonoBehaviour
 
         inputManager.OnTabPressed += uiManager.SwitchTabs;
 
-        uiManager.OnUIToggle += inputManager.IsUIActive;
+        uiManager.OnUIToggle += inputManager.DisableCameraPan;
+
+        sensorInfoMenu.DisableCameraControls += inputManager.SetTopDownMode;
+
+        sensorInfoMenu.DisableCameraControls += inputManager.DisableCameraRotation;
+
+        sensorInfoMenu.DisableCameraControls += inputManager.DisableCameraZoom;
     }
 
     public void HandleLog(int numer)
