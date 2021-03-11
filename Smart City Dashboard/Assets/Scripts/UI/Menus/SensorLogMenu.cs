@@ -22,7 +22,7 @@ public class SensorLogMenu : MonoBehaviour
     {
         if(!sensorMapping.ContainsKey(sensor)) throw new Exception("Sensor does not exist in this menu");
         var card = sensorMapping[sensor];
-        card.DestroyUIElement();
+        if(card != null) card.DestroyUIElement();
         sensorMapping.Remove(sensor);
     }
 
