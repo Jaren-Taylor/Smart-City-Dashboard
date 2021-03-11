@@ -1,18 +1,14 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
-public class UIElement : MonoBehaviour
+public class UIElement : MonoBehaviour, IPointerDownHandler
 {
     public Action<UIElement> OnClick;
     public void DestroyUIElement()
     {
         if(gameObject != null) Destroy(gameObject);
-    }
-
-    private void OnMouseDown()
-    {
-        OnClick?.Invoke(this);
     }
 
     /// <summary>
@@ -26,5 +22,10 @@ public class UIElement : MonoBehaviour
         var model = Resources.Load<GameObject>(prefabAddress);
         var uiElementGO = UnityEngine.Object.Instantiate(model, parent.position, Quaternion.identity, parent);
         return uiElementGO;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        OnClick?.Invoke(this);
     }
 }

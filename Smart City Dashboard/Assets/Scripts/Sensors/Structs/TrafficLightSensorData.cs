@@ -24,6 +24,6 @@ public struct TrafficLightSensorData
     public override string ToString()
     { 
         if(IsInbound) return $"({Entity}): Inbound in {EstimatedDirection} stopped for {StopTime}  Tile: [{TilePosition.x}, {TilePosition.y}]";
-        else return $"({Entity}): Outgoing in {EstimatedDirection} stopped for {StopTime} Tile: [{TilePosition.x}, {TilePosition.y}]";
+        else return $"({Entity}): Outgoing in {EstimatedDirection} stopped for {StopTime}  Tile: [{TilePosition.x}, {TilePosition.y}]";
     }
 }

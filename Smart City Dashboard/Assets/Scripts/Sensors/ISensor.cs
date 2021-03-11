@@ -6,6 +6,7 @@ public interface ISensor
 {
     public Action<ISensor> StatusUpdated { get; set; }
 
+    public Vector2Int GetTilePosition();
     public void CollectDataFrom(HashSet<GameObject> sensedObjects);
     public (string msg, SensorStatus status) Status();
 }

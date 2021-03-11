@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CameraSensor : Sensor<CameraSensorData>
 {
+    public CameraSensor(Vector2Int position) : base(position) { }
+
     protected override CameraSensorData CollectData(GameObject sensedObject)
     {
         return new CameraSensorData(this,

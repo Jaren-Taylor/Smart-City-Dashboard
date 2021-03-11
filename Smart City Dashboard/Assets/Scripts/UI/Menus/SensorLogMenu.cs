@@ -8,7 +8,10 @@ public class SensorLogMenu : MonoBehaviour
     [SerializeField]
     private ScrollablePopupMenu menu;
 
+    private ISensor targetedSensor;
+
     private Dictionary<ISensor, SimpleCard> sensorMapping = new Dictionary<ISensor, SimpleCard>();
+    private Dictionary<UIElement, ISensor> cardMapping = new Dictionary<UIElement, ISensor>();
 
     public void AddSensor(ISensor sensor)
     {
@@ -16,14 +19,40 @@ public class SensorLogMenu : MonoBehaviour
         var (statusMsg, statusEnum) = sensor.Status();
         var card = menu.AddNewItem(statusEnum.GetColor(), statusMsg);
         sensorMapping.Add(sensor, card);
+        cardMapping.Add(card, sensor);
+        card.OnClick += CardClicked;
+    }
+
+    private void CardClicked(UIElement card)
+    {
+        if(cardMapping.TryGetValue(card, out ISensor sensor))
+        {
+            var tilePosition = sensor.GetTilePosition();
+            CameraManager.Instance.OnReachedTarget += ReachedSensor;
+            targetedSensor = sensor;
+            CameraManager.Instance.TrackPosition(tilePosition.ToGridVector3(), Config.minSize, true);
+        }
+    }
+
+    private void ReachedSensor(Vector3 position)
+    {
+        if(targetedSensor != null && targetedSensor.GetTilePosition() == position.ToGridInt())
+        {
+            Debug.Log("Open sensor menu");
+        }
+        else
+        {
+            Debug.Log("Something went wrong in the process");
+        }
     }
 
     public void RemoveSensor(ISensor sensor)
     {
         if(!sensorMapping.ContainsKey(sensor)) throw new Exception("Sensor does not exist in this menu");
         var card = sensorMapping[sensor];
-        if(card != null) card.DestroyUIElement();
+        if (card != null) card.DestroyUIElement();
         sensorMapping.Remove(sensor);
+        cardMapping.Remove(card);
     }
 
     public void UpdateSensorLog(ISensor sensor)

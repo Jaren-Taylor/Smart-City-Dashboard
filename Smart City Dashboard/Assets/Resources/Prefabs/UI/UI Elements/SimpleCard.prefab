@@ -337,6 +337,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Header
       objectReference: {fileID: 0}
+    - target: {fileID: 3071769493547450044, guid: ec199a78c471c1844bc262df6e0df27a, type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5613177618998943518, guid: ec199a78c471c1844bc262df6e0df27a, type: 3}
       propertyPath: m_fontSize
       value: 24

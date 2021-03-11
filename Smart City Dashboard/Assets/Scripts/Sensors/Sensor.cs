@@ -5,12 +5,18 @@ using UnityEngine;
 
 public abstract class Sensor<T> : ISensor
 {
+    private readonly Vector2Int tilePosition;
+
     public Action<List<T>> DataCollected;
     public Action<ISensor> StatusUpdated { get; set; }
 
     protected string lastStatus = "";
     protected SensorStatus statusEnum = SensorStatus.Fine;
 
+    public Sensor(Vector2Int tilePosition)
+    {
+        this.tilePosition = tilePosition;
+    }
 
     public void CollectDataFrom(HashSet<GameObject> sensedObjects)
     {
@@ -30,4 +36,6 @@ public abstract class Sensor<T> : ISensor
     protected abstract T CollectData(GameObject sensedObject);
 
     public (string msg, SensorStatus status) Status() => ($"{ToString()}: {lastStatus}", statusEnum);
+
+    public Vector2Int GetTilePosition() => tilePosition;
 }
