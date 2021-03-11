@@ -12,7 +12,8 @@ public class UIManager : MonoBehaviour
     public Action<int> OnTabSwitch;
     public TabbedMenu F1Menu;
     public Menu TildeMenu;
-    public TileSensorMenu TileSensorPreview; 
+    public TileSensorMenu TileSensorPreview;
+    //public SensorInfoMenu SensorInfoMenuInstance;
     // contains a dupe reference to the currently active menu
     [HideInInspector]
     public IFocusableWindow ActiveMenu;
@@ -26,6 +27,7 @@ public class UIManager : MonoBehaviour
         enumToMenu.Add(MenuType.Dashboard, TildeMenu);
         enumToMenu.Add(MenuType.GridState, F1Menu);
         enumToMenu.Add(MenuType.TileSensorPopup, TileSensorPreview);
+        //enumToMenu.Add(MenuType.SensorInfo, SensorInfoMenuInstance);
 
         keyToMenuDict.Add(KeyCode.F1, MenuType.GridState);
         keyToMenuDict.Add(KeyCode.BackQuote, MenuType.Dashboard);
