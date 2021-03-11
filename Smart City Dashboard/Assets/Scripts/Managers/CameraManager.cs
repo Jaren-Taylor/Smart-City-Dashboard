@@ -184,13 +184,15 @@ public class CameraManager : MonoBehaviour
     public void StopFollowEntity()
     {
 
-        GridManager.Instance.CursorEnabled = true;
         entityCamera.gameObject.SetActive(false);
         mainCamera.gameObject.SetActive(true);
-        GridManager.Instance.GridSM.ResumeState(new DigitalCursor());
         isFollowingEntity = false;
+        GridManager.Instance.GridSM.ResumeState(new DigitalCursor());
+        GridManager.Instance.CursorEnabled = true;
+        
         if(trackedEntity is Entity entity)
             entity.OnBeingDestroy -= TrackedEntityDestroyed;
+
         trackedEntity = null;
         if (vehicleViewport.gameObject.activeSelf)
         {
