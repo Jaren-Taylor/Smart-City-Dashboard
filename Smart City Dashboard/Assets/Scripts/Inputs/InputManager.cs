@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using static UnityEngine.InputSystem.InputAction;
 
@@ -18,8 +18,7 @@ public class InputManager : MonoBehaviour
 
     // Keyboard Actions
     public Action<int> OnNumberPressed;
-    public Action<KeyCode> OnF1Pressed;
-    public Action<KeyCode> OnTildePressed;
+    public Action<Key> OnMenuKeyPress;
     public Action OnCPressed;
     public Action OnTabPressed;
 
@@ -108,19 +107,12 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public void OnF1KeyPressed(CallbackContext context)
+    public void OnMenuKeyPressed(CallbackContext context)
     {
         if (context.started)
         {
-            OnF1Pressed?.Invoke(KeyCode.F1);
-        }
-    }
-
-    public void OnTildeKeyPressed(CallbackContext context)
-    {
-        if (context.started)
-        {
-            OnTildePressed?.Invoke(KeyCode.BackQuote);
+            KeyControl control = (KeyControl)context.control;
+            OnMenuKeyPress?.Invoke(control.keyCode);
         }
     }
 

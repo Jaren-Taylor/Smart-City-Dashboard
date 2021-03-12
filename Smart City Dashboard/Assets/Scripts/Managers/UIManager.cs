@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour
 {
-    private Dictionary<KeyCode, MenuType> keyToMenuDict = new Dictionary<KeyCode, MenuType>();
+    private Dictionary<Key, MenuType> keyToMenuDict = new Dictionary<Key, MenuType>();
     private Dictionary<MenuType, Menu> enumToMenu = new Dictionary<MenuType, Menu>();
     private List<Menu> menus = new List<Menu>();
 
@@ -12,6 +13,7 @@ public class UIManager : MonoBehaviour
     public Action OnEnteringUI;
     public Action OnExitingUI;
     public Menu F1Menu;
+    public Menu F2Menu;
     public Menu TildeMenu;
     public TileSensorMenu TileSensorPreview; 
     [HideInInspector]
@@ -26,13 +28,15 @@ public class UIManager : MonoBehaviour
         enumToMenu.Add(MenuType.Dashboard, TildeMenu);
         enumToMenu.Add(MenuType.GridState, F1Menu);
         enumToMenu.Add(MenuType.TileSensorPopup, TileSensorPreview);
+        enumToMenu.Add(MenuType.SaveLoadMenu, F2Menu);
         //enumToMenu.Add(MenuType.SensorInfo, SensorInfoMenuInstance);
 
-        keyToMenuDict.Add(KeyCode.F1, MenuType.GridState);
-        keyToMenuDict.Add(KeyCode.BackQuote, MenuType.Dashboard);
+        keyToMenuDict.Add(Key.F1, MenuType.GridState);
+        keyToMenuDict.Add(Key.F2, MenuType.SaveLoadMenu);
+        keyToMenuDict.Add(Key.Backquote, MenuType.Dashboard);
     }
 
-    public void ReceiveMenuKey(KeyCode key)
+    public void ReceiveMenuKey(Key key)
     {
         if (keyToMenuDict.ContainsKey(key)) {
             ToggleMenu(keyToMenuDict[key]);
@@ -138,5 +142,6 @@ public enum MenuType
 {
     Dashboard,
     GridState,
-    TileSensorPopup
+    TileSensorPopup,
+    SaveLoadMenu
 }
