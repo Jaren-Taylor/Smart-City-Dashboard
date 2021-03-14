@@ -20,7 +20,7 @@ public class TestScrollMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
         {
             i++;
-            var card = popup.AddNewItem(Color.blue, "Test Entry: " + i);
+            var card = popup.AddNewItem(UIBackgroundSprite.Blue, "Test Entry: " + i);
             card.OnClick += Clicked;
         }
     }

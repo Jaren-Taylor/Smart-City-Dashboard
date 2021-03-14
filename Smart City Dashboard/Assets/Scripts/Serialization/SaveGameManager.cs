@@ -35,7 +35,16 @@ public static class SaveGameManager
     /// <returns></returns>
     public static bool SaveGame(string gameLocation, TileGrid saveData)
     {
-        using (FileStream fs = new FileStream(gameLocation, FileMode.Truncate))
+        FileMode mode;
+        if (File.Exists(gameLocation))
+        {
+             mode = FileMode.Truncate;
+        }
+        else
+        {
+            mode = FileMode.Create;
+        }
+        using (FileStream fs = new FileStream(gameLocation, mode))
         {
             using (XmlWriter xmlWriter = XmlWriter.Create(fs))
             {

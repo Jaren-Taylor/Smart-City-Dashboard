@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TileSensorMenu : Menu
 {
-    public Color CardColor;
+    public UIBackgroundSprite CardColor;
     [SerializeField]
     private ScrollablePopupMenu menu;
 

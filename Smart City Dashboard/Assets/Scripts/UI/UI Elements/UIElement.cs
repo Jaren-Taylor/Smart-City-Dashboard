@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-
 public class UIElement : MonoBehaviour, IPointerDownHandler
 {
     public Action<UIElement> OnClick;
+
     public void DestroyUIElement()
     {
         if(gameObject != null) Destroy(gameObject);
@@ -20,8 +21,12 @@ public class UIElement : MonoBehaviour, IPointerDownHandler
     public static GameObject Spawn(Transform parent, string prefabAddress)
     {
         var model = Resources.Load<GameObject>(prefabAddress);
-        var uiElementGO = UnityEngine.Object.Instantiate(model, parent.position, Quaternion.identity, parent);
-        return uiElementGO;
+        return Instantiate(model, parent.position, Quaternion.identity, parent);
+    }
+
+    public static GameObject Spawn(Transform parent, GameObject original)
+    {
+        return Instantiate(original, parent.position, Quaternion.identity, parent); ;
     }
 
     public void OnPointerDown(PointerEventData eventData)

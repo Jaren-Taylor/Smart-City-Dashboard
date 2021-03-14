@@ -69,10 +69,10 @@ public class SensorLogMenu : MonoBehaviour
         }
     }
 
-    private void UpdateCard(SimpleCard card, string message, Color color)
+    private void UpdateCard(SimpleCard card, string message, UIBackgroundSprite sprite)
     {
         card.SetText(message);
-        card.SetColor(color);
+        card.SetBackgroundSprite(sprite);
         UpdatePositionalStanding(card);
     }
 
