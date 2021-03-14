@@ -48,7 +48,10 @@ public class SensorInfoMenu : MonoBehaviour,IFocusableWindow
         if (IsFullyVisible())
         {
             currentTrafficLight.TurnedGreen += UpdateView;
-            DelayText.SetText((currentTrafficLight.switchDelay - currentTrafficLight.totalTime + 1).ToString("N1"));
+            var timeRemaining = currentTrafficLight.switchDelay - currentTrafficLight.totalTime + 1;
+            if (timeRemaining <= 0)
+                timeRemaining = 0;
+            DelayText.SetText((timeRemaining).ToString("N1"));
         }
         
     }
