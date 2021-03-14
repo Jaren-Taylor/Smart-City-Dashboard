@@ -8,8 +8,7 @@ public class SelectEntityState : IGridControlState
 
     public void OnMouseDown(DigitalCursor location)
     {
-        if(location is DigitalCursor //Checks if the Digital Cursor is not null
-            && location.OnGrid is true //Checks if the hit location is on the grid
+        if(location.IsValid() //Checks if the hit location is on the grid
             && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity, layerMask) //Checks if the ray hits a target
             && hit.collider.gameObject.TryGetComponent(out Entity entity)) //Checks that the target hit is an entity
         {
@@ -31,6 +30,5 @@ public class SelectEntityState : IGridControlState
 
     public void OnPush(DigitalCursor location)
     {
-
     }
 }

@@ -11,7 +11,7 @@ public class ExamineTileSensorsState : DrawsWithCursorState
 
     public override void OnMouseDown(DigitalCursor location)
     {
-        if (location.OnGrid && GridManager.GetTile(location.Position) is Tile)
+        if (location.IsValid() && GridManager.GetTile(location.Position) is Tile)
         {
             UIManager.Instance.InspectTile(location.Position);
         }

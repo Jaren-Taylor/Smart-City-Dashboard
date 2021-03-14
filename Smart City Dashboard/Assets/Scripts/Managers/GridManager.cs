@@ -12,18 +12,17 @@ public class GridManager : MonoBehaviour
     [Range(5, 100)]
     public int gridSize;
 
-    private DigitalCursor cursor = null;
+    private DigitalCursor cursor = DigitalCursor.Empty;
     private bool cursorEnabled = true; //When false, cursor will not be shown
 
     private bool oldCursorEnabled;
     private bool clickRecieved = false; //When true, update function will pick this up and signal to its state controller
 
-    private Vector2Int tileLoc;
     private GameObject ground = null;
     public LayerMask groundMask; // The mask used to find the ground plane
 
     public GameObject NavPointPrefab;
-    private NodeController EntityLoc;
+    [HideInInspector]
     public VehicleEntity entity;
 
     public Material TileMaterial;
@@ -39,7 +38,7 @@ public class GridManager : MonoBehaviour
 
     public void SuspendCursor() {
         oldCursorEnabled = cursorEnabled;
-        SetCursor(false); 
+        SetCursor(false);
     }
 
     public void ResumeCursor() { 
@@ -59,7 +58,7 @@ public class GridManager : MonoBehaviour
         {
             GridSM.SuspendState(cursor);
             cursorEnabled = false;
-            cursor = null;
+            cursor = DigitalCursor.Empty;
         }
     }
 
@@ -296,7 +295,7 @@ public class GridManager : MonoBehaviour
     {
         DigitalCursor newCursor = new DigitalCursor();
         
-        if(newCursor.Position != cursor?.Position || newCursor.SubDirection != cursor?.SubDirection)
+        if(newCursor.Position != cursor.Position || newCursor.SubDirection != cursor.SubDirection)
         {
             GridSM.MoveCursor(cursor, newCursor);
             cursor = newCursor;

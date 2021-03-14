@@ -19,17 +19,17 @@ public class RemoveTileState : IGridControlState
 
     public void OnMouseDown(DigitalCursor location)
     {
-        GridManager.Instance.RemoveTile(location.Position);
+        if (location.IsValid()) GridManager.Instance.RemoveTile(location.Position);
     }
 
     public void OnMouseEnterTile(DigitalCursor location)
     {
-        GridManager.Instance.SetTransparency(location.Position, true);
+        if (location.IsValid()) GridManager.Instance.SetTransparency(location.Position, true);
     }
 
     public void OnMouseExitTile(DigitalCursor location)
     {
-        GridManager.Instance.SetTransparency(location.Position, false);
+        if (location.IsValid()) GridManager.Instance.SetTransparency(location.Position, false);
     }
 
 

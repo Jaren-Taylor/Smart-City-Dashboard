@@ -28,12 +28,7 @@ public class GridController
         controlStates.Add(EGridControlState.ExamineTile,    new ExamineTileSensorsState());
         controlStates.Add(EGridControlState.DeleteTile,     new RemoveTileState());
         controlStates.Add(EGridControlState.SelectEntity,   new SelectEntityState());
-        // TODO
-        // controlGroups.Add(IGridControlGroups.Sensors, new IGridControlState[3]);
-        // controlGroups.Add(IGridControlGroups.Entities, new IGridControlState[3]);
-        // controlGroups.Add(IGridControlGroups.Objects, new IGridControlState[3]);
-        activeControlState = controlStates[initState];
-        //SetState(initState, new DigitalCursor(DigitalCursor.Fake.Zero));
+        SetState(initState, DigitalCursor.Empty);
     }
 
     /// <summary>
@@ -43,16 +38,9 @@ public class GridController
     /// <param name="mousePosition"</param>
     public void SetState(EGridControlState newState, DigitalCursor mousePosition)
     {
-        if (IsValid(mousePosition))
-        {
-            activeControlState?.OnPop(mousePosition);
-            activeControlState = controlStates[newState];
-            activeControlState?.OnPush(mousePosition);
-        }
-        else
-        {
-            activeControlState = controlStates[newState];
-        }
+        activeControlState?.OnPop(mousePosition);
+        activeControlState = controlStates[newState];
+        activeControlState?.OnPush(mousePosition);
         state = newState;
     }
 
@@ -68,8 +56,8 @@ public class GridController
     public void MoveCursor(DigitalCursor oldPosition, DigitalCursor newPosition)
     {
         if (activeControlState == null) throw new System.Exception("State not set");
-        if (IsValid(oldPosition)) activeControlState.OnMouseExitTile(oldPosition);
-        if (IsValid(newPosition)) activeControlState.OnMouseEnterTile(newPosition);
+        activeControlState.OnMouseExitTile(oldPosition);
+        activeControlState.OnMouseEnterTile(newPosition);
     }
 
     /// <summary>
@@ -78,29 +66,16 @@ public class GridController
     /// <param name="location">Tile that the cursor was hovering over</param>
     public void OnMouseDown(DigitalCursor mousePosition)
     {
-        if (IsValid(mousePosition)) activeControlState?.OnMouseDown(mousePosition);
+        activeControlState?.OnMouseDown(mousePosition);
     }
-
-    /// <summary>
-    /// Checks if the cursor is valid to use in current state
-    /// </summary>
-    /// <param name="cursor"></param>
-    /// <returns></returns>
-    private bool IsValid(DigitalCursor cursor) => cursor?.OnGrid ?? false;
 
     public void SuspendState(DigitalCursor mousePosition)
     {
-        if (IsValid(mousePosition))
-        {
-            activeControlState?.OnPop(mousePosition);
-        }
+        activeControlState?.OnPop(mousePosition);
     }
 
     public void ResumeState(DigitalCursor mousePosition)
     {
-        if (IsValid(mousePosition))
-        {
-            activeControlState?.OnPush(mousePosition);
-        }
+        activeControlState?.OnPush(mousePosition);
     }
 }

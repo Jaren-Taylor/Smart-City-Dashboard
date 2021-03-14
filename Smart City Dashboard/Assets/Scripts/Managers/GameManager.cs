@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
         
         // Input Manager subscriptions
 
-        uiManager.OnUIToggle += inputManager.AllowCameraPan;
+        uiManager.OnUIToggle += inputManager.DisableCameraPan;
 
         // Camera Manager subscriptions
 
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
         sensorInfoMenu.ToggleCursor += gridManager.ToggleCursor;
     }
-fttttt
+
     public void HandleLog(int numer)
     {
         Debug.Log(numer);

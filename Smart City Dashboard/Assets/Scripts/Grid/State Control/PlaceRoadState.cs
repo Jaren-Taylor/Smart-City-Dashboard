@@ -25,7 +25,7 @@ public class PlaceRoadState : IGridControlState
     /// <param name="location"></param>
     public void OnMouseDown(DigitalCursor location)
     {
-        if (location != null && GridManager.GetTile(location.Position) is RoadTile)
+        if (location.IsValid() && GridManager.GetTile(location.Position) is RoadTile)
         {
             GridManager.Instance.MakePermanent(location.Position);
         }
@@ -38,7 +38,7 @@ public class PlaceRoadState : IGridControlState
     /// <param name="location"></param>
     public void OnMouseEnterTile(DigitalCursor location)
     {
-        if (location != null) GridManager.Instance.CreateTemporaryTile<RoadTile>(location.Position);
+        if (location.IsValid()) GridManager.Instance.CreateTemporaryTile<RoadTile>(location.Position);
     }
 
     /// <summary>
@@ -47,6 +47,6 @@ public class PlaceRoadState : IGridControlState
     /// <param name="location"></param>
     public void OnMouseExitTile(DigitalCursor location)
     {
-        if (location != null) GridManager.Instance.RemoveTileIfTemporary(location.Position);
+        if (location.IsValid()) GridManager.Instance.RemoveTileIfTemporary(location.Position);
     }
 }

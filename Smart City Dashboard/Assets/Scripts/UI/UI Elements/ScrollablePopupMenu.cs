@@ -11,9 +11,9 @@ public class ScrollablePopupMenu : MonoBehaviour
 
     public UnityEvent OnCloseMenu;
 
-    public SimpleCard AddNewItem(UIBackgroundSprite sprite, string text)
+    public SimpleCard AddNewItem(UIBackgroundSprite spriteColor, string text)
     {
-        return SimpleCard.Spawn(menuContent.transform, sprite, text);
+        return SimpleCard.Spawn(menuContent.transform, spriteColor, text);
     }
 
     public SimpleCard AddNewItem(Material material, string text)

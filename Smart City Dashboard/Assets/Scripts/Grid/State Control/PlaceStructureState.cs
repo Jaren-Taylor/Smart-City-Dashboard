@@ -30,7 +30,7 @@ public class PlaceStructureState : IGridControlState
 
     public void OnMouseDown(DigitalCursor location)
     {
-        if (location != null && location.OnGrid)
+        if (location.IsValid())
         {
             Tile tile = GridManager.GetTile(location.Position);
             if(isValidToPlace(tile)) GridManager.Instance.MakePermanent(location.Position, true);
@@ -51,12 +51,12 @@ public class PlaceStructureState : IGridControlState
 
     public void OnMouseEnterTile(DigitalCursor location)
     {
-        if (location != null) GridManager.Instance.AddTileToGrid(location.Position, new BuildingTile(Structure, location.SubDirection));
+        if (location.IsValid()) GridManager.Instance.AddTileToGrid(location.Position, new BuildingTile(Structure, location.SubDirection));
     }
 
     public void OnMouseExitTile(DigitalCursor location)
     {
-        if (location != null) GridManager.Instance.RemoveTileIfTemporary(location.Position);
+        if (location.IsValid()) GridManager.Instance.RemoveTileIfTemporary(location.Position);
     }
 
 

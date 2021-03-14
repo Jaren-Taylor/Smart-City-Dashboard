@@ -9,7 +9,7 @@ using static UnityEngine.InputSystem.InputAction;
 /// <summary>
 /// All input for the project should pass through here
 /// </summary>
-public class InputManager : MonoBehaviour   
+public class InputManager : MonoBehaviour
 {
     [SerializeField]
     public Action<Vector3> OnCameraPan;
@@ -36,7 +36,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if(isMoving == true)
+        if (isMoving == true)
         {
 
             if (!isPanDisabled && !isInTopDown) OnCameraPan.Invoke(moveBy);
@@ -61,12 +61,12 @@ public class InputManager : MonoBehaviour
         Vector3 movementDelta = Vector3.zero;
         if (mousePosition.x > xUpperBound)
         {
-            movementDelta.x =  (mousePosition.x - xUpperBound) / xLowerBound;
+            movementDelta.x = (mousePosition.x - xUpperBound) / xLowerBound;
         }
         else if (mousePosition.x < xLowerBound)
         {
             movementDelta.x = -(xLowerBound - mousePosition.x) / xLowerBound;
-       }
+        }
 
         if (mousePosition.y > yUpperBound)
         {
@@ -77,10 +77,10 @@ public class InputManager : MonoBehaviour
             movementDelta.z = -(yLowerBound - mousePosition.y) / yLowerBound;
 
         }
-        if(movementDelta != Vector3.zero)
+        if (movementDelta != Vector3.zero)
         {
             isMoving = true;
-            if(movementDelta.x != 0 && movementDelta.z != 0)
+            if (movementDelta.x != 0 && movementDelta.z != 0)
             {
                 moveBy = new Vector3(Mathf.Clamp(movementDelta.x, -.71f, .71f), 0, Mathf.Clamp(movementDelta.z, -.71f, .71f));
             }
@@ -99,10 +99,10 @@ public class InputManager : MonoBehaviour
     {
         if (!isRotationDisabled)
         {
-        float direciton = context.ReadValue<float>();
-        OnCameraRotation?.Invoke(direciton);
+            float direciton = context.ReadValue<float>();
+            OnCameraRotation?.Invoke(direciton);
         }
-        
+
     }
     public void OnZoom(CallbackContext context)
     {
@@ -147,8 +147,9 @@ public class InputManager : MonoBehaviour
 
     // Used as an event handler in Game manager. This way UI manager can talk to this manager
 
-    public void DisableCameraPan(bool active) {
-        isPanDisabled = active; 
+    public void DisableCameraPan(bool active)
+    {
+        isPanDisabled = active;
     }
     public void SetTopDownMode(bool active)
     {
@@ -161,7 +162,5 @@ public class InputManager : MonoBehaviour
     public void DisableCameraZoom(bool active)
     {
         isZoomDisabled = active;
-     }
-
     }
 }

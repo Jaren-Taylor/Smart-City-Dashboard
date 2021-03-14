@@ -14,7 +14,7 @@ class PlaceSensorState : DrawsWithCursorState
 
     public override void OnMouseDown(DigitalCursor location)
     {
-        if (location.OnGrid && SensorManager.TryCreateSensorAt(location.Position, sensor))
+        if (location.IsValid() && SensorManager.TryCreateSensorAt(location.Position, sensor))
         {
             ClickCursor();
         }
