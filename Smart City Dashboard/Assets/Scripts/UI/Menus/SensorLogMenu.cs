@@ -29,6 +29,7 @@ public class SensorLogMenu : MonoBehaviour
     {
         if(cardMapping.TryGetValue(card, out ISensor sensor))
         {
+            sensorInfoMenu.DisableUserInput();
             var tilePosition = sensor.GetTilePosition();
             CameraManager.Instance.OnReachedTarget += ReachedSensor;
             CameraManager.Instance.OnReachedTarget += sensorInfoMenu.SetVisible;
@@ -41,7 +42,6 @@ public class SensorLogMenu : MonoBehaviour
     {
         if(targetedSensor != null && targetedSensor.GetTilePosition() == position.ToGridInt())
         {
-            Debug.Log("Open sensor menu");
         }
         else
         {

@@ -7,13 +7,15 @@ using UnityEngine;
 
 public class TrafficLightController : MonoBehaviour
 {
-    private float totalTime = 0f;
-    private float switchDelay = 10f;
+    public float totalTime { private set; get; } = 0f;
+    public float switchDelay { private set; get; } = 10f;
     private Dictionary<NodeCollectionController.Direction, LightAnimationController> TrafficLights = new Dictionary<NodeCollectionController.Direction, LightAnimationController>();
     private SortedDictionary<NodeCollectionController.Direction, float> TrafficLightDownTime = new SortedDictionary<NodeCollectionController.Direction, float>(); 
-    private bool isEastWest = false;
+    public bool isEastWest { private set; get; } = false;
     private bool isTransitioning = false;
     private bool isInitialized = false;
+    public Action TurnedGreen;
+    public Action TurnedRed;
 
 
     /// <summary>
@@ -214,6 +216,7 @@ public class TrafficLightController : MonoBehaviour
         if (TrafficLights.TryGetValue(direction, out var value))
         {
             value.TurnGreen();
+            TurnedGreen?.Invoke();
         }
     }
 
@@ -222,6 +225,11 @@ public class TrafficLightController : MonoBehaviour
         if (TrafficLights.TryGetValue(direction, out var value))
         {
             value.TurnRed();
+            TurnedRed?.Invoke();
         }
+    }
+    public void ChangeTrafficDirection()
+    {
+        totalTime += switchDelay;
     }
 }

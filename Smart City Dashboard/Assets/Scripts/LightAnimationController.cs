@@ -14,7 +14,6 @@ public class LightAnimationController : MonoBehaviour
     private bool TransformToRed = false;
     private float totalTime = 0f;
     private readonly float lightDelay = 1f;
-    Action onTurnRed;
     public enum LightColor
     {
         Red,
@@ -49,7 +48,6 @@ public class LightAnimationController : MonoBehaviour
         TransformToRed = false;
         ChangeLightState(LightColor.Green);
     }
-
     private void ChangeLightState(LightColor nextState)
     {
         this.State = nextState;

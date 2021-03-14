@@ -7324,24 +7324,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1856358584}
   m_CullTransparentMesh: 1
---- !u!1 &1859218915 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5158693115315672149, guid: 641b9feeb9113ca4599be2c7c9a4a47f, type: 3}
+--- !u!114 &1859218920 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1859218920, guid: 641b9feeb9113ca4599be2c7c9a4a47f, type: 3}
   m_PrefabInstance: {fileID: 5723291224596632352}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1859218920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1859218915}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1bdd0ac299ddfd49b2ca00aecec0158, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensorInfoMenu: {fileID: 1859218915}
 --- !u!1 &1915548642
 GameObject:
   m_ObjectHideFlags: 0
@@ -10549,10 +10542,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1582670932}
     m_Modifications:
-    - target: {fileID: 917394555541149378, guid: 641b9feeb9113ca4599be2c7c9a4a47f, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
-      objectReference: {fileID: 0}
     - target: {fileID: 1149352996429199464, guid: 641b9feeb9113ca4599be2c7c9a4a47f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -10637,9 +10626,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4620864436096056492, guid: 641b9feeb9113ca4599be2c7c9a4a47f, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5158693115315672149, guid: 641b9feeb9113ca4599be2c7c9a4a47f, type: 3}
       propertyPath: m_Name
       value: SensorInfoMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 5484776798150825123, guid: 641b9feeb9113ca4599be2c7c9a4a47f, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 641b9feeb9113ca4599be2c7c9a4a47f, type: 3}

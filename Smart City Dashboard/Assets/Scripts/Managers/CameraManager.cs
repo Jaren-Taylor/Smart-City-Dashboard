@@ -237,7 +237,7 @@ public class CameraManager : MonoBehaviour
     {
         TrackPosition(gameObject.transform.position, zoomLevel, isTopDown);
     }
-    private void StopTrackObject()
+    public void StopTrackObject()
     {
         trackedRotation = Quaternion.Euler(45, 45, 0);
         isLockedToPosition = false;

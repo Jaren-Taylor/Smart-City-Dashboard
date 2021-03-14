@@ -42,11 +42,15 @@ public class GameManager : MonoBehaviour
 
         uiManager.OnUIToggle += inputManager.DisableCameraPan;
 
+        sensorInfoMenu.DisableCameraControls += inputManager.DisableCameraPan;
+
         sensorInfoMenu.DisableCameraControls += inputManager.SetTopDownMode;
 
         sensorInfoMenu.DisableCameraControls += inputManager.DisableCameraRotation;
 
         sensorInfoMenu.DisableCameraControls += inputManager.DisableCameraZoom;
+
+        sensorInfoMenu.ToggleCursor += gridManager.ToggleCursor;
     }
 
     public void HandleLog(int numer)
