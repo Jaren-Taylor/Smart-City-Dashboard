@@ -151,12 +151,21 @@ public class CameraManager : MonoBehaviour
     {
         Size += -zoom * Config.zoomScale;
     }
+    public void DisableUserInput()
+    {
+        GridManager.Instance.CursorEnabled = false;
+        GridManager.Instance.GridSM.SuspendState(new DigitalCursor());
+    }
+    public void EnableUserInput()
+    {
+        GridManager.Instance.GridSM.ResumeState(new DigitalCursor());
+        GridManager.Instance.CursorEnabled = true;
+    }
     public void StartFollowEntity(Entity entity)
     {
 
-        GridManager.Instance.CursorEnabled = false;
+        DisableUserInput();
         isFollowingEntity = true;
-        GridManager.Instance.GridSM.SuspendState(new DigitalCursor());
         mainCamera.gameObject.SetActive(false);
         entityCamera.gameObject.SetActive(true);
         trackedEntity = entity;
@@ -187,8 +196,7 @@ public class CameraManager : MonoBehaviour
         entityCamera.gameObject.SetActive(false);
         mainCamera.gameObject.SetActive(true);
         isFollowingEntity = false;
-        GridManager.Instance.GridSM.ResumeState(new DigitalCursor());
-        GridManager.Instance.CursorEnabled = true;
+        EnableUserInput();
         
         if(trackedEntity is Entity entity)
             entity.OnBeingDestroy -= TrackedEntityDestroyed;
@@ -229,7 +237,7 @@ public class CameraManager : MonoBehaviour
     {
         TrackPosition(gameObject.transform.position, zoomLevel, isTopDown);
     }
-    private void StopTrackObject()
+    public void StopTrackObject()
     {
         trackedRotation = Quaternion.Euler(45, 45, 0);
         isLockedToPosition = false;

@@ -26,15 +26,23 @@ public class InputManager : MonoBehaviour
     public Action OnEndPlaceTile;
 
     private bool isMoving = false;
-    private bool isPanActive = false;
+
+    private bool isPanDisabled;
+    private bool isRotationDisabled;
+    private bool isZoomDisabled;
+    private bool isInTopDown;
+
     Vector3 moveBy;
 
     private void Update()
     {
         if(isMoving == true)
         {
-            if (!isPanActive) OnCameraPan.Invoke(moveBy);
+
+            if (!isPanDisabled && !isInTopDown) OnCameraPan.Invoke(moveBy);
+
         }
+
     }
 
     public void OnPlace(CallbackContext context)
@@ -89,14 +97,20 @@ public class InputManager : MonoBehaviour
     }
     public void OnRotation(CallbackContext context)
     {
+        if (!isRotationDisabled)
+        {
         float direciton = context.ReadValue<float>();
         OnCameraRotation?.Invoke(direciton);
+        }
         
     }
     public void OnZoom(CallbackContext context)
     {
-        Vector2 zoom = context.ReadValue<Vector2>();
-        OnCameraZoom?.Invoke(zoom.y / 3);
+        if (!isZoomDisabled)
+        {
+            Vector2 zoom = context.ReadValue<Vector2>();
+            OnCameraZoom?.Invoke(zoom.y / 3);
+        }
     }
 
     public void OnNumberKeyPressed(CallbackContext context)
@@ -132,7 +146,22 @@ public class InputManager : MonoBehaviour
     }
 
     // Used as an event handler in Game manager. This way UI manager can talk to this manager
-    public void AllowCameraPan(bool active) {
-        isPanActive = active; 
+
+    public void DisableCameraPan(bool active) {
+        isPanDisabled = active; 
+    }
+    public void SetTopDownMode(bool active)
+    {
+        isInTopDown = active;
+    }
+    public void DisableCameraRotation(bool active)
+    {
+        isRotationDisabled = active;
+    }
+    public void DisableCameraZoom(bool active)
+    {
+        isZoomDisabled = active;
+     }
+
     }
 }

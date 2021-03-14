@@ -7,6 +7,8 @@ public class SensorLogMenu : MonoBehaviour
 {
     [SerializeField]
     private ScrollablePopupMenu menu;
+    [SerializeField]
+    private SensorInfoMenu sensorInfoMenu;
 
     private ISensor targetedSensor;
 
@@ -27,8 +29,10 @@ public class SensorLogMenu : MonoBehaviour
     {
         if(cardMapping.TryGetValue(card, out ISensor sensor))
         {
+            sensorInfoMenu.DisableUserInput();
             var tilePosition = sensor.GetTilePosition();
             CameraManager.Instance.OnReachedTarget += ReachedSensor;
+            CameraManager.Instance.OnReachedTarget += sensorInfoMenu.SetVisible;
             targetedSensor = sensor;
             CameraManager.Instance.TrackPosition(tilePosition.ToGridVector3(), Config.minSize, true);
         }
@@ -38,7 +42,6 @@ public class SensorLogMenu : MonoBehaviour
     {
         if(targetedSensor != null && targetedSensor.GetTilePosition() == position.ToGridInt())
         {
-            Debug.Log("Open sensor menu");
         }
         else
         {

@@ -14,7 +14,9 @@ public class RoadTile : Tile
 {
     public TrafficLightController TrafficLight { get; private set; } = null;
     private List<NodeCollectionController.Direction> directions = null;
+    public Facing rotation;
     public static readonly Dictionary<TileType, string> ModelLookup = new Dictionary<TileType, string>()
+
     {
         { TileType.Road0Way, "Prefabs/Roads/Road_0_Way"},
         { TileType.RoadEndcap, "Prefabs/Roads/Road_Endcap"},
@@ -56,7 +58,7 @@ public class RoadTile : Tile
         if (neighbors.bottom is RoadTile) { count++; bottom = true; }
 
         // all this switch statement does it handle which way the tile should be rotated
-        Facing rotation = Facing.Top;
+        rotation = Facing.Top;
         switch (count)
         {
             // 0 way
@@ -156,4 +158,5 @@ public class RoadTile : Tile
             _ => true,
         };
     }
+
 }
