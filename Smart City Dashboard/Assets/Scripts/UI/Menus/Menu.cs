@@ -33,9 +33,14 @@ public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHa
     public virtual void Toggle()
     {
         if (IsOpen())
+        {
+            uiManager.OnExitingUI();
             Close();
+        }
         else
+        {
             Open();
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
