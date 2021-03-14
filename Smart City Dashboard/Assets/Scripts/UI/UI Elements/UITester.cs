@@ -12,7 +12,7 @@ public class UITester : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             //test += "\n";
-            SimpleCard.Spawn(gameObject.transform, Color.blue, test + i);//.transform.SetParent(transform);
+            SimpleCard.Spawn(gameObject.transform, UIBackgroundSprite.Blue, test + i);//.transform.SetParent(transform);
         }
     }
 }

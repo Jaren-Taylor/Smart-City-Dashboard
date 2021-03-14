@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -236,16 +238,7 @@ public class GridManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            GridSM.SuspendState(cursor);
-            SaveGameManager.SaveGame("save.xml", Grid);
-            GridSM.ResumeState(cursor);
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            SaveGameManager.LoadFromFile = "save.xml";
-            SceneManager.LoadScene(0);
-            //SaveGameManager.LoadGame("save.xml");
+            SaveGame();
         }
 
         if (Input.GetKeyDown(KeyCode.O))
@@ -275,6 +268,28 @@ public class GridManager : MonoBehaviour
             }
         }
         clickRecieved = false;
+    }
+
+    public void SaveGame()
+    {
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.Clear();
+        strBuilder.Append(Application.dataPath);
+        strBuilder.Append("/Saves/");
+        int count = Directory.GetFiles(strBuilder.ToString(), "*.xml").Length;
+        strBuilder.Append("save ");
+        strBuilder.Append(count.ToString());
+        strBuilder.Append(".xml");
+        GridSM.SuspendState(cursor);
+        SaveGameManager.SaveGame(strBuilder.ToString(), Grid);
+        GridSM.ResumeState(cursor);
+    }
+
+    public void LoadGame()
+    {
+        GridSM.SuspendState(cursor);
+        SceneManager.LoadScene(0);
+        GridSM.ResumeState(cursor);
     }
 
     private void HandleCursorMovement()

@@ -21,6 +21,7 @@ public class DigitalCursor
     {
         Zero
     }
+
     public DigitalCursor(Fake defaultType)
     {
         switch (defaultType)
@@ -32,6 +33,7 @@ public class DigitalCursor
                 break;
         }
     }
+
     public DigitalCursor()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);

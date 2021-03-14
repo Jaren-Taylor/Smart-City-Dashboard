@@ -20,10 +20,10 @@ public enum SensorStatus
 
 public static class SensorStatusExtensions
 {
-    public static Color GetColor(this SensorStatus status) => status switch
+    public static UIBackgroundSprite GetColor(this SensorStatus status) => status switch
     {
-        SensorStatus.Meh => Color.yellow,
-        SensorStatus.Bad => Color.red,
-        _ => Color.green,
+        SensorStatus.Meh => UIBackgroundSprite.Yellow,
+        SensorStatus.Bad => UIBackgroundSprite.Red,
+        _ => UIBackgroundSprite.Green,
     };
 }

@@ -19,12 +19,22 @@ public class UIManager : MonoBehaviour
     [HideInInspector]
     public Menu ActiveMenu;
 
+    public static readonly Dictionary<UIBackgroundSprite, Sprite> BackgroundSprites = new Dictionary<UIBackgroundSprite, Sprite>();
     public static UIManager Instance;
 
     private void Start()
     {
         Instance = this;
 
+        if (BackgroundSprites.Count == 0)
+        {
+            BackgroundSprites.Add(UIBackgroundSprite.Red,    Resources.Load<Sprite>("UI/UI Elements/Buttons/red button"));
+            BackgroundSprites.Add(UIBackgroundSprite.Green,  Resources.Load<Sprite>("UI/UI Elements/Buttons/green button"));
+            BackgroundSprites.Add(UIBackgroundSprite.Blue,   Resources.Load<Sprite>("UI/UI Elements/Buttons/blue button"));
+            BackgroundSprites.Add(UIBackgroundSprite.Yellow, Resources.Load<Sprite>("UI/UI Elements/Buttons/yellow button"));
+            BackgroundSprites.Add(UIBackgroundSprite.Orange, Resources.Load<Sprite>("UI/UI Elements/Buttons/orange button"));
+        }
+        
         enumToMenu.Add(MenuType.Dashboard, TildeMenu);
         enumToMenu.Add(MenuType.GridState, F1Menu);
         enumToMenu.Add(MenuType.TileSensorPopup, TileSensorPreview);
@@ -41,7 +51,7 @@ public class UIManager : MonoBehaviour
         if (keyToMenuDict.ContainsKey(key)) {
             ToggleMenu(keyToMenuDict[key]);
         } else {
-            throw new Exception("That key is not bound to a menu!");
+            throw new Exception("That key is not bound to a menu! Key: " + key.ToString());
         }
     }
 
@@ -144,4 +154,13 @@ public enum MenuType
     GridState,
     TileSensorPopup,
     SaveLoadMenu
+}
+
+public enum UIBackgroundSprite
+{
+    Red,
+    Green,
+    Blue,
+    Yellow,
+    Orange,
 }
