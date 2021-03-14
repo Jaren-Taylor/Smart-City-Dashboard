@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class SensorInfoMenu : MonoBehaviour,IFocusableWindow
+public class SensorInfoMenu : MonoBehaviour
 {
     //TODO: Programatically show traffic light info on the UI, allow user to change flow via red buttons. Get light countdown time and display.
 

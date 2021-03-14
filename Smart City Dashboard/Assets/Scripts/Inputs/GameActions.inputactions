@@ -812,7 +812,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "F1",
+                    "name": "Open Menus",
                     "type": "Button",
                     "id": "741b8dc4-4384-4854-8fe3-5c9afb76a233",
                     "expectedControlType": "Button",
@@ -820,17 +820,9 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Tab",
+                    "name": "Switch Tabs",
                     "type": "Button",
                     "id": "3fbe0174-bfe6-41e6-9a39-3635ef62f071",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Tilde",
-                    "type": "Button",
-                    "id": "267053ef-c266-4983-8c31-237ec46e124b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -1031,7 +1023,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Tab",
+                    "action": "Switch Tabs",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1042,7 +1034,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "F1",
+                    "action": "Open Menus",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1053,7 +1045,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Tilde",
+                    "action": "Open Menus",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d0566671-2445-42f5-8ac1-a668925d10a5",
+                    "path": "<Keyboard>/f2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Open Menus",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

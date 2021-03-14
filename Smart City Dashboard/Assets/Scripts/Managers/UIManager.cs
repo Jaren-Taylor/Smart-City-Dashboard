@@ -1,22 +1,23 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour
 {
-    private Dictionary<KeyCode, MenuType> keyToMenuDict = new Dictionary<KeyCode, MenuType>();
-    private Dictionary<MenuType, IFocusableWindow> enumToMenu = new Dictionary<MenuType, IFocusableWindow>();
-    private List<IFocusableWindow> menus = new List<IFocusableWindow>();
+    private Dictionary<Key, MenuType> keyToMenuDict = new Dictionary<Key, MenuType>();
+    private Dictionary<MenuType, Menu> enumToMenu = new Dictionary<MenuType, Menu>();
+    private List<Menu> menus = new List<Menu>();
 
     public Action<bool> OnUIToggle;
-    public Action<int> OnTabSwitch;
-    public TabbedMenu F1Menu;
+    public Action OnEnteringUI;
+    public Action OnExitingUI;
+    public Menu F1Menu;
+    public Menu F2Menu;
     public Menu TildeMenu;
-    public TileSensorMenu TileSensorPreview;
-    //public SensorInfoMenu SensorInfoMenuInstance;
-    // contains a dupe reference to the currently active menu
+    public TileSensorMenu TileSensorPreview; 
     [HideInInspector]
-    public IFocusableWindow ActiveMenu;
+    public Menu ActiveMenu;
 
     public static UIManager Instance;
 
@@ -27,25 +28,15 @@ public class UIManager : MonoBehaviour
         enumToMenu.Add(MenuType.Dashboard, TildeMenu);
         enumToMenu.Add(MenuType.GridState, F1Menu);
         enumToMenu.Add(MenuType.TileSensorPopup, TileSensorPreview);
+        enumToMenu.Add(MenuType.SaveLoadMenu, F2Menu);
         //enumToMenu.Add(MenuType.SensorInfo, SensorInfoMenuInstance);
 
-        keyToMenuDict.Add(KeyCode.F1, MenuType.GridState);
-        keyToMenuDict.Add(KeyCode.BackQuote, MenuType.Dashboard);
+        keyToMenuDict.Add(Key.F1, MenuType.GridState);
+        keyToMenuDict.Add(Key.F2, MenuType.SaveLoadMenu);
+        keyToMenuDict.Add(Key.Backquote, MenuType.Dashboard);
     }
 
-    public void SwitchTabs()
-    {
-        if (ActiveMenu is TabbedMenu tabbedMenu)
-        {
-            tabbedMenu.SwitchTabs();
-            if(tabbedMenu == F1Menu) // TODO this only works if ModeMenu is externally set as the escape menu
-            {
-                OnTabSwitch?.Invoke(tabbedMenu.ActiveTab);
-            }
-        }
-    }
-
-    public void ReceiveMenuKey(KeyCode key)
+    public void ReceiveMenuKey(Key key)
     {
         if (keyToMenuDict.ContainsKey(key)) {
             ToggleMenu(keyToMenuDict[key]);
@@ -58,9 +49,9 @@ public class UIManager : MonoBehaviour
 
     public void ToggleMenu(MenuType menuType)
     {
-        IFocusableWindow menu = enumToMenu[menuType];
+        Menu menu = enumToMenu[menuType];
         // check if we'll be turning the menu off or on
-        if (menu.IsFullyVisible())
+        if (menu.IsOpen())
         {
             TurnOffMenu(menu);
         }
@@ -68,11 +59,11 @@ public class UIManager : MonoBehaviour
         {
             TurnOnMenu(menu);
         }
-        menu.ToggleMenuHandler();
+        menu.Toggle();
         OnUIToggle?.Invoke(IsUIActive());
     }
 
-    private void TurnOffMenu(IFocusableWindow menu)
+    private void TurnOffMenu(Menu menu)
     {
         menus.Remove(menu);
         // only re-set ActiveMenu if the menu being turned off was the ActiveMenu
@@ -84,29 +75,49 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void TurnOnMenu(IFocusableWindow menu)
+    private void TurnOnMenu(Menu menu)
     {
         menus.Add(menu);
         ActiveMenu = menu;
     }
 
+    /// <summary>
+    /// Returns true if any Menu is open
+    /// </summary>
+    /// <returns></returns>
     public bool IsUIActive()
     {
         foreach (var menu in menus)
         {
-            if (menu.IsFullyVisible()) return true;
+            if (menu.IsOpen()) return true;
         }
         return false;
     }
 
     public void OnNumberKeyPress(int value)
     {
-        if (ActiveMenu != null)
+        if (ActiveMenu != null && ActiveMenu.TabGroup != null)
         {
-            ActiveMenu.OnNumberKeyPress(value);
-        }else
+            ActiveMenu.TabGroup.OnNumberKeyPress(value);
+        }
+        else
         {
-            F1Menu.OnNumberKeyPress(value);
+            F1Menu.TabGroup.OnNumberKeyPress(value);
+        }
+    }
+
+    /// <summary>
+    /// Switches menu tabs only if a menu is open
+    /// </summary>
+    public void NextTab()
+    {
+        if (ActiveMenu != null && ActiveMenu.TabGroup != null)
+        {
+            ActiveMenu.TabGroup.NextTab();
+        }
+        else
+        {
+            F1Menu.TabGroup.NextTab();
         }
     }
 
@@ -115,11 +126,22 @@ public class UIManager : MonoBehaviour
         TileSensorPreview.FocusTile(position);
         if (!menus.Contains(TileSensorPreview)) ToggleSensorPopup();
     }
+
+    /// <summary>
+    /// Called whenever the pointer hovers over a Menu
+    /// </summary>
+    public void OnPointerEnter() => OnEnteringUI?.Invoke();
+
+    /// <summary>
+    /// Called whenever the pointer hovers off of a Menu
+    /// </summary>
+    public void OnPointerExit() => OnExitingUI?.Invoke();
 }
 
 public enum MenuType
 {
     Dashboard,
     GridState,
-    TileSensorPopup
+    TileSensorPopup,
+    SaveLoadMenu
 }

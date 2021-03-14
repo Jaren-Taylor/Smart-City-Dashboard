@@ -1,160 +1,50 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public abstract class Menu : MonoBehaviour, IFocusableWindow
+[RequireComponent(typeof(RectTransform))]
+public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHandler
 {
-    [HideInInspector]
-    protected RectTransform menuBounds;
-    public EUIPosition uiPosition = EUIPosition.Bottom;
-    protected float destination;
-    protected int glideSpeed = 25;
+    public UIManager uiManager;
+    public TabGroup TabGroup;
 
-    private bool isOnScreen;
-
-    protected void Start()
+    private void Start()
     {
-        // Assumed to be used in child classes for use in movement calculations
-        menuBounds = gameObject.GetComponent<RectTransform>();
-        InitializeGlideAmount();
-        JumpToDestination();
-        isOnScreen = false;
+        Close();
     }
 
-    /// <summary>
-    /// If needed, glides the menu into/out of place
-    /// </summary>
-    private void Update()
+    public virtual void Close()
     {
-        // dont try to move if we're at our target position
-        switch (uiPosition)
-        {
-            case EUIPosition.Top:
-            case EUIPosition.Bottom:
-                if (transform.position.y != destination) GlideTowardsDestination();
-                break;
-            case EUIPosition.Left:
-            case EUIPosition.Right:
-                if (transform.position.x != destination) GlideTowardsDestination();
-                break;
-        }
+        gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// Set the Menu's glide amount based on its EUIPosition
-    /// </summary>
-    private void InitializeGlideAmount()
+    public virtual bool IsOpen()
     {
-        switch (uiPosition)
-        {
-            case EUIPosition.Top:
-                destination = +menuBounds.rect.height;
-                break;
-            case EUIPosition.Bottom:
-                destination = -menuBounds.rect.height;
-                break;
-            case EUIPosition.Left:
-                destination = -menuBounds.rect.width;
-                break;
-            case EUIPosition.Right:
-                destination = +menuBounds.rect.width;
-                break;
-        }
+        return gameObject.activeSelf;
     }
 
-    /// <summary>
-    /// Glide the menu in and out of view
-    /// </summary>
-    protected virtual void GlideTowardsDestination()
+    public virtual void Open()
     {
-        // Move towards destination portions at a time
-        Vector3 newPosition = transform.position;
-        switch (uiPosition)
-        {
-            case EUIPosition.Top:
-            case EUIPosition.Bottom:
-                newPosition.y += YGlideAmount(newPosition.y);
-                break;
-            case EUIPosition.Left:
-            case EUIPosition.Right:
-                newPosition.x += XGlideAmount(newPosition.x);
-                break;
-        }
-        transform.position = newPosition;
+        gameObject.SetActive(true);
     }
 
-    /// <summary>
-    /// Calculates the distance between the destination and current position, then divides by the glideSpeed
-    /// </summary>
-    /// <param name="y"></param>
-    /// <returns></returns>
-    private float YGlideAmount(float y) => (destination - y) / glideSpeed;
-
-    /// <summary>
-    /// Calculates the distance between the destination and current position, then divides by the glideSpeed
-    /// </summary>
-    /// <param name="x"></param>
-    /// <returns></returns>
-    private float XGlideAmount(float x) => (destination - x) / glideSpeed;
-
-    /// <summary>
-    /// Quickly move the menu in and out of view
-    /// </summary>
-    private void JumpToDestination()
+    public virtual void Toggle()
     {
-        // Move towards destination portions at a time
-        Vector3 newPosition = transform.position;
-        switch (uiPosition)
-        {
-            case EUIPosition.Top:
-                newPosition.y += destination - newPosition.y;
-                break;
-            case EUIPosition.Bottom:
-                newPosition.y += destination - newPosition.y;
-                break;
-            case EUIPosition.Left:
-                newPosition.x += destination - newPosition.x;
-                break;
-            case EUIPosition.Right:
-                newPosition.x += destination - newPosition.x;
-                break;
-        }
-        transform.position = newPosition;
+        if (IsOpen())
+            Close();
+        else
+            Open();
     }
 
-    /// <summary>
-    /// Opens and closes the menu
-    /// </summary>
-    public virtual void ToggleMenuHandler()
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        float movementDelta = 0;
-        // move with respect to the menu's RectTransform width or height
-        switch (uiPosition)
-        {
-            case EUIPosition.Top:
-            case EUIPosition.Bottom:
-                movementDelta = isOnScreen ? -menuBounds.rect.height : menuBounds.rect.height;
-                break;
-            case EUIPosition.Left:
-            case EUIPosition.Right:
-                movementDelta = isOnScreen ? -menuBounds.rect.width : menuBounds.rect.width;
-                break;
-
-        }
-        isOnScreen = !isOnScreen;
-        // move the menu offscreen
-        destination += movementDelta;
+        uiManager.OnEnteringUI();
     }
 
-    /// <summary>
-    /// Returns true if window is fully visible on screen
-    /// </summary>
-    public bool IsFullyVisible()
+    public void OnPointerExit(PointerEventData eventData)
     {
-        return isOnScreen;
-    }
-
-    public virtual void OnNumberKeyPress(int value)
-    {
-        return;
+        uiManager.OnExitingUI();
     }
 }

@@ -15,30 +15,38 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
 
         // Please be mindful. Order of handler assignment could matters
-
-        // Camera Manager events
         
+        // Input Manager subscriptions
+
+        uiManager.OnUIToggle += inputManager.AllowCameraPan;
+
+        // Camera Manager subscriptions
+
         inputManager.OnCameraPan += cameraManager.PanHandler;
 
         inputManager.OnCameraRotation += cameraManager.RotationHandler;
 
         inputManager.OnCameraZoom += cameraManager.ZoomHandler;
 
-        // Grid Manager events
+        // Grid Manager subscriptions
 
         inputManager.OnPlaceTile += gridManager.PlaceHandler;
 
-        inputManager.OnNumberPressed += uiManager.OnNumberKeyPress;
-
         inputManager.OnCPressed += gridManager.ToggleCursor;
 
-        // UI events
+        uiManager.OnExitingUI += gridManager.ResumeCursor;
 
-        inputManager.OnF1Pressed += uiManager.ReceiveMenuKey;
+        uiManager.OnEnteringUI += gridManager.SuspendCursor;
 
-        inputManager.OnTildePressed += uiManager.ReceiveMenuKey;
+        // UI subscriptions
 
-        inputManager.OnTabPressed += uiManager.SwitchTabs;
+        inputManager.OnNumberPressed += uiManager.OnNumberKeyPress;
+
+        inputManager.OnMenuKeyPress += uiManager.ReceiveMenuKey;
+
+        //inputManager.OnTildePressed += uiManager.ReceiveMenuKey;
+
+        inputManager.OnTabPressed += uiManager.NextTab;
 
         uiManager.OnUIToggle += inputManager.DisableCameraPan;
 
@@ -52,7 +60,7 @@ public class GameManager : MonoBehaviour
 
         sensorInfoMenu.ToggleCursor += gridManager.ToggleCursor;
     }
-
+fttttt
     public void HandleLog(int numer)
     {
         Debug.Log(numer);
