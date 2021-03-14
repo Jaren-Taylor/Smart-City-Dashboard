@@ -47,7 +47,6 @@ public class SensorInfoMenu : MonoBehaviour,IFocusableWindow
 
         if (IsFullyVisible())
         {
-            currentTrafficLight.TurnedGreen += UpdateView;
             var timeRemaining = currentTrafficLight.switchDelay - currentTrafficLight.totalTime + 1;
             if (timeRemaining <= 0)
                 timeRemaining = 0;
@@ -56,26 +55,18 @@ public class SensorInfoMenu : MonoBehaviour,IFocusableWindow
         
     }
 
-    private void UpdateView()
+    private void FirstTimeUpdateView()
     {
-        if (!hasRun)
-        {
-            if (currentTrafficLight.isEastWest)
-            {
-                SwapLights();
-            }
-        }
-        if (hasRun && currentTrafficLight.isEastWest != isCurrentlyEastWest)
+        if (currentTrafficLight.isEastWest)
         {
             SwapLights();
         }
-        hasRun = true;
-        ResetLights();
         if (currentRoad.Type == RoadTile.TileType.Road3Way)
         {
             DetermineRotation(currentRoad);
         }
     }
+
 
     private void SwapLights()
     {
@@ -86,7 +77,6 @@ public class SensorInfoMenu : MonoBehaviour,IFocusableWindow
         SouthLight.GetComponent<Image>().sprite = WestLight.GetComponent<Image>().sprite;
         WestLight.GetComponent<Image>().sprite = temp;
         RotateArrows();
-        isCurrentlyEastWest = !isCurrentlyEastWest;
     }
 
     private void RotateArrows()
@@ -99,6 +89,8 @@ public class SensorInfoMenu : MonoBehaviour,IFocusableWindow
 
     public void SetVisible(Vector3 tileTransform)
     {
+        if (!(currentTrafficLight is null))
+            currentTrafficLight.TurnedGreen -= SwapLights;
         DisableMenu();
         hasRun = false;
         ResetLights();
@@ -109,6 +101,7 @@ public class SensorInfoMenu : MonoBehaviour,IFocusableWindow
         {
             currentRoad = road;
             currentTrafficLight = road.TrafficLight;
+            currentTrafficLight.TurnedGreen += SwapLights;
             isCurrentlyEastWest = road.TrafficLight.isEastWest;
             switch (road.Type)
             {
@@ -128,8 +121,9 @@ public class SensorInfoMenu : MonoBehaviour,IFocusableWindow
         if (IsFullyVisible())
         {
             //rotates the SensorInfoMenu to match the camera's rotation
+            FirstTimeUpdateView();
             CameraManager.Instance.DisableUserInput();
-            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
+            sensorInfoMenu.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
             ButtonAndTextCanvas.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z - GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
         }
         CameraManager.Instance.OnReachedTarget += SetVisible;

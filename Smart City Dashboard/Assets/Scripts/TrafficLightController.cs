@@ -100,6 +100,7 @@ public class TrafficLightController : MonoBehaviour
                         TryTurnGreen(NodeCollectionController.Direction.SouthBound);
                         isTransitioning = false;
                         totalTime = 0;
+                        TurnedGreen?.Invoke();
                     }
 
                 }
@@ -112,6 +113,7 @@ public class TrafficLightController : MonoBehaviour
                         TryTurnGreen(NodeCollectionController.Direction.WestBound);
                         isTransitioning = false;
                         totalTime = 0;
+                        TurnedGreen?.Invoke();
                     }
                 }
 
@@ -173,6 +175,7 @@ public class TrafficLightController : MonoBehaviour
             TryTurnGreen(NodeCollectionController.Direction.NorthBound);
             TryTurnGreen(NodeCollectionController.Direction.SouthBound);
         }
+        TurnedGreen?.Invoke();
     }
 
     public void VehicleFoundInDirection(NodeCollectionController.Direction direction)
@@ -216,7 +219,6 @@ public class TrafficLightController : MonoBehaviour
         if (TrafficLights.TryGetValue(direction, out var value))
         {
             value.TurnGreen();
-            TurnedGreen?.Invoke();
         }
     }
 
