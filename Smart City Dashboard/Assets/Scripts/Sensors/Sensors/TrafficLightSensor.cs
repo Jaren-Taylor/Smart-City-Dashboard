@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class TrafficLightSensor : Sensor<TrafficLightSensorData>
 {
+    private static Dictionary<SensorStatus, string> StatusStringMapping = new Dictionary<SensorStatus, string>()
+    {
+        { SensorStatus.Fine, "No Congestion" },
+        { SensorStatus.Meh, "Light Congestion" },
+        { SensorStatus.Bad, "Heavy Congestion" }
+    };
+
     public TrafficLightSensor(Vector2Int tilePosition) : base(tilePosition) { }
 
     protected override TrafficLightSensorData CollectData(GameObject sensedObject)
@@ -57,6 +64,16 @@ public class TrafficLightSensor : Sensor<TrafficLightSensorData>
 
     protected override (string msg, SensorStatus status) GetStatus(List<TrafficLightSensorData> collectedData)
     {
-        return ("Test", SensorStatus.Fine);
+        int stopTime = 0;
+        foreach (var data in collectedData) if (data.Entity == NodeCollectionController.TargetUser.Vehicles) stopTime += (int)data.StopTime;
+        var status = StopTimeToStatus(stopTime);
+        return (StatusStringMapping[status], status);
+    }
+
+    private SensorStatus StopTimeToStatus(int count)
+    {
+        if (count < 5) return SensorStatus.Fine;
+        else if (count < 8) return SensorStatus.Meh;
+        else return SensorStatus.Bad;
     }
 }
