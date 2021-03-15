@@ -201,7 +201,6 @@ public class CameraManager : MonoBehaviour
         if(trackedEntity is Entity entity)
             entity.OnBeingDestroy -= TrackedEntityDestroyed;
 
-        trackedEntity = null;
         if (vehicleViewport.gameObject.activeSelf)
         {
             vehicleViewport.StopTracking();
@@ -211,6 +210,7 @@ public class CameraManager : MonoBehaviour
                 vehicleEntity.SetModelVisibility(true);
             }
         }
+        trackedEntity = null;
         trackedPosition = transform.position;
         mainCamera.orthographicSize = Config.minSize;
         
