@@ -15,6 +15,8 @@ public class SensorLogMenu : MonoBehaviour
     private Dictionary<ISensor, SimpleCard> sensorMapping = new Dictionary<ISensor, SimpleCard>();
     private Dictionary<UIElement, ISensor> cardMapping = new Dictionary<UIElement, ISensor>();
 
+    private SortMode currentSort = SortMode.None;
+
     public void AddSensor(ISensor sensor)
     {
         if (sensorMapping.ContainsKey(sensor)) throw new Exception("Sensor already found");
@@ -72,6 +74,39 @@ public class SensorLogMenu : MonoBehaviour
         }
     }
 
+    public void SortByType() => SetSort(SortMode.Type);
+    public void SortByStatus() => SetSort(SortMode.Status);
+
+    private void SetSort(SortMode newSort)
+    {
+        if(newSort == SortMode.None)
+        {
+            currentSort = SortMode.None;
+            return;
+        } 
+        else if(newSort == SortMode.Type)
+        {
+            foreach(var kvp in sensorMapping) SortCardType(kvp.Key, kvp.Value);
+            currentSort = newSort;
+        } else if(newSort == SortMode.Status)
+        {
+
+            foreach(var kvp in sensorMapping)
+            {
+                //Sort em by color!
+            }
+            currentSort = newSort;
+        }
+
+
+    }
+
+    private void SortCardType(ISensor sensor, SimpleCard card)
+    {
+        if (sensor is CameraSensor) card.gameObject.RectTransform().SetAsLastSibling();
+        else card.gameObject.RectTransform().SetAsFirstSibling();
+    }
+
     private void UpdateCard(SimpleCard card, string message, UIBackgroundSprite sprite)
     {
         card.SetText(message);
@@ -81,6 +116,14 @@ public class SensorLogMenu : MonoBehaviour
 
     private void UpdatePositionalStanding(SimpleCard card)
     {
+        if (currentSort == SortMode.Type) SortCardType(cardMapping[card], card);
         return;
+    }
+
+    private enum SortMode
+    {
+        None,
+        Status,
+        Type
     }
 }
