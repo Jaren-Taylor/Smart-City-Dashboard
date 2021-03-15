@@ -142,7 +142,7 @@ public class TabGroup : MonoBehaviour
     /// <param name="index"></param>
     public void OnNumberKeyPress(int index)
     {
-        if (activeControls != null)
+        if (activeControls != null && index < activeControls.NumberKeyButtons.Count)
         {
             activeControls.NumberKeyButtons[index].onClick.Invoke();
         }
