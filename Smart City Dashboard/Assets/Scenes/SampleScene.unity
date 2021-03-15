@@ -2784,7 +2784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6efe685c0a2bb84fa6d836aa35bd49c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tab: {fileID: 2091606045180752536}
+  pageReference: {fileID: 2091606045262730940}
   log: {fileID: 1930164259229815381}
 --- !u!222 &2091606044029546147
 CanvasRenderer:
