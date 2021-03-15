@@ -6,6 +6,13 @@ public class CameraSensor : Sensor<CameraSensorData>
 {
     public CameraSensor(Vector2Int position) : base(position) { }
 
+    private static Dictionary<SensorStatus, string> StatusStringMapping = new Dictionary<SensorStatus, string>()
+    {
+        { SensorStatus.Fine, "No Congestion" },
+        { SensorStatus.Meh, "Light Congestion" },
+        { SensorStatus.Bad, "Heavy Congestion" }
+    };
+
     protected override CameraSensorData CollectData(GameObject sensedObject)
     {
         return new CameraSensorData(this,
@@ -21,6 +28,14 @@ public class CameraSensor : Sensor<CameraSensorData>
 
     protected override (string msg, SensorStatus status) GetStatus(List<CameraSensorData> collectedData)
     {
-        return ("Test", SensorStatus.Fine);
+        var status = CountToStatus(collectedData.Count);
+        return (StatusStringMapping[status], status);
+    }
+
+    private SensorStatus CountToStatus(int count)
+    {
+        if (count < 3) return SensorStatus.Fine;
+        else if (count < 6) return SensorStatus.Meh;
+        else return SensorStatus.Bad;
     }
 }

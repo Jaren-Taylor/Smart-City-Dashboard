@@ -10,7 +10,7 @@ public class SensorLogUIController : MonoBehaviour
     private ListeningStage stage = ListeningStage.Disabled;
 
     [SerializeField]
-    private TabButton tab;
+    private GameObject pageReference;
 
     [SerializeField]
     private SensorLogMenu log;
@@ -21,7 +21,7 @@ public class SensorLogUIController : MonoBehaviour
         switch (stage)
         {
             case ListeningStage.Disabled:
-                if (tab.IsTabEnabled) stage = ListeningStage.FullRefresh;
+                if (pageReference.activeInHierarchy) stage = ListeningStage.FullRefresh;
                 break;
             case ListeningStage.FullRefresh:
                 FullRefreshLog();
@@ -29,7 +29,7 @@ public class SensorLogUIController : MonoBehaviour
                 stage = ListeningStage.ChangeOnly;
                 break;
             case ListeningStage.ChangeOnly:
-                if(!tab.IsTabEnabled)
+                if(!pageReference.activeInHierarchy)
                 {
                     SetActiveListenMode(false);
                     stage = ListeningStage.Disabled;

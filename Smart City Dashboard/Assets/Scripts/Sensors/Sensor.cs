@@ -24,7 +24,7 @@ public abstract class Sensor<T> : ISensor
         foreach(GameObject sensedObject in sensedObjects) collectedData.Add(CollectData(sensedObject));
         DataCollected?.Invoke(collectedData);
         var (msg, status) = GetStatus(collectedData);
-        if(msg != lastStatus)
+        if(status != statusEnum)
         {
             lastStatus = msg;
             statusEnum = status;
