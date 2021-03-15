@@ -6,13 +6,6 @@ public class CameraSensor : Sensor<CameraSensorData>
 {
     public CameraSensor(Vector2Int position) : base(position) { }
 
-    private static Dictionary<SensorStatus, string> StatusStringMapping = new Dictionary<SensorStatus, string>()
-    {
-        { SensorStatus.Fine, "No Congestion" },
-        { SensorStatus.Meh, "Light Congestion" },
-        { SensorStatus.Bad, "Heavy Congestion" }
-    };
-
     protected override CameraSensorData CollectData(GameObject sensedObject)
     {
         return new CameraSensorData(this,

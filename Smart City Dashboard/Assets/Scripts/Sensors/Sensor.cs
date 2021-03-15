@@ -5,13 +5,20 @@ using UnityEngine;
 
 public abstract class Sensor<T> : ISensor
 {
+    protected readonly static Dictionary<SensorStatus, string> StatusStringMapping = new Dictionary<SensorStatus, string>()
+    {
+        { SensorStatus.Fine, "No Congestion" },
+        { SensorStatus.Meh, "Light Congestion" },
+        { SensorStatus.Bad, "Heavy Congestion" }
+    };
+
     private readonly Vector2Int tilePosition;
 
     public Action<List<T>> DataCollected;
     public Action<ISensor> StatusUpdated { get; set; }
 
-    protected string lastStatus = "";
     protected SensorStatus statusEnum = SensorStatus.Fine;
+    protected string lastStatus = StatusStringMapping[SensorStatus.Fine];
 
     public Sensor(Vector2Int tilePosition)
     {

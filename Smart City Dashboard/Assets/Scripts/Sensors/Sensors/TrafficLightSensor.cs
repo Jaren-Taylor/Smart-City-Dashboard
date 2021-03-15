@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class TrafficLightSensor : Sensor<TrafficLightSensorData>
 {
-    private static Dictionary<SensorStatus, string> StatusStringMapping = new Dictionary<SensorStatus, string>()
-    {
-        { SensorStatus.Fine, "No Congestion" },
-        { SensorStatus.Meh, "Light Congestion" },
-        { SensorStatus.Bad, "Heavy Congestion" }
-    };
-
     public TrafficLightSensor(Vector2Int tilePosition) : base(tilePosition) { }
 
     protected override TrafficLightSensorData CollectData(GameObject sensedObject)
