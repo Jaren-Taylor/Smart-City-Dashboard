@@ -12,16 +12,17 @@ public class GlideMenu : Menu
     private Rect menuBounds;
     private Vector2 closedPosition;
     private Vector2 openPosition;
-    private int glideSpeed = 25;
     private Vector2 destination;
+    private int glideSpeed = 25;
 
-    private void Start()
+    private new void Start()
     {
         // Assumed to be used in child classes for use in movement calculations
         menuBounds = gameObject.GetComponent<RectTransform>().rect;
         // 
         openPosition = transform.position;
         closedPosition = CalculateClosedPosition();
+        base.Start();
         InstantlyClose();
     }
 
@@ -74,6 +75,7 @@ public class GlideMenu : Menu
     /// </summary>
     public override void Open() {
         destination = openPosition;
+        OnOpen?.Invoke(this);
         if (!gameObject.activeSelf) gameObject.SetActive(true);
     }
 
@@ -87,6 +89,7 @@ public class GlideMenu : Menu
     /// </summary>
     public override void Close()
     {
+        OnClose?.Invoke(this);
         destination = closedPosition;
     }
 

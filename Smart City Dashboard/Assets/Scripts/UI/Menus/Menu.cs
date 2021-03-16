@@ -1,40 +1,40 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(RectTransform))]
 public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHandler
 {
-    public UIManager uiManager;
-    public TabGroup TabGroup;
+    public Key Key;
+    public Action<Menu> OnOpen;
+    public Action<Menu> OnClose;
+    public Action OnEnter;
+    public Action OnExit;
+    [SerializeField]
+    private TabGroup tabGroup;
 
-    private void Start()
+    protected virtual void Start()
     {
         Close();
+        UIManager.Instance.Subscribe(this);
     }
 
     public virtual void Close()
     {
+        OnExit?.Invoke();
+        OnClose?.Invoke(this);
         gameObject.SetActive(false);
     }
-
-    public virtual bool IsOpen()
-    {
-        return gameObject.activeSelf;
-    }
-
     public virtual void Open()
     {
+        OnOpen?.Invoke(this);
         gameObject.SetActive(true);
     }
-
     public virtual void Toggle()
     {
         if (IsOpen())
         {
-            uiManager.OnExitingUI();
             Close();
         }
         else
@@ -43,13 +43,34 @@ public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHa
         }
     }
 
+    public virtual bool IsOpen()
+    {
+        return gameObject.activeSelf;
+    }
+
+    public void NextTab()
+    {
+        if (tabGroup != null)
+        {
+            tabGroup.NextTab();
+        }
+    }
+
+    public void OnNumberKeyPress(int value)
+    {
+        if (tabGroup != null)
+        {
+            tabGroup.OnNumberKeyPress(value);
+        }
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
-        uiManager.OnEnteringUI();
+        OnEnter?.Invoke();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        uiManager.OnExitingUI();
+        OnExit?.Invoke();
     }
 }

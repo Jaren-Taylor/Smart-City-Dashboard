@@ -1174,9 +1174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0d0e685986a69e4db07995fd1d1637e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  F1Menu: {fileID: 2091606045146118163}
-  F2Menu: {fileID: 2091606044880757504}
-  TildeMenu: {fileID: 2091606044029546150}
+  defaultMenu: {fileID: 2091606045146118163}
   TileSensorPreview: {fileID: 2967115165130273129}
   ActiveMenu: {fileID: 0}
 --- !u!1 &1464729508
@@ -2995,8 +2993,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a452c338157530439ba83254ab1fe48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 1230303453}
-  TabGroup: {fileID: 2091606045863463913}
+  Key: 4
+  tabGroup: {fileID: 0}
   DeactivateOnClose: 1
   uiPosition: 2
   Canvas: {fileID: 2091606045232230047}
@@ -5993,8 +5991,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6979ce62dc8a354797bc19abe4d5429, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 1230303453}
-  TabGroup: {fileID: 0}
+  Key: 26
+  tabGroup: {fileID: 0}
   CardArea: {fileID: 2091606045021442138}
 --- !u!222 &2091606044880757505
 CanvasRenderer:
@@ -6823,8 +6821,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a452c338157530439ba83254ab1fe48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 1230303453}
-  TabGroup: {fileID: 2091606044289489662}
+  Key: 94
+  tabGroup: {fileID: 0}
   DeactivateOnClose: 0
   uiPosition: 1
   Canvas: {fileID: 2091606045232230047}
@@ -11911,8 +11909,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 210313e2cb98178429b4cceba76ab11e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 1230303453}
-  TabGroup: {fileID: 0}
+  Key: 0
+  tabGroup: {fileID: 0}
   CardColor: 4
   menu: {fileID: 2010912147268835228}
 --- !u!114 &3826957212962607789
