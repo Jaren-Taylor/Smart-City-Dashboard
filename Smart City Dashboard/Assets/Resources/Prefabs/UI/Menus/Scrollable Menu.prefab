@@ -654,7 +654,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 270fbbf14e9b29a4c9ad321be96d93a1, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -813,6 +813,30 @@ PrefabInstance:
     - target: {fileID: 69040329366151716, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
       propertyPath: m_Name
       value: Menu Title
+      objectReference: {fileID: 0}
+    - target: {fileID: 855872809154897715, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 855872809154897715, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 855872809154897715, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 855872809154897715, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 855872809154897715, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 855872809154897715, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 986815006908335552, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
       propertyPath: m_AnchorMax.y
