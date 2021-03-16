@@ -6,9 +6,9 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class DetailedCard : SimpleCard
+public class DetailedCard : HeaderCard
 {
-    public static new readonly string prefabAddress = "Prefabs/UI/UI Elements/Cards/DetailedCard";
+    public static new readonly string prefabAddress = "Prefabs/UI/Cards/DetailedCard";
     [HideInInspector]
     public Button button;
 

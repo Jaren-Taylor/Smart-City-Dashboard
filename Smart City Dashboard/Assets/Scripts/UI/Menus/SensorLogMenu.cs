@@ -12,7 +12,7 @@ public class SensorLogMenu : MonoBehaviour
 
     private ISensor targetedSensor;
 
-    private Dictionary<ISensor, SimpleCard> sensorMapping = new Dictionary<ISensor, SimpleCard>();
+    private Dictionary<ISensor, HeaderCard> sensorMapping = new Dictionary<ISensor, HeaderCard>();
     private Dictionary<UIElement, ISensor> cardMapping = new Dictionary<UIElement, ISensor>();
 
     private SortMode currentSort = SortMode.None;
@@ -100,20 +100,20 @@ public class SensorLogMenu : MonoBehaviour
 
     }
 
-    private void SortCardType(ISensor sensor, SimpleCard card)
+    private void SortCardType(ISensor sensor, HeaderCard card)
     {
         if (sensor is CameraSensor) card.gameObject.RectTransform().SetAsLastSibling();
         else card.gameObject.RectTransform().SetAsFirstSibling();
     }
 
-    private void UpdateCard(SimpleCard card, string message, UIBackgroundSprite sprite)
+    private void UpdateCard(HeaderCard card, string message, UIBackgroundSprite sprite)
     {
         card.SetText(message);
         card.SetBackgroundSprite(sprite);
         UpdatePositionalStanding(card);
     }
 
-    private void UpdatePositionalStanding(SimpleCard card)
+    private void UpdatePositionalStanding(HeaderCard card)
     {
         if (currentSort == SortMode.Type) SortCardType(cardMapping[card], card);
         return;

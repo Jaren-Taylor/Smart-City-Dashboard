@@ -3,12 +3,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class SimpleCard : UIElement
+public class HeaderCard : UIElement
 {
     public UnityEvent<UIElement> OnRemoveClicked;
 
     private static GameObject staticPrefab = null;
-    public static readonly string prefabAddress = "Prefabs/UI/UI Elements/Cards/SimpleCard";
+    public static readonly string prefabAddress = "Prefabs/UI/Cards/HeaderCard";
 
     [SerializeField]
     protected Image bkgImage;
@@ -52,27 +52,27 @@ public class SimpleCard : UIElement
     /// <param name="backgroundColor"></param>
     /// <param name="text"></param>
     /// <returns></returns>
-    public static SimpleCard Spawn(Transform parent, UIBackgroundSprite backgroundSprite, string text)
+    public static HeaderCard Spawn(Transform parent, UIBackgroundSprite backgroundSprite, string text)
     {
-        SimpleCard simpleCard = CopyPrefabToParent(parent);
+        HeaderCard simpleCard = CopyPrefabToParent(parent);
         simpleCard.SetText(text);
         simpleCard.SetBackgroundSprite(backgroundSprite);
        
         return simpleCard;
     }
 
-    public static SimpleCard Spawn(Transform parent, Material backgroundMaterial, string text)
+    public static HeaderCard Spawn(Transform parent, Material backgroundMaterial, string text)
     {
-        SimpleCard simpleCard = CopyPrefabToParent(parent);
+        HeaderCard simpleCard = CopyPrefabToParent(parent);
         simpleCard.SetText(text);
         simpleCard.SetMaterial(backgroundMaterial);
 
         return simpleCard;
     }
 
-    private static SimpleCard CopyPrefabToParent(Transform parent)
+    private static HeaderCard CopyPrefabToParent(Transform parent)
     {
         if (staticPrefab == null) staticPrefab = Resources.Load<GameObject>(prefabAddress);
-        return Instantiate(staticPrefab, parent.position, Quaternion.identity, parent).GetComponent<SimpleCard>();
+        return Instantiate(staticPrefab, parent.position, Quaternion.identity, parent).GetComponent<HeaderCard>();
     }
 }
