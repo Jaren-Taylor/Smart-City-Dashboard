@@ -1702,6 +1702,10 @@ PrefabInstance:
       propertyPath: Canvas
       value: 
       objectReference: {fileID: 2091606045232230047}
+    - target: {fileID: 2535622606829337073, guid: f698fc6596beb894a8095ffeafcc6038, type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 1230303453}
     - target: {fileID: 2535622606911584307, guid: f698fc6596beb894a8095ffeafcc6038, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2011,6 +2015,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: SaveLoad Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 6556101590594060716, guid: 33d7a248b44fd674eb6ceac77a63f2e4, type: 3}
+      propertyPath: Key
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 6556101590594060716, guid: 33d7a248b44fd674eb6ceac77a63f2e4, type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 1230303453}
     - target: {fileID: 6556101590716445429, guid: 33d7a248b44fd674eb6ceac77a63f2e4, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -2317,6 +2329,10 @@ PrefabInstance:
       propertyPath: Canvas
       value: 
       objectReference: {fileID: 2091606045232230047}
+    - target: {fileID: 5059492873463918143, guid: 6dbcde7a463125246b51f730ef1422de, type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 1230303453}
     - target: {fileID: 5059492873616085025, guid: 6dbcde7a463125246b51f730ef1422de, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -2635,6 +2651,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4765349968703903296, guid: 522f7d9d885dfd440b8d8f3716004bf6, type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 1230303453}
     - target: {fileID: 5578105754431916607, guid: 522f7d9d885dfd440b8d8f3716004bf6, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

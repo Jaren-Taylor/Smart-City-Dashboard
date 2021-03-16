@@ -119,13 +119,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bb57424419b1b8409d0811a19cecf33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClick:
+    m_PersistentCalls:
+      m_Calls: []
   OnRemoveClicked:
     m_PersistentCalls:
       m_Calls: []
   bkgImage: {fileID: 3767533324910892865}
   header: {fileID: 4161920944987169650}
   closeButton: {fileID: 230835116062963321}
-  button: {fileID: 0}
   textArea: {fileID: 7611768222376940803}
   NameValuePairPrefab: {fileID: 7110331931191709982, guid: e6f0aca32d8ff71499d0eed6208aaff8, type: 3}
 --- !u!114 &7802981506912644550

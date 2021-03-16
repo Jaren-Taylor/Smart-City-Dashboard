@@ -1,15 +1,27 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
-public class UIElement : MonoBehaviour, IPointerDownHandler
-{
-    public Action<UIElement> OnClick;
+using UnityEngine.UI;
 
-    public void DestroyUIElement()
+[RequireComponent(typeof(Button))]
+public class UIElement : MonoBehaviour
+{
+    public UnityEvent<UIElement> OnClick;
+    private Button button;
+
+    protected virtual void Start()
     {
-        if(gameObject != null) Destroy(gameObject);
+        button = GetComponent<Button>();
+        button.onClick.AddListener(Click);
+    }
+
+    public void Destroy()
+    {
+        Destroy(gameObject);
+    }
+
+    public void Click()
+    {
+        OnClick?.Invoke(this);
     }
 
     /// <summary>
@@ -18,19 +30,14 @@ public class UIElement : MonoBehaviour, IPointerDownHandler
     /// <param name="parent"></param>
     /// <param name="prefabAddress"></param>
     /// <returns></returns>
-    public static GameObject Spawn(Transform parent, string prefabAddress)
+    public static UIElement Spawn(Transform parent, string prefabAddress)
     {
         var model = Resources.Load<GameObject>(prefabAddress);
-        return Instantiate(model, parent.position, Quaternion.identity, parent);
+        return Instantiate(model, parent.position, Quaternion.identity, parent).GetComponent<UIElement>();
     }
 
-    public static GameObject Spawn(Transform parent, GameObject original)
+    public static UIElement Spawn(Transform parent, UIElement original)
     {
-        return Instantiate(original, parent.position, Quaternion.identity, parent); ;
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        OnClick?.Invoke(this);
+        return Instantiate(original.gameObject, parent.position, Quaternion.identity, parent).GetComponent<UIElement>();
     }
 }

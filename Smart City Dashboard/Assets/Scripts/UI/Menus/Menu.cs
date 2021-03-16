@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(RectTransform))]
 public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHandler
 {
+    [SerializeField]
+    private UIManager uiManager;
     public Key Key;
     public Action<Menu> OnOpen;
     public Action<Menu> OnClose;
@@ -17,7 +19,15 @@ public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHa
     protected virtual void Start()
     {
         Close();
-        UIManager.Instance.Subscribe(this);
+        if (uiManager != null)
+        {
+            uiManager.Subscribe(this);
+        }
+        else
+        {
+            throw new Exception("No UI Manager is set for this menu!");
+        }
+        
     }
 
     public virtual void Close()

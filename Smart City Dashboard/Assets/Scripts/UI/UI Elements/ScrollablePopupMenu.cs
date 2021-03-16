@@ -11,15 +11,20 @@ public class ScrollablePopupMenu : MonoBehaviour
 
     public UnityEvent OnCloseMenu;
 
-    public HeaderCard AddNewItem(UIBackgroundSprite spriteColor, string text)
+    public NameAndValueCard AddNewItem(UIBackgroundSprite spriteColor, string header, string name, string value)
     {
-        return HeaderCard.Spawn(menuContent.transform, spriteColor, text);
+        return NameAndValueCard.Spawn(menuContent.transform, spriteColor, header, name, value);
     }
 
-    public HeaderCard AddNewItem(Material material, string text)
+    public HeaderCard AddNewItem(UIBackgroundSprite spriteColor, string header)
     {
-        return HeaderCard.Spawn(menuContent.transform, material, text);
+        return NameAndValueCard.Spawn(menuContent.transform, spriteColor, header);
     }
+
+    /*public NameAndValueCard AddNewItem(Material material, string text)
+    {
+        return NameAndValueCard.Spawn(menuContent.transform, material, text);
+    }*/
 
     public void Clear()
     {

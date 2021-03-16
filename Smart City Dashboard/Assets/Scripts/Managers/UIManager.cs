@@ -57,7 +57,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
     public void ToggleMenu(Menu menu)
     {
         menu.Toggle();

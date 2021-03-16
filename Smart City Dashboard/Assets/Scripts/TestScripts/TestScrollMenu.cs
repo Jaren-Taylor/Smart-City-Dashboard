@@ -21,7 +21,7 @@ public class TestScrollMenu : MonoBehaviour
         {
             i++;
             var card = popup.AddNewItem(UIBackgroundSprite.Blue, "Test Entry: " + i);
-            card.OnClick += Clicked;
+            card.OnClick.AddListener(Clicked);
         }
     }
 

@@ -42,7 +42,7 @@ public abstract class Sensor<T> : ISensor
     protected abstract (string msg, SensorStatus status) GetStatus(List<T> collectedData);
     protected abstract T CollectData(GameObject sensedObject);
 
-    public (string msg, SensorStatus status) Status() => ($"{ToString()}: {lastStatus}", statusEnum);
+    public (string name, string status, SensorStatus sensorStatus) Status() => ("Status", lastStatus, statusEnum);
 
     public Vector2Int GetTilePosition() => tilePosition;
 }

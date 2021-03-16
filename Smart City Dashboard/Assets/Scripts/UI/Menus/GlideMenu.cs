@@ -15,7 +15,7 @@ public class GlideMenu : Menu
     private Vector2 destination;
     private int glideSpeed = 25;
 
-    private new void Start()
+    protected override void Start()
     {
         // Assumed to be used in child classes for use in movement calculations
         menuBounds = gameObject.GetComponent<RectTransform>().rect;

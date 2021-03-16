@@ -40,7 +40,7 @@ public class SaveLoadMenu : Menu
         {   
             card = DetailedCard.Spawn(CardArea.transform, UIBackgroundSprite.Blue, System.IO.Path.GetFileNameWithoutExtension(file));
             card.AddItem("Last Saved", File.GetLastWriteTime(file).ToString());
-            card.OnClick += LoadGame;
+            card.OnClick.AddListener(LoadGame);
             card.OnRemoveClicked.AddListener(CardDeleted);
             cards.Add(card);
         }

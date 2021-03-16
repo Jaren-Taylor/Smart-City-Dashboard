@@ -11,12 +11,6 @@ public class TileSensorMenu : Menu
 
     private Tile focusedTile = null;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Close();
-    }
-
     internal void FocusTile(Vector2Int position)
     {
         Tile tile = GridManager.GetTile(position);

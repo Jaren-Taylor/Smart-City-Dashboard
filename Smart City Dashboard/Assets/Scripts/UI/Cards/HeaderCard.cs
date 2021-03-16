@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class HeaderCard : UIElement
 {
-    public UnityEvent<UIElement> OnRemoveClicked;
-
-    private static GameObject staticPrefab = null;
     public static readonly string prefabAddress = "Prefabs/UI/Cards/HeaderCard";
+    protected static GameObject staticPrefab = null;
+
+    public UnityEvent<UIElement> OnRemoveClicked;
 
     [SerializeField]
     protected Image bkgImage;
@@ -17,35 +17,43 @@ public class HeaderCard : UIElement
     [SerializeField]
     protected Button closeButton;
 
-    protected void Start()
+    private UIBackgroundSprite spriteEnum;
+
+    public string Header
+    {
+        get { return header.text; }
+        set { header.text = value; }
+    }
+
+    public UIBackgroundSprite BackgroundSprite
+    {
+        get { return spriteEnum; }
+        set {
+            if (bkgImage.sprite != UIManager.BackgroundSprites[value]) 
+            {
+                spriteEnum = value;
+                bkgImage.sprite = UIManager.BackgroundSprites[value];
+            }
+        }
+    }
+
+    public Material Material
+    {
+        get { return bkgImage.material; }
+        set { bkgImage.material = value; }
+    }
+
+    protected override void Start()
     {
         closeButton.onClick.AddListener(RemoveClicked);
-        closeButton.onClick.AddListener(DestroyUIElement);
+        closeButton.onClick.AddListener(Destroy);
+        base.Start();
     }
 
     private void RemoveClicked()
     {
         OnRemoveClicked?.Invoke(this);
     }
-
-    #region Component methods
-
-        public void SetBackgroundSprite(UIBackgroundSprite backgroundSprite)                                               
-        {
-            if(bkgImage.sprite != UIManager.BackgroundSprites[backgroundSprite]) bkgImage.sprite = UIManager.BackgroundSprites[backgroundSprite];
-        }
-
-        public void SetMaterial(Material material)
-        {
-            bkgImage.material = material;
-        }
-
-        public void SetText(string text)
-        {
-            if(header.text != text) header.text = text;
-        }
-
-    #endregion
 
     /// </summary>
     /// <param name="parent"></param>
@@ -55,18 +63,16 @@ public class HeaderCard : UIElement
     public static HeaderCard Spawn(Transform parent, UIBackgroundSprite backgroundSprite, string text)
     {
         HeaderCard simpleCard = CopyPrefabToParent(parent);
-        simpleCard.SetText(text);
-        simpleCard.SetBackgroundSprite(backgroundSprite);
-       
+        simpleCard.Header = text;
+        simpleCard.BackgroundSprite = backgroundSprite;
         return simpleCard;
     }
 
     public static HeaderCard Spawn(Transform parent, Material backgroundMaterial, string text)
     {
         HeaderCard simpleCard = CopyPrefabToParent(parent);
-        simpleCard.SetText(text);
-        simpleCard.SetMaterial(backgroundMaterial);
-
+        simpleCard.Header = text;
+        simpleCard.Material = backgroundMaterial;
         return simpleCard;
     }
 

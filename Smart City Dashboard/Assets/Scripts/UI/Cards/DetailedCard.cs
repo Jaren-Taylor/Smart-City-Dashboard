@@ -5,30 +5,16 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Button))]
 public class DetailedCard : HeaderCard
 {
     public static new readonly string prefabAddress = "Prefabs/UI/Cards/DetailedCard";
-    [HideInInspector]
-    public Button button;
+    private static new GameObject staticPrefab = null;
 
-    private static GameObject staticPrefab = null;
     private Dictionary<string, NameValuePair> items = new Dictionary<string, NameValuePair>();
     [SerializeField]
     private GameObject textArea;
     [SerializeField]
     private GameObject NameValuePairPrefab;
-
-    private new void Start()
-    {
-        base.Start();
-        button.onClick.AddListener(Click);
-    }
-
-    public void Click()
-    {
-        OnClick?.Invoke(this);
-    }
 
     public string GetHeader() => header.text;
 
@@ -91,9 +77,8 @@ public class DetailedCard : HeaderCard
     public new static DetailedCard Spawn(Transform parent, UIBackgroundSprite backgroundSprite, string header)
     {
         DetailedCard detailCard = CopyPrefabToParent(parent);
-        detailCard.SetText(header);
-        detailCard.SetBackgroundSprite(backgroundSprite);
-        detailCard.button = detailCard.GetComponent<Button>();
+        detailCard.Header  = header;
+        detailCard.BackgroundSprite = backgroundSprite;
         return detailCard;
     }
 

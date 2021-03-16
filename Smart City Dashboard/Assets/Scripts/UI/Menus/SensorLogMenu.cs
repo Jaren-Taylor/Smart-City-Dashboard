@@ -12,7 +12,7 @@ public class SensorLogMenu : MonoBehaviour
 
     private ISensor targetedSensor;
 
-    private Dictionary<ISensor, HeaderCard> sensorMapping = new Dictionary<ISensor, HeaderCard>();
+    private Dictionary<ISensor, NameAndValueCard> sensorMapping = new Dictionary<ISensor, NameAndValueCard>();
     private Dictionary<UIElement, ISensor> cardMapping = new Dictionary<UIElement, ISensor>();
 
     private SortMode currentSort = SortMode.None;
@@ -20,11 +20,11 @@ public class SensorLogMenu : MonoBehaviour
     public void AddSensor(ISensor sensor)
     {
         if (sensorMapping.ContainsKey(sensor)) throw new Exception("Sensor already found");
-        var (statusMsg, statusEnum) = sensor.Status();
-        var card = menu.AddNewItem(statusEnum.GetColor(), statusMsg);
+        var (statusName, statusMsg, statusEnum) = sensor.Status();
+        var card = menu.AddNewItem(statusEnum.GetColor(), sensor.ToString(), statusName, statusMsg);
         sensorMapping.Add(sensor, card);
         cardMapping.Add(card, sensor);
-        card.OnClick += CardClicked;
+        card.OnClick.AddListener(CardClicked);
     }
 
     private void CardClicked(UIElement card)
@@ -55,7 +55,7 @@ public class SensorLogMenu : MonoBehaviour
     {
         if(!sensorMapping.ContainsKey(sensor)) throw new Exception("Sensor does not exist in this menu");
         var card = sensorMapping[sensor];
-        if (card != null) card.DestroyUIElement();
+        if (card != null) card.Destroy();
         sensorMapping.Remove(sensor);
     }
 
@@ -63,7 +63,7 @@ public class SensorLogMenu : MonoBehaviour
     {
         if (sensorMapping.TryGetValue(sensor, out var card))
         {
-            var (statusMsg, statusEnum) = sensor.Status();
+            var (statusName, statusMsg, statusEnum) = sensor.Status();
             UpdateCard(card, statusMsg, statusEnum.GetColor());            
         }
         else
@@ -100,20 +100,20 @@ public class SensorLogMenu : MonoBehaviour
 
     }
 
-    private void SortCardType(ISensor sensor, HeaderCard card)
+    private void SortCardType(ISensor sensor, NameAndValueCard card)
     {
         if (sensor is CameraSensor) card.gameObject.RectTransform().SetAsLastSibling();
         else card.gameObject.RectTransform().SetAsFirstSibling();
     }
 
-    private void UpdateCard(HeaderCard card, string message, UIBackgroundSprite sprite)
+    private void UpdateCard(NameAndValueCard card, string message, UIBackgroundSprite sprite)
     {
-        card.SetText(message);
-        card.SetBackgroundSprite(sprite);
+        card.Value = message;
+        card.BackgroundSprite = sprite;
         UpdatePositionalStanding(card);
     }
 
-    private void UpdatePositionalStanding(HeaderCard card)
+    private void UpdatePositionalStanding(NameAndValueCard card)
     {
         if (currentSort == SortMode.Type) SortCardType(cardMapping[card], card);
         return;
