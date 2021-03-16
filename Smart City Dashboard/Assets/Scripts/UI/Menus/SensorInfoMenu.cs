@@ -7,7 +7,6 @@ using TMPro;
 
 public class SensorInfoMenu : MonoBehaviour
 {
-    //TODO: Programatically show traffic light info on the UI, allow user to change flow via red buttons. Get light countdown time and display.
 
     [SerializeField]
     private GameObject sensorInfoMenu;
@@ -89,7 +88,7 @@ public class SensorInfoMenu : MonoBehaviour
 
     public void SetVisible(Vector3 tileTransform)
     {
-        if (!(currentTrafficLight is null))
+        if (currentTrafficLight != null)
             currentTrafficLight.TurnedGreen -= SwapLights;
         DisableMenu();
         hasRun = false;
@@ -97,7 +96,7 @@ public class SensorInfoMenu : MonoBehaviour
         var tilePosition = tileTransform.ToGridInt();
         ResetViewButton.SetActive(true);
         ToggleCursor?.Invoke();
-        if (GridManager.Instance.Grid[tilePosition] is RoadTile road && !(road.TrafficLight is null))
+        if (GridManager.Instance.Grid[tilePosition] is RoadTile road && road.TrafficLight != null)
         {
             currentRoad = road;
             currentTrafficLight = road.TrafficLight;
@@ -124,7 +123,7 @@ public class SensorInfoMenu : MonoBehaviour
             FirstTimeUpdateView();
             CameraManager.Instance.DisableUserInput();
             sensorInfoMenu.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
-            ButtonAndTextCanvas.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z - GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
+            //ButtonAndTextCanvas.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z - GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
         }
         CameraManager.Instance.OnReachedTarget += SetVisible;
     }
