@@ -16,7 +16,7 @@ public class CameraSensor : Sensor<CameraSensorData>
 
     public override string ToString()
     {
-        return "Camera Sensor";
+        return $"Camera Sensor [{GetTilePosition()}]";
     }
 
     protected override (string msg, SensorStatus status) GetStatus(List<CameraSensorData> collectedData)

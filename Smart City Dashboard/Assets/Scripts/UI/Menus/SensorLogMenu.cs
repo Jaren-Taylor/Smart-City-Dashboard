@@ -57,7 +57,6 @@ public class SensorLogMenu : MonoBehaviour
         var card = sensorMapping[sensor];
         if (card != null) card.DestroyUIElement();
         sensorMapping.Remove(sensor);
-        cardMapping.Remove(card);
     }
 
     public void UpdateSensorLog(ISensor sensor)

@@ -79,6 +79,7 @@ public class SensorSocket : MonoBehaviour
     #endregion
 
     #region Private Methods
+
     private bool AreEntitiesInCollider() => objectsInCollider.Count > 0;
 
     private void AttachSensor(SensorType value)

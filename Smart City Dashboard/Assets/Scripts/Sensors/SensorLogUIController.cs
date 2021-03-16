@@ -56,7 +56,6 @@ public class SensorLogUIController : MonoBehaviour
     internal void RegisterSensor(ISensor sensor)
     {
         sensors.Add(sensor);
-        
         log.AddSensor(sensor);
     }
 
