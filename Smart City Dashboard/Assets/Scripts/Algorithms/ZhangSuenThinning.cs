@@ -126,6 +126,11 @@ public static class ZhangSuenThinning
             {
                 for (int col = 1; col < width - 1; col++)
                 {
+                    if(row == 4 && col == 80)
+                    {
+                        int i = 420;
+                    }
+
                     if (image[row][col] is false) continue; //First check (common to both stages)
 
                     PopulateNeighborSequence(image, checkingSequence, row, col); //Fills the checking sequence array the 3x3 values show in documents
@@ -154,12 +159,33 @@ public static class ZhangSuenThinning
         if (iter >= maxIter) Debug.LogError("Max iter reached");
     }
 
-    public static void PopulateNeighborSequence(bool[][] image, bool[] sequence, int row, int col)
+    public static void PopulateNeighborSequence(bool[][] image, bool[] sequence, int row, int col, bool safeCheck = false)
     {
-        for(int i = 0; i < 9; i++)
+        if (safeCheck)
         {
-            //Row is analogous to the y coord and Col is x coord
-            sequence[i] = image[row + SequenceRelations[i][1]][col + SequenceRelations[i][0]];
+            int height = image.Length;
+            int width = image[0].Length;
+
+            for (int i = 0; i < 9; i++)
+            {
+                int checkRow = row + SequenceRelations[i][1];
+                int checkCol = col + SequenceRelations[i][0];
+                if (checkRow < 0 || checkRow >= height || checkCol < 0 || checkCol >= width)
+                {
+                    sequence[i] = false;
+                    continue;
+                }
+                //Row is analogous to the y coord and Col is x coord
+                sequence[i] = image[checkRow][checkCol];
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                //Row is analogous to the y coord and Col is x coord
+                sequence[i] = image[row + SequenceRelations[i][1]][col + SequenceRelations[i][0]];
+            }
         }
     }
 

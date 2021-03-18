@@ -5,45 +5,51 @@ using UnityEngine;
 
 public static class InterestPointMarking
 {
-    public static void RemoveUnintersting(bool[][] image)
+    public static HashSet<Vector2Int> GetUninteresting(bool[][] image)
     {
         int height = image.Length;
         int width = image[0].Length;
 
         bool[] neighborSequenceData = new bool[9];
 
-        bool any = false;
+        HashSet<Vector2Int> markedPositions = new HashSet<Vector2Int>();
 
-        List<Vector2Int> markedPositions = new List<Vector2Int>();
-
-        for (int row = 1; row < height - 1; row++)
+        for (int y = 0; y < height; y++)
         {
-            for (int col = 1; col < width - 1; col++)
+            for (int x = 0; x < width; x++)
             {
+
                 //If pixel color is part of background mask, skip
-                if (!image[row][col]) continue;
+                if (!image[y][x]) continue;
 
                 //If the point is not interesting it is removed from the image
-                if (!MatchesInterestPattern(image, row, col, neighborSequenceData))
+                if (!MatchesInterestPattern(image, y, x, neighborSequenceData, (y == 0 || x == 0 || y == height - 1 || x == width - 1)))
                 {
-                    markedPositions.Add(new Vector2Int(row, col));
+                    markedPositions.Add(new Vector2Int(x, y));
                 }
             }
         }
 
+        return markedPositions;
+    }
+
+    public static void RemoveUnintersting(bool[][] image)
+    {
+        var markedPositions = GetUninteresting(image);
+
         foreach (Vector2Int marked in markedPositions)
         {
-            image[marked.x][marked.y] = false;
+            image[marked.y][marked.x] = false; //y and x are backwards on purpose. Bool array is indexed [y][x]
         }
     }
 
-    private static bool MatchesInterestPattern(bool[][] image, int row, int col, bool[] sequenceData)
+    private static bool MatchesInterestPattern(bool[][] image, int row, int col, bool[] sequenceData, bool safeCheck)
     {
-        ZhangSuenThinning.PopulateNeighborSequence(image, sequenceData, row, col);
+        ZhangSuenThinning.PopulateNeighborSequence(image, sequenceData, row, col, safeCheck);
 
-        int transitions = ZhangSuenThinning.TransitionsFromFalseToTrue(sequenceData, 1);
         int numTrue = ZhangSuenThinning.NumberOfTrue(sequenceData, 1);
+        int transitions = ZhangSuenThinning.TransitionsFromFalseToTrue(sequenceData, 1);
 
-        return transitions > 2 || (transitions == 1 && numTrue == 1); 
+        return transitions > 2 || (transitions == 1 && numTrue <= 2) || numTrue > 4; 
     }
 }
