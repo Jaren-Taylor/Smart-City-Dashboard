@@ -59,7 +59,8 @@ public abstract class Tile
     [DataMember(Name="IsPermanent")]
     public bool IsPermanent { get; private set; }
 
-    [DataMember(Name="IsTransparent")]
+    //[DataMember(Name="IsTransparent")]
+    [IgnoreDataMember]
     private bool isTransparent = true;
 
     [DataMember(Name="Sensors")]

@@ -14,6 +14,8 @@ public class RoadTile : Tile
 {
     public TrafficLightController TrafficLight { get; private set; } = null;
     private List<NodeCollectionController.Direction> directions = null;
+
+    [IgnoreDataMember]
     public Facing rotation;
     public static readonly Dictionary<TileType, string> ModelLookup = new Dictionary<TileType, string>()
 
@@ -37,7 +39,8 @@ public class RoadTile : Tile
         RoadCorner = 5
     }
 
-    [DataMember(Name="Type")]
+    //[DataMember(Name="Type")]
+    [IgnoreDataMember]
     public TileType Type { get; private set; }
 
 
