@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5153459362884124902}
   - component: {fileID: 5153459362884124901}
   - component: {fileID: 5153459362884124903}
-  - component: {fileID: 5153459362884124896}
   m_Layer: 5
   m_Name: Scrollable Menu
   m_TagString: Untagged
@@ -105,34 +104,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &5153459362884124896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5153459362884124923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4241bd0f5f5e0534386ed9545d94b0f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  menuContent: {fileID: 5153459363099288937}
-  OnCloseMenu:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5153459362884124923}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &5153459363099288943
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,6 +117,7 @@ GameObject:
   - component: {fileID: 5153459363099288938}
   - component: {fileID: 5153459363099288937}
   - component: {fileID: 5153459363099288852}
+  - component: {fileID: 8493942439796418084}
   m_Layer: 5
   m_Name: Scrollable Content
   m_TagString: Untagged
@@ -250,6 +222,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &8493942439796418084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5153459363099288943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4241bd0f5f5e0534386ed9545d94b0f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5153459363158765617
 GameObject:
   m_ObjectHideFlags: 0
@@ -793,7 +777,7 @@ PrefabInstance:
     - target: {fileID: -1240822334741703616, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
       propertyPath: OnRemoveClicked.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 5153459362884124896}
+      objectReference: {fileID: 0}
     - target: {fileID: -1240822334741703616, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
       propertyPath: OnRemoveClicked.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -909,7 +893,7 @@ PrefabInstance:
     - target: {fileID: 2466198470358930103, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 5153459362884124896}
+      objectReference: {fileID: 0}
     - target: {fileID: 2466198470358930103, guid: d661e22d4e45542419c5ebd9b0bbc7d2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2

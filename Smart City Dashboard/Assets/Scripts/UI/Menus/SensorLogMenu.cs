@@ -6,14 +6,14 @@ using UnityEngine;
 public class SensorLogMenu : MonoBehaviour
 {
     [SerializeField]
-    private ScrollablePopupMenu menu;
+    private UICardManager menu;
     [SerializeField]
     private SensorInfoMenu sensorInfoMenu;
 
     private ISensor targetedSensor;
 
     private Dictionary<ISensor, NameAndValueCard> sensorMapping = new Dictionary<ISensor, NameAndValueCard>();
-    private Dictionary<UIElement, ISensor> cardMapping = new Dictionary<UIElement, ISensor>();
+    private Dictionary<UIClickable, ISensor> cardMapping = new Dictionary<UIClickable, ISensor>();
 
     private SortMode currentSort = SortMode.None;
 
@@ -21,13 +21,13 @@ public class SensorLogMenu : MonoBehaviour
     {
         if (sensorMapping.ContainsKey(sensor)) throw new Exception("Sensor already found");
         var (statusName, statusMsg, statusEnum) = sensor.Status();
-        var card = menu.AddNewItem(statusEnum.GetColor(), sensor.ToString(), statusName, statusMsg);
+        var card = menu.AddNameValueCard(statusEnum.GetColor(), sensor.ToString(), statusName, statusMsg);
         sensorMapping.Add(sensor, card);
         cardMapping.Add(card, sensor);
         card.OnClick.AddListener(CardClicked);
     }
 
-    private void CardClicked(UIElement card)
+    private void CardClicked(UIClickable card)
     {
         if(cardMapping.TryGetValue(card, out ISensor sensor))
         {
@@ -55,7 +55,7 @@ public class SensorLogMenu : MonoBehaviour
     {
         if(!sensorMapping.ContainsKey(sensor)) throw new Exception("Sensor does not exist in this menu");
         var card = sensorMapping[sensor];
-        if (card != null) card.Destroy();
+        if (card != null) Destroy(card.gameObject);
         sensorMapping.Remove(sensor);
     }
 

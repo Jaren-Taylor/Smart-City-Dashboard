@@ -8,7 +8,7 @@ public class SaveLoadMenu : Menu
 {
     [SerializeField]
     private GameObject CardArea;
-    private List<DetailedCard> cards = new List<DetailedCard>();
+    private List<DictionaryCard> cards = new List<DictionaryCard>();
 
     private StringBuilder strBuilder = new StringBuilder();
 
@@ -26,7 +26,7 @@ public class SaveLoadMenu : Menu
 
     public void ClearCards()
     {
-        foreach (DetailedCard card in cards)
+        foreach (DictionaryCard card in cards)
         {
             Destroy(card.gameObject);
         }
@@ -35,31 +35,32 @@ public class SaveLoadMenu : Menu
 
     public void FetchFiles()
     {
-        DetailedCard card;
+        DictionaryCard card;
         foreach (string file in Directory.EnumerateFiles(Application.dataPath+"/Saves", "*.xml"))
         {   
-            card = DetailedCard.Spawn(CardArea.transform, UIBackgroundSprite.Blue, System.IO.Path.GetFileNameWithoutExtension(file));
-            card.AddItem("Last Saved", File.GetLastWriteTime(file).ToString());
+            card = DictionaryCard.Spawn(CardArea.transform, UIBackgroundSprite.Blue, System.IO.Path.GetFileNameWithoutExtension(file));
+            card.AddItem("Created", File.GetCreationTime(file).ToString());
+            card.AddItem("Last Modified", File.GetLastWriteTime(file).ToString());
             card.OnClick.AddListener(LoadGame);
-            card.OnRemoveClicked.AddListener(CardDeleted);
+            card.OnRemoved.AddListener(CardDeleted);
             cards.Add(card);
         }
     }
 
-    private void CardDeleted(UIElement card)
+    private void CardDeleted(UIClickable card)
     {
-        DetailedCard detailedCard = (DetailedCard)card;
-        DeleteSaveFile(detailedCard.GetHeader());
+        DictionaryCard detailedCard = (DictionaryCard)card;
+        DeleteSaveFile(detailedCard.Header);
         cards.Remove(detailedCard);
     }
 
-    private void LoadGame(UIElement card)
+    private void LoadGame(UIClickable card)
     {
-        DetailedCard detailedCard = (DetailedCard)card;
+        DictionaryCard detailedCard = (DictionaryCard)card;
         strBuilder.Clear();
         strBuilder.Append(Application.dataPath);
         strBuilder.Append("/Saves/");
-        strBuilder.Append(detailedCard.GetHeader());
+        strBuilder.Append(detailedCard.Header);
         strBuilder.Append(".xml");
         SaveGameManager.LoadFromFile = strBuilder.ToString();
         GridManager.Instance.LoadGame();

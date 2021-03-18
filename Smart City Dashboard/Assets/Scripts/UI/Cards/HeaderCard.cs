@@ -3,32 +3,69 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class HeaderCard : UIElement
+[RequireComponent(typeof(Image))]
+public class HeaderCard : UIClickable
 {
     public static readonly string prefabAddress = "Prefabs/UI/Cards/HeaderCard";
-    protected static GameObject staticPrefab = null;
+    private static GameObject staticPrefab = null;
 
-    public UnityEvent<UIElement> OnRemoveClicked;
+    public UnityEvent<UIClickable> OnRemoved;
 
+    private Image bkgImage = null;
     [SerializeField]
-    protected Image bkgImage;
+    private TextMeshProUGUI header;
     [SerializeField]
-    protected TextMeshProUGUI header;
-    [SerializeField]
-    protected Button closeButton;
+    private Button closeButton;
 
     private UIBackgroundSprite spriteEnum;
 
+    protected override void Start()
+    {
+        base.Start();
+        if (bkgImage is null) bkgImage = GetComponent<Image>();
+        closeButton.onClick.AddListener(() => Destroy(gameObject));
+        closeButton.onClick.AddListener(OnRemove);
+    }
+
+    private void OnRemove()
+    {
+        OnRemoved?.Invoke(this);
+    }
+
+    #region Properties
+
     public string Header
     {
-        get { return header.text; }
-        set { header.text = value; }
+        
+        get
+        {
+            HeaderErrorCheck();
+            return header.text;
+        }
+        set {
+            HeaderErrorCheck();
+            header.text = value; 
+        }
+    }
+
+    private void HeaderErrorCheck()
+    {
+        if (header is null) throw new System.Exception("Header was never set for this HeaderCard");
+    }
+
+    private void BackgroundImageErrorCheck()
+    {
+        if (bkgImage is null)
+            bkgImage = GetComponent<Image>();
+        if (bkgImage is null)
+            throw new System.Exception("Cannot find Image component");
     }
 
     public UIBackgroundSprite BackgroundSprite
     {
         get { return spriteEnum; }
         set {
+            BackgroundImageErrorCheck();
             if (bkgImage.sprite != UIManager.BackgroundSprites[value]) 
             {
                 spriteEnum = value;
@@ -43,17 +80,9 @@ public class HeaderCard : UIElement
         set { bkgImage.material = value; }
     }
 
-    protected override void Start()
-    {
-        closeButton.onClick.AddListener(RemoveClicked);
-        closeButton.onClick.AddListener(Destroy);
-        base.Start();
-    }
+    #endregion
 
-    private void RemoveClicked()
-    {
-        OnRemoveClicked?.Invoke(this);
-    }
+    #region Factories
 
     /// </summary>
     /// <param name="parent"></param>
@@ -62,23 +91,11 @@ public class HeaderCard : UIElement
     /// <returns></returns>
     public static HeaderCard Spawn(Transform parent, UIBackgroundSprite backgroundSprite, string text)
     {
-        HeaderCard simpleCard = CopyPrefabToParent(parent);
+        HeaderCard simpleCard = CopyPrefabToParent(staticPrefab, parent, prefabAddress).GetComponent<HeaderCard>();
         simpleCard.Header = text;
         simpleCard.BackgroundSprite = backgroundSprite;
         return simpleCard;
     }
 
-    public static HeaderCard Spawn(Transform parent, Material backgroundMaterial, string text)
-    {
-        HeaderCard simpleCard = CopyPrefabToParent(parent);
-        simpleCard.Header = text;
-        simpleCard.Material = backgroundMaterial;
-        return simpleCard;
-    }
-
-    private static HeaderCard CopyPrefabToParent(Transform parent)
-    {
-        if (staticPrefab == null) staticPrefab = Resources.Load<GameObject>(prefabAddress);
-        return Instantiate(staticPrefab, parent.position, Quaternion.identity, parent).GetComponent<HeaderCard>();
-    }
+    #endregion
 }
