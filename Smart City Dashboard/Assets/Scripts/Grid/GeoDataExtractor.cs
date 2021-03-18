@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -33,9 +34,11 @@ public class GeoDataExtractor
 
 
         //Gets a hashset of all of the interesting points from the foreground mask
-        //var (_, pointsOfInterest) = InterestPointMarking.SortIntoSets(foregroudMask);
+        var (_, pointsOfInterest) = InterestPointMarking.SortIntoSets(forgroudMask);
 
         PixelType[][] pixelInfo = ExtractDataWithMask(forgroudMask, dataSource);
+
+        FloodFillCheck(pixelInfo, pointsOfInterest);
 
         TileGrid generatedGrid = CreateMap(forgroudMask, pixelInfo);
 
@@ -125,9 +128,105 @@ public class GeoDataExtractor
         }
     }
 
-    private void FloodFillCheck()
-    {
 
+    private PixelPathGraph FloodFillCheck(PixelType[][] pixelInfo, HashSet<Vector2Int> pointsOfInterest)
+    {
+        PixelPathGraph pathGraph = new PixelPathGraph();
+        if (pointsOfInterest.Count == 0) return pathGraph;
+
+        int height = pixelInfo.Length;
+        int width = pixelInfo[0].Length;
+
+        LinkedList<Vector2Int> unexploredPoI = new LinkedList<Vector2Int>(pointsOfInterest);
+
+        List<Vector2Int> checkableDir = new List<Vector2Int>();
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        queue.Enqueue(unexploredPoI.First.Value);
+        pathGraph.AddNode(queue.Peek());
+
+        while (queue.Count != 0) //Still has something to explore
+        {
+            var nodePos = queue.Dequeue();
+
+            RepopulateCheckable(checkableDir);
+
+            foreach(Tile.Facing direction in Enum.GetValues(typeof(Tile.Facing)))
+            {
+                Vector2Int checkPos = nodePos + direction.ToVector2();
+                if (PixelExists(pixelInfo, checkPos, width, height) && pathGraph.IsNodeKnown(checkPos) is false)
+                {
+                    pathGraph.AddNode(checkPos);
+                    pathGraph.ConnectNodes(checkPos, nodePos);
+                    queue.Enqueue(checkPos);
+                    
+                    FoundDir(direction, checkableDir);
+                }
+                else NotFoundDir(direction, checkableDir);
+            }
+
+            foreach(Vector2Int remainingDirection in checkableDir)
+            {
+                Vector2Int checkPos = nodePos + remainingDirection;
+                if (PixelExists(pixelInfo, checkPos, width, height) && pathGraph.IsNodeKnown(checkPos) is false)
+                {
+                    pathGraph.AddNode(checkPos);
+                    pathGraph.ConnectNodes(checkPos, nodePos);
+                    queue.Enqueue(checkPos);
+                }
+            }
+
+
+            //The island from the last seed has been exhausted. Set next seed
+            if(queue.Count == 0) 
+            {
+                while(unexploredPoI.Count > 0)
+                {
+                    if (pathGraph.IsNodeKnown(unexploredPoI.First.Value))
+                    {
+                        unexploredPoI.RemoveFirst();
+                    }
+                    else
+                    {
+                        queue.Enqueue(unexploredPoI.First.Value);
+                        break;
+                    }
+                }
+                //Try finding a new POI to look from
+            }
+        }
+
+        return pathGraph;
+    }
+
+    private void RepopulateCheckable(List<Vector2Int> checkableDir)
+    {
+        checkableDir.Clear();
+        checkableDir.Add(new Vector2Int(0, 1));
+        checkableDir.Add(new Vector2Int(1, 1));
+        checkableDir.Add(new Vector2Int(1, 0));
+        checkableDir.Add(new Vector2Int(1, -1));
+        checkableDir.Add(new Vector2Int(0, -1));
+        checkableDir.Add(new Vector2Int(-1, -1));
+        checkableDir.Add(new Vector2Int(-1, 0));
+        checkableDir.Add(new Vector2Int(-1, 1));
+    }
+
+    private void FoundDir(Tile.Facing direction, List<Vector2Int> checkableDir)
+    {
+        Vector2Int vec = direction.ToVector2();
+        if (direction.IsHorizontal()) checkableDir.RemoveAll(v => v.x == vec.x);
+        else checkableDir.RemoveAll(v => v.y == vec.y);
+    }
+
+    private void NotFoundDir(Tile.Facing direction, List<Vector2Int> checkableDir)
+    {
+        checkableDir.Remove(direction.ToVector2());
+    }
+
+    private bool PixelExists(PixelType[][] pixelInfo, Vector2Int position, int width, int height)
+    {
+        if (position.x < 0 || position.x > width - 1 || position.y < 0 || position.y > height - 1) return false;
+        return pixelInfo[position.y][position.x] != PixelType.None;
     }
 
     /// <summary>

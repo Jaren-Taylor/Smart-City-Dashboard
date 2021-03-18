@@ -300,4 +300,47 @@ public static class FacingExtension
         Tile.Facing.Bottom => Tile.Facing.Top,
         _ => throw new Exception()
     };
+
+    public static Tile.Facing TurnLeft(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => Tile.Facing.Top,
+        Tile.Facing.Left => Tile.Facing.Bottom,
+        Tile.Facing.Top => Tile.Facing.Left,
+        Tile.Facing.Bottom => Tile.Facing.Right,
+        _ => throw new Exception()
+    };
+
+    public static Tile.Facing TurnRight(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => Tile.Facing.Bottom,
+        Tile.Facing.Left => Tile.Facing.Top,
+        Tile.Facing.Top => Tile.Facing.Right,
+        Tile.Facing.Bottom => Tile.Facing.Left,
+        _ => throw new Exception()
+    };
+
+    public static Vector2Int DiagonalLeftVector(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => new Vector2Int(1, 1),
+        Tile.Facing.Left => new Vector2Int(-1, -1),
+        Tile.Facing.Top => new Vector2Int(-1, 1),
+        Tile.Facing.Bottom => new Vector2Int(1, -1),
+        _ => throw new Exception()
+    };
+
+    public static Vector2Int DiagonalRightVector(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => new Vector2Int(1, -1),
+        Tile.Facing.Left => new Vector2Int(-1, 1),
+        Tile.Facing.Top => new Vector2Int(1, 1),
+        Tile.Facing.Bottom => new Vector2Int(-1, -1),
+        _ => throw new Exception()
+    };
+
+    public static bool IsHorizontal(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => true,
+        Tile.Facing.Left => true,
+        _ => false
+    };
 }
