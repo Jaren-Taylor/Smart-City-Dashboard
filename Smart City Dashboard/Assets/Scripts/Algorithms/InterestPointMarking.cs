@@ -5,14 +5,17 @@ using UnityEngine;
 
 public static class InterestPointMarking
 {
-    public static HashSet<Vector2Int> GetUninteresting(bool[][] image)
+
+
+    public static (HashSet<Vector2Int> uninteresting, HashSet<Vector2Int> interesting) SortIntoSets(bool[][] image)
     {
         int height = image.Length;
         int width = image[0].Length;
 
         bool[] neighborSequenceData = new bool[9];
 
-        HashSet<Vector2Int> markedPositions = new HashSet<Vector2Int>();
+        HashSet<Vector2Int> uninteresting = new HashSet<Vector2Int>();
+        HashSet<Vector2Int> interesting = new HashSet<Vector2Int>();
 
         for (int y = 0; y < height; y++)
         {
@@ -25,17 +28,21 @@ public static class InterestPointMarking
                 //If the point is not interesting it is removed from the image
                 if (!MatchesInterestPattern(image, y, x, neighborSequenceData, (y == 0 || x == 0 || y == height - 1 || x == width - 1)))
                 {
-                    markedPositions.Add(new Vector2Int(x, y));
+                    uninteresting.Add(new Vector2Int(x, y));
+                }
+                else
+                {
+                    interesting.Add(new Vector2Int(x, y));
                 }
             }
         }
 
-        return markedPositions;
+        return (uninteresting, interesting);
     }
 
     public static void RemoveUnintersting(bool[][] image)
     {
-        var markedPositions = GetUninteresting(image);
+        var (markedPositions, _) = SortIntoSets(image);
 
         foreach (Vector2Int marked in markedPositions)
         {
