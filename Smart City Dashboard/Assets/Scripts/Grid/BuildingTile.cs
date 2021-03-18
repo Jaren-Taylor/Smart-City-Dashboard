@@ -31,6 +31,12 @@ public class BuildingTile : Tile
     [DataMember(Name="IsLocationValid")]
     public bool IsLocationValid { get; private set; }
 
+    public BuildingTile(StructureType type, Facing facing, bool isPerm) : base(isPerm)
+    {
+        structure = type;
+        currentFacing = facing;
+    }
+
     public BuildingTile(StructureType type, Facing facing)
     {
         structure = type;

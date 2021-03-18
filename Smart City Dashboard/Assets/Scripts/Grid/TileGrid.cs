@@ -76,6 +76,8 @@ public class TileGrid
 
     private int XyToGrid(int x, int y) => x + y * Width;
 
+    public bool Contains(Vector2Int position) => grid.ContainsKey(position);
+
     
     /// <summary>
     /// Checks to see if a 

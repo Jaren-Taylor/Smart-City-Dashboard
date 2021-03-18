@@ -5,8 +5,6 @@ using UnityEngine;
 
 public static class InterestPointMarking
 {
-
-
     public static (HashSet<Vector2Int> uninteresting, HashSet<Vector2Int> interesting) SortIntoSets(bool[][] image)
     {
         int height = image.Length;

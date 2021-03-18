@@ -28,6 +28,7 @@ public class RoadTile : Tile
         { TileType.RoadCorner, "Prefabs/Roads/Road_Corner"}
     };
 
+    public RoadTile(bool isPerm) : base(isPerm) { }
     public RoadTile() : base() { }
 
     public enum TileType { 

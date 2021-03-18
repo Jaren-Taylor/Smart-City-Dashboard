@@ -16,8 +16,15 @@ public class ThinOutTestImage : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(this.gameObject.name);
 
+        var extract = new GeoDataExtractor(source.sprite.texture, this.gameObject.name);
+
+        extract.Extract();
+
+        Debug.Log(this.gameObject.name + ": Completed");
+
+
+        /*
         var backgroundMask = new[] { maskColor };
 
         var forgroundImage = TextureToBinary(source.sprite.texture, backgroundMask);
@@ -39,7 +46,7 @@ public class ThinOutTestImage : MonoBehaviour
         interest.sprite = Sprite.Create(
             highlightedTexture,
             new Rect(0, 0, highlightedTexture.width, highlightedTexture.height),
-            new Vector2(0, 1));
+            new Vector2(0, 1));*/
     }
 
     private Texture2D CopyTexture(Texture2D texture)

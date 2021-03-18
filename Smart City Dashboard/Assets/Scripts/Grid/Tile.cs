@@ -85,6 +85,8 @@ public abstract class Tile
     public NodeCollectionController NodeCollection => cachedCollection ??= GetComponent<PathfindingTileInterface>()?.NodeCollection;
 #pragma warning restore UNT0008 // Null propagation on Unity objects
 
+    public Tile(bool isPermanent) { this.IsPermanent = isPermanent; }
+
     public Tile()
     {
         IsPermanent = false;
@@ -276,4 +278,26 @@ public abstract class Tile
     /// <param name="neighbors">The neighbor information required to determine orientation</param>
     /// <returns>Returns true when this object is flagged for deletion from grid!</returns>
     protected abstract bool CalculateAndSetModelFromNeighbors(NeighborInfo neighbors);
+}
+
+
+public static class FacingExtension
+{
+    public static Vector2Int ToVector2(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => Vector2Int.right,
+        Tile.Facing.Left => Vector2Int.left,
+        Tile.Facing.Top => Vector2Int.up,
+        Tile.Facing.Bottom => Vector2Int.down,
+        _ => throw new Exception()
+    };
+
+    public static Tile.Facing Oppisite(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => Tile.Facing.Left,
+        Tile.Facing.Left => Tile.Facing.Right,
+        Tile.Facing.Top => Tile.Facing.Bottom,
+        Tile.Facing.Bottom => Tile.Facing.Top,
+        _ => throw new Exception()
+    };
 }

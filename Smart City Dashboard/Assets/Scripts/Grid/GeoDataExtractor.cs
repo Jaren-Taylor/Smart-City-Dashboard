@@ -1,18 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 
 public class GeoDataExtractor
 {
     private readonly Texture2D dataSource;
+    private readonly string name;
 
     private readonly Color maskColor = Color.black;
     private readonly Color replaceColor = Color.black;
     private readonly Color highlightColor = Color.blue;
 
-    public GeoDataExtractor(Texture2D dataSource)
+    public GeoDataExtractor(Texture2D dataSource, string name)
     {
         this.dataSource = dataSource;
+        this.name = name;
     }
 
     /// <summary>
@@ -33,7 +38,14 @@ public class GeoDataExtractor
         PixelType[][] pixelInfo = ExtractDataWithMask(forgroudMask, dataSource);
 
         TileGrid generatedGrid = CreateMap(forgroudMask, pixelInfo);
-                
+
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.Clear();
+        strBuilder.Append(Application.dataPath);
+        strBuilder.Append("/Saves/");
+        strBuilder.Append(name);
+        strBuilder.Append(".xml");
+        SaveGameManager.SaveGame(strBuilder.ToString(), generatedGrid);  
     }
 
     private PixelType[][] ExtractDataWithMask(bool[][] image, Texture2D texture)
@@ -66,7 +78,51 @@ public class GeoDataExtractor
 
     private TileGrid CreateMap(bool[][] image, PixelType[][] pixelInfo)
     {
-        throw new System.Exception();
+        int height = image.Length;
+        int width = image[0].Length;
+
+        int densityOffsetter = 0;
+
+        TileGrid grid = new TileGrid(width, height);
+
+        for(int y = 0; y < height; y++)
+        {
+            for(int x = 0; x < width; x++)
+            {
+                PixelType location = pixelInfo[y][x];
+                //When the pixel is blank, do nothing on this tile (for now)
+                if (location == PixelType.None) continue;
+
+                Vector2Int tilePos = new Vector2Int(x, y);
+                grid[tilePos] = new RoadTile(true);
+                if (location == PixelType.LocalRoad)
+                {
+                    TryPlacingHousesAround(tilePos, grid, pixelInfo, ref densityOffsetter);
+                }
+            }
+        }
+
+        return grid;
+    }
+
+    private void TryPlacingHousesAround(Vector2Int tilePos, TileGrid grid, PixelType[][] pixelInfo, ref int densityOffset)
+    {
+        foreach(Tile.Facing directions in Enum.GetValues(typeof(Tile.Facing)))
+        {
+            Vector2Int checkPos = tilePos + directions.ToVector2();
+            if(!grid.Contains(checkPos) && grid.InBounds(checkPos.x, checkPos.y) && pixelInfo[checkPos.y][checkPos.x] == PixelType.None)
+            {
+                if(densityOffset == 0)
+                {
+                    grid[checkPos] = new BuildingTile(BuildingTile.StructureType.House, directions.Oppisite(), true);
+                    densityOffset = UnityEngine.Random.Range(3, 6);
+                }
+                else
+                {
+                    densityOffset--;
+                }
+            }
+        }
     }
 
     private void FloodFillCheck()
