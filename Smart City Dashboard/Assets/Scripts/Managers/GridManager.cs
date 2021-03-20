@@ -136,7 +136,7 @@ public class GridManager : MonoBehaviour
     {
         if (SaveGameManager.LoadFromFile != "")
         {
-            Grid = SaveGameManager.LoadGame(SaveGameManager.LoadFromFile);
+            Grid = SaveGameManager.ReadMapFromFile(SaveGameManager.LoadFromFile);
             if (Grid == null) return false;
             SaveGameManager.LoadFromFile = "";
             gridSize = Grid.Width;
@@ -256,16 +256,8 @@ public class GridManager : MonoBehaviour
 
     public void SaveGame()
     {
-        StringBuilder strBuilder = new StringBuilder();
-        strBuilder.Clear();
-        strBuilder.Append(Application.dataPath);
-        strBuilder.Append("/Saves/");
-        int count = Directory.GetFiles(strBuilder.ToString(), "*.xml").Length;
-        strBuilder.Append("save ");
-        strBuilder.Append(count.ToString());
-        strBuilder.Append(".xml");
         GridSM.SuspendState(cursor);
-        SaveGameManager.SaveGame(strBuilder.ToString(), Grid);
+        SaveGameManager.WriteMapToFile(Grid);
         GridSM.ResumeState(cursor);
     }
 

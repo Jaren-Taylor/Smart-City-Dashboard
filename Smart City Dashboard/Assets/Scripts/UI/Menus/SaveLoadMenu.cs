@@ -11,8 +11,6 @@ public class SaveLoadMenu : Menu
     private GameObject CardArea;
     private List<DictionaryCard> cards = new List<DictionaryCard>();
 
-    private StringBuilder strBuilder = new StringBuilder();
-
     public override void Open()
     {
         FetchFiles();
@@ -37,54 +35,28 @@ public class SaveLoadMenu : Menu
     public void FetchFiles()
     {
         DictionaryCard card;
-        var address = Application.dataPath + "/Saves";
-        try
-        {
-            foreach (string file in Directory.EnumerateFiles(address, "*.xml"))
-            {   
-                card = DictionaryCard.Spawn(CardArea.transform, UIBackgroundSprite.Blue, System.IO.Path.GetFileNameWithoutExtension(file));
-                card.AddItem("Created", File.GetCreationTime(file).ToString());
-                card.AddItem("Last Modified", File.GetLastWriteTime(file).ToString());
-                card.OnClick.AddListener(LoadGame);
-                card.OnRemoved.AddListener(CardDeleted);
-                cards.Add(card);
-            }
-        }
-        catch (Exception)
-        {
-            Debug.LogError("Cannot load files from the specified path: " + address);
+        foreach (string file in SaveGameManager.FetchSaveFiles())
+        {   
+            card = DictionaryCard.Spawn(CardArea.transform, UIBackgroundSprite.Blue, System.IO.Path.GetFileNameWithoutExtension(file));
+            card.AddItem("Created", File.GetCreationTime(file).ToString());
+            card.AddItem("Last Modified", File.GetLastWriteTime(file).ToString());
+            card.OnClick.AddListener(LoadGame);
+            card.OnRemoved.AddListener(CardDeleted);
+            cards.Add(card);
         }
     }
 
     private void CardDeleted(UIClickable card)
     {
         DictionaryCard detailedCard = (DictionaryCard)card;
-        DeleteSaveFile(detailedCard.Header);
+        SaveGameManager.DeleteSaveFile(detailedCard.Header);
         cards.Remove(detailedCard);
     }
 
     private void LoadGame(UIClickable card)
     {
-        DictionaryCard detailedCard = (DictionaryCard)card;
-        strBuilder.Clear();
-        strBuilder.Append(Application.dataPath);
-        strBuilder.Append("/Saves/");
-        strBuilder.Append(detailedCard.Header);
-        strBuilder.Append(".xml");
-        SaveGameManager.LoadFromFile = strBuilder.ToString();
-        SaveGameManager.FileName = detailedCard.Header;
-        GridManager.Instance.LoadGame();
+        SaveGameManager.LoadGame(((DictionaryCard)card).Header);
     }
+
     
-    private void DeleteSaveFile(string name)
-    {
-        strBuilder.Clear();
-        strBuilder.Append(Application.dataPath);
-        strBuilder.Append("/Saves/");
-        strBuilder.Append(name);
-        strBuilder.Append(".xml");
-        File.Delete(@strBuilder.ToString());
-        strBuilder.Append(".meta");
-        File.Delete(@strBuilder.ToString());
-    }
 }

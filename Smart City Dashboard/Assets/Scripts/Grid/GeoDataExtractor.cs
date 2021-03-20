@@ -50,14 +50,7 @@ public class GeoDataExtractor
     public void WriteGraphToFile(string fileName, Texture2D mapTexture)
     {
         TileGrid generatedGrid = CreateMap(mapTexture);
-
-        StringBuilder strBuilder = new StringBuilder();
-        strBuilder.Clear();
-        strBuilder.Append(Application.dataPath);
-        strBuilder.Append("/Saves/");
-        strBuilder.Append(fileName);
-        strBuilder.Append(".xml");
-        SaveGameManager.SaveGame(strBuilder.ToString(), generatedGrid);
+        SaveGameManager.WriteMapToFile(fileName, generatedGrid);
     }
 
     private PixelType[][] ExtractDataWithMask(bool[][] image, Texture2D texture)
