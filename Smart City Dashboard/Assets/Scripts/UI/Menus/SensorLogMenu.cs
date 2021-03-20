@@ -17,14 +17,18 @@ public class SensorLogMenu : MonoBehaviour
 
     private SortMode currentSort = SortMode.None;
 
-    public void AddSensor(ISensor sensor)
+    public bool TryAddSensor(ISensor sensor)
     {
-        if (sensorMapping.ContainsKey(sensor)) throw new Exception("Sensor already found");
-        var (statusName, statusMsg, statusEnum) = sensor.Status();
-        var card = menu.AddNameValueCard(statusEnum.GetColor(), sensor.ToString(), statusName, statusMsg);
-        sensorMapping.Add(sensor, card);
-        cardMapping.Add(card, sensor);
-        card.OnClick.AddListener(CardClicked);
+        if (!sensorMapping.ContainsKey(sensor) && menu.isActiveAndEnabled)
+        {
+            var (statusName, statusMsg, statusEnum) = sensor.Status();
+            var card = menu.AddNameValueCard(statusEnum.GetColor(), sensor.ToString(), statusName, statusMsg);
+            sensorMapping.Add(sensor, card);
+            cardMapping.Add(card, sensor);
+            card.OnClick.AddListener(CardClicked);
+            return true;
+        }
+        return false;
     }
 
     private void CardClicked(UIClickable card)
@@ -51,12 +55,13 @@ public class SensorLogMenu : MonoBehaviour
         }
     }
 
-    public void RemoveSensor(ISensor sensor)
+    public bool TryRemoveSensor(ISensor sensor)
     {
-        if(!sensorMapping.ContainsKey(sensor)) throw new Exception("Sensor does not exist in this menu");
+        if (!sensorMapping.ContainsKey(sensor)) return false;// throw new Exception("Sensor does not exist in this menu");
         var card = sensorMapping[sensor];
         if (card != null) Destroy(card.gameObject);
         sensorMapping.Remove(sensor);
+        return true;
     }
 
     public void UpdateSensorLog(ISensor sensor)
@@ -68,7 +73,7 @@ public class SensorLogMenu : MonoBehaviour
         }
         else
         {
-            AddSensor(sensor);
+            TryAddSensor(sensor);
             UpdatePositionalStanding(card);
         }
     }

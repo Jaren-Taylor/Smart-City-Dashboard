@@ -56,13 +56,13 @@ public class SensorLogUIController : MonoBehaviour
     internal void RegisterSensor(ISensor sensor)
     {
         sensors.Add(sensor);
-        log.AddSensor(sensor);
+        log.TryAddSensor(sensor);
     }
 
     internal void DeregisterSensor(ISensor sensor)
     {
         sensors.Remove(sensor);
-        log.RemoveSensor(sensor);
+        log.TryRemoveSensor(sensor);
     }
 
     private void ListenToSensor(ISensor sensor) => sensor.StatusUpdated += UpdateSensorStatus;
