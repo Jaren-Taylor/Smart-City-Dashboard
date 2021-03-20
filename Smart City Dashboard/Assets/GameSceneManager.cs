@@ -32,7 +32,7 @@ public class GameSceneManager : MonoBehaviour
 
     public static void LoadScene(SceneIndexes newScene)
     {
-        if (Instance == null) throw new System.Exception("Load this scene with the loading scene in additive mode");
+        if (Instance == null) throw new System.Exception("Mike added this: start the game from the LOADING SCENE to be able to change scenes.");
         Instance.InternalLoadScene(newScene);
     }
 
