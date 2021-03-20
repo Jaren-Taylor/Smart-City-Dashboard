@@ -23,7 +23,11 @@ public class ThinOutTestImage : MonoBehaviour
 
         var nodeTexture = DrawGraphToTexture(graph, source.sprite.texture.width, source.sprite.texture.height, true);
 
-        var rasterTexture = extract.DrawToTextureAtAngle(graph, nodeTexture.width, nodeTexture.height, -1.5f);
+        var moneyAng = extract.GetMoneyShot(graph);
+
+        var rasterTexture = extract.DrawToTextureAtAngle(graph, nodeTexture.width, nodeTexture.height, moneyAng);
+
+        Debug.Log(this.gameObject.name + " : ang = " + moneyAng);
 
         var backgroundMask = new[] { maskColor };
 
@@ -48,7 +52,8 @@ public class ThinOutTestImage : MonoBehaviour
            new Rect(0, 0, nodeTexture.width, nodeTexture.height),
            new Vector2(0, 1));
 
-        Debug.Log(this.gameObject.name + ": Completed");
+
+        extract.WriteGraphToFile(this.gameObject.name, rasterTexture);
     }
 
 

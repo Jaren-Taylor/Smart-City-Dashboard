@@ -434,7 +434,7 @@ public class GeoDataExtractor
 
     public float GetMoneyShot(PixelPathGraph graph)
     {
-        List<(float length, float angle)> angleLength = new List<(float length, float angle)>();
+        List<(int sqrLength, float angle)> angleSqrLength = new List<(int sqrLength, float angle)>();
 
         var allLines = graph.GetAllLines();
 
@@ -442,17 +442,52 @@ public class GeoDataExtractor
         {
             var (leftmostPT, rightmostPT) = (p1.x < p2.x) ? (p1, p2) : (p2, p1);
 
-            var vertAngle = Vector2.SignedAngle(rightmostPT - leftmostPT, Vector3.right);
-            float correctedAngle = 0f;
+            var delta = rightmostPT - leftmostPT;
+
+            var vertAngle = Vector2.SignedAngle(delta, Vector3.right);
+            float correctedAngle;
 
             if (vertAngle.IsBetween(-45, 45)) correctedAngle = vertAngle;
-            else if (vertAngle > 0) correctedAngle = vertAngle + 90;
-            else correctedAngle = vertAngle - 90;
+            else if (vertAngle > 0) correctedAngle = (90 - vertAngle);
+            else correctedAngle = (90 + vertAngle);
 
-            angleLength.Add((Vector2.Distance(leftmostPT, rightmostPT), correctedAngle));
+            angleSqrLength.Add(((rightmostPT - leftmostPT).sqrMagnitude, correctedAngle));
         }
 
-        return 0f;
+        float minVal = -45;
+        float maxVal = 46;
+        int bucketCount = 9;
+        List<List<float>> Buckets = new List<List<float>>();
+        List<int> BucketWeight = new List<int>();
+
+        for(int i = 0; i < bucketCount; i++)
+        {
+            Buckets.Add(new List<float>());
+            BucketWeight.Add(0);
+        }
+
+        float bucketSize = (maxVal - minVal) / bucketCount;
+
+        foreach(var (sqrLen, angle) in angleSqrLength)
+        {
+            int bucketNum = Mathf.FloorToInt((angle - minVal) / bucketSize);
+            Buckets[bucketNum].Add(angle);
+            BucketWeight[bucketNum] += sqrLen;
+        }
+
+        int max = 0;
+        for(int i = 0; i < bucketCount; i++)
+        {
+            if (BucketWeight[i] > BucketWeight[max]) max = i;
+        }
+
+        float total = 0f; 
+        foreach(float ang in Buckets[max])
+        {
+            total += ang;
+        }
+
+        return total / Buckets[max].Count;
     }
 
     public Texture2D DrawToTexture(PixelPathGraph graph, int width, int height)
