@@ -62,7 +62,6 @@ public class GameSceneManager : MonoBehaviour
                 foreach(AsyncOperation operation in runningOperations)
                 {
                     totalSceneProgress += operation.progress;
-                    Debug.Log(operation.progress);
                 }
 
                 totalSceneProgress = (totalSceneProgress / runningOperations.Count) * 100f;
