@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TestScrollMenu : MonoBehaviour
 {
-    public ScrollablePopupMenu popup;
+    public UICardManager popup;
 
     int i = 0;
 
@@ -20,12 +20,12 @@ public class TestScrollMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
         {
             i++;
-            var card = popup.AddNewItem(UIBackgroundSprite.Blue, "Test Entry: " + i);
+            var card = popup.AddHeaderCard(UIBackgroundSprite.Blue, "Test Entry: " + i);
             card.OnClick.AddListener(Clicked);
         }
     }
 
-    private void Clicked(UIElement obj)
+    private void Clicked(UIClickable obj)
     {
         Debug.Log("It's been clicked!");
     }

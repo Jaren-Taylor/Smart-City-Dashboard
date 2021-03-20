@@ -7,9 +7,9 @@ public class UIElementManager : MonoBehaviour
     public static float halfMargin = Margin / 2;
     public static float GlideSpeed = 25;
  
-    public List<UIElement> elements = new List<UIElement>();
-    private Dictionary<UIElement, RectTransform> rectTransforms = new Dictionary<UIElement, RectTransform>();
-    private Dictionary<UIElement, Vector3> destinations = new Dictionary<UIElement, Vector3>();
+    public List<UIClickable> elements = new List<UIClickable>();
+    private Dictionary<UIClickable, RectTransform> rectTransforms = new Dictionary<UIClickable, RectTransform>();
+    private Dictionary<UIClickable, Vector3> destinations = new Dictionary<UIClickable, Vector3>();
     private Vector3 positionCursor = new Vector3(Margin, -Margin, 0);
 
     private void Update()
@@ -22,7 +22,7 @@ public class UIElementManager : MonoBehaviour
     /// </summary>
     private void UpdatePositions()
     {
-        foreach (UIElement element in elements)
+        foreach (UIClickable element in elements)
         {
             // only update position if it needs it
             if (rectTransforms[element].localPosition != destinations[element]) {
@@ -42,7 +42,7 @@ public class UIElementManager : MonoBehaviour
     /// Add a GameObject to the manager's system. GameObject is assumed to contain a RectTransform
     /// </summary>
     /// <param name="element"></param>
-    public void Add(UIElement element)
+    public void Add(UIClickable element)
     {
         var rectTransform = element.GetComponent<RectTransform>();
         //element.OnDestroyElement += Remove;
@@ -56,7 +56,7 @@ public class UIElementManager : MonoBehaviour
     /// </summary>
     /// <param name="element"></param>
     /// <param name="rectTransform"></param>
-    private void AddToDictionaries(UIElement element, RectTransform rectTransform)
+    private void AddToDictionaries(UIClickable element, RectTransform rectTransform)
     {
         rectTransforms.Add(element, rectTransform);
         destinations.Add(element, new Vector3(positionCursor.x, positionCursor.y, positionCursor.z));
@@ -66,7 +66,7 @@ public class UIElementManager : MonoBehaviour
     /// Removes a GameObject from the manager's system
     /// </summary>
     /// <param name="element"></param>
-    public void Remove(UIElement element)
+    public void Remove(UIClickable element)
     {
         UpdateDictionaryPositions(element);
         RemoveFromDictionaries(element);
@@ -77,7 +77,7 @@ public class UIElementManager : MonoBehaviour
     /// Removes a GameObject from each dictionary the manager uses
     /// </summary>
     /// <param name="element"></param>
-    private void RemoveFromDictionaries(UIElement element)
+    private void RemoveFromDictionaries(UIClickable element)
     {
         rectTransforms.Remove(element);
         destinations.Remove(element);
@@ -87,7 +87,7 @@ public class UIElementManager : MonoBehaviour
     /// Only used for when a GameObject is removed from the manager, and the dictionaries need to be updated
     /// </summary>
     /// <param name="elementRemoved"></param>
-    private void UpdateDictionaryPositions(UIElement elementRemoved)
+    private void UpdateDictionaryPositions(UIClickable elementRemoved)
     {
         int indexRemoved = elements.IndexOf(elementRemoved);
         Vector3 spaceCreated;

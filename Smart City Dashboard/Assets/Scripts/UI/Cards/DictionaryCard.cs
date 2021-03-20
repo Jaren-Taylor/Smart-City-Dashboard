@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class DetailedCard : HeaderCard
+public class DictionaryCard : HeaderCard
 {
     public static new readonly string prefabAddress = "Prefabs/UI/Cards/DetailedCard";
-    private static new GameObject staticPrefab = null;
+    private static GameObject staticPrefab = null;
 
     private Dictionary<string, NameValuePair> items = new Dictionary<string, NameValuePair>();
     [SerializeField]
@@ -16,12 +16,15 @@ public class DetailedCard : HeaderCard
     [SerializeField]
     private GameObject NameValuePairPrefab;
 
-    public string GetHeader() => header.text;
-
+    /// <summary>
+    /// Adds a Key-Value pair to the Card
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
     public void AddItem(string key, string value)
     {
         
-        if (NameValuePairPrefab is null) throw new System.Exception("NameValuePair prefab not set on DetailCard script");
+        if (NameValuePairPrefab is null) throw new System.Exception("NameValuePair prefab not set in the DetailCard script");
         GameObject nameValueObj = Instantiate(NameValuePairPrefab, textArea.transform);
         if (nameValueObj.TryGetComponent(out NameValuePair pair))
         {
@@ -35,6 +38,10 @@ public class DetailedCard : HeaderCard
         }
     }
 
+    /// <summary>
+    /// Deletes a Key-Value pair from the Card
+    /// </summary>
+    /// <param name="key"></param>
     public void DeleteItem(string key)
     {
         Destroy(items[key].gameObject);
@@ -74,17 +81,11 @@ public class DetailedCard : HeaderCard
     /// <param name="backgroundSprite"></param>
     /// <param name="text"></param>
     /// <returns></returns>
-    public new static DetailedCard Spawn(Transform parent, UIBackgroundSprite backgroundSprite, string header)
+    public new static DictionaryCard Spawn(Transform parent, UIBackgroundSprite backgroundSprite, string header)
     {
-        DetailedCard detailCard = CopyPrefabToParent(parent);
+        DictionaryCard detailCard = CopyPrefabToParent(staticPrefab, parent, prefabAddress).GetComponent<DictionaryCard>();
         detailCard.Header  = header;
         detailCard.BackgroundSprite = backgroundSprite;
         return detailCard;
-    }
-
-    private static DetailedCard CopyPrefabToParent(Transform parent)
-    {
-        if (staticPrefab == null) staticPrefab = Resources.Load<GameObject>(prefabAddress);
-        return Instantiate(staticPrefab, parent.position, Quaternion.identity, parent).GetComponent<DetailedCard>();
     }
 }

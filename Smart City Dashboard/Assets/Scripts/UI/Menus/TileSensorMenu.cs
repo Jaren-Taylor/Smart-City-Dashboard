@@ -7,7 +7,7 @@ public class TileSensorMenu : Menu
 {
     public UIBackgroundSprite CardColor;
     [SerializeField]
-    private ScrollablePopupMenu menu;
+    private UICardManager menu;
 
     private Tile focusedTile = null;
 
@@ -38,7 +38,7 @@ public class TileSensorMenu : Menu
 
     private void AddSensorToMenu(SensorType sensor)
     {
-        var card = menu.AddNewItem(CardColor, sensor.ToString());
-        card.OnRemoveClicked.AddListener((_) => focusedTile.RemoveSensor(sensor));
+        var card = menu.AddHeaderCard(CardColor, sensor.ToString());
+        card.OnRemoved.AddListener((_) => focusedTile.RemoveSensor(sensor));
     }
 }
