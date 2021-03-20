@@ -238,29 +238,9 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P)) Debug.Log(Grid.ToString());
-
         if (Input.GetKeyDown(KeyCode.S))
         {
             SaveGame();
-        }
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            GameObject path = new GameObject("Path Holder");
-
-            List<Vector2Int> points = Pathfinding.GetListOfPositionsFromTo(new Vector2Int(1, 1), Grid.GetBuildingLocations()[1]);
-            points.Reverse();
-
-            List<GameObject> pointInstances = new List<GameObject>();
-
-            if (points.Count > 0) pointInstances.Add(Instantiate(NavPointPrefab, new Vector3(points[0].x, 0f, points[0].y), Quaternion.identity, path.transform));
-            for (int i = 1; i < points.Count; i++)
-            {
-                var navPt = Instantiate(NavPointPrefab, new Vector3(points[i].x, 0f, points[i].y), Quaternion.identity, path.transform);
-                navPt.GetComponent<NavPoint>().Connections.Add(new NavPointConnection(pointInstances[i - 1].GetComponent<NavPoint>(), NavPointConnection.ConnectionType.Directed));
-                pointInstances.Add(navPt);
-            }
         }
 
         if (CursorEnabled && CameraManager.Instance.isFollowingEntity is false)

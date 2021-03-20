@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -36,14 +37,22 @@ public class SaveLoadMenu : Menu
     public void FetchFiles()
     {
         DictionaryCard card;
-        foreach (string file in Directory.EnumerateFiles(Application.dataPath+"/Saves", "*.xml"))
-        {   
-            card = DictionaryCard.Spawn(CardArea.transform, UIBackgroundSprite.Blue, System.IO.Path.GetFileNameWithoutExtension(file));
-            card.AddItem("Created", File.GetCreationTime(file).ToString());
-            card.AddItem("Last Modified", File.GetLastWriteTime(file).ToString());
-            card.OnClick.AddListener(LoadGame);
-            card.OnRemoved.AddListener(CardDeleted);
-            cards.Add(card);
+        var address = Application.dataPath + "/Saves";
+        try
+        {
+            foreach (string file in Directory.EnumerateFiles(address, "*.xml"))
+            {   
+                card = DictionaryCard.Spawn(CardArea.transform, UIBackgroundSprite.Blue, System.IO.Path.GetFileNameWithoutExtension(file));
+                card.AddItem("Created", File.GetCreationTime(file).ToString());
+                card.AddItem("Last Modified", File.GetLastWriteTime(file).ToString());
+                card.OnClick.AddListener(LoadGame);
+                card.OnRemoved.AddListener(CardDeleted);
+                cards.Add(card);
+            }
+        }
+        catch (Exception)
+        {
+            Debug.LogError("Cannot load files from the specified path: " + address);
         }
     }
 
