@@ -42,6 +42,8 @@ public class GeoDataExtractor
 
         CollapseBetweenPoI(graph);
 
+        CollapseSmallLoops(graph);
+
         return graph;
     }
 
@@ -271,6 +273,61 @@ public class GeoDataExtractor
         }
 
         return pathGraph;
+    }
+
+
+    private void CollapseSmallLoops(PixelPathGraph graph)
+    {
+        var changes = false;
+        do
+        {
+            LinkedList<Vector2Int> unexploredPoI = new LinkedList<Vector2Int>(graph.GetPointsOfInterest());
+            graph.ClearVisited();
+            changes = false;
+
+            LinkedList<(Vector2Int from, Vector2Int to)> collapseFromTo = new LinkedList<(Vector2Int from, Vector2Int to)>();
+
+            Dictionary<Vector2Int, Vector2Int> collapseMapping = new Dictionary<Vector2Int, Vector2Int>();
+
+            var exploringNode = unexploredPoI.First;
+            while(exploringNode != null)
+            {
+                if (graph.DoesNodeExist(exploringNode.Value))
+                {
+                    graph.MarkVisited(exploringNode.Value);
+
+                    var connCopy = new HashSet<Vector2Int> (graph.GetConnections(exploringNode.Value));
+
+                    foreach (var con in connCopy)
+                    {
+                        if (!graph.IsNodeOfInterest(exploringNode.Value)) break;
+                        if (graph.IsConnected(exploringNode.Value, con) 
+                            && graph.IsNodeOfInterest(con) 
+                            && Vector2.Distance(exploringNode.Value, con) <= 1)
+                        {
+                            //graph.CollapseConnection(con, exploringNode.Value);
+                            collapseFromTo.AddLast((con, exploringNode.Value));
+                            changes = true;
+                        }
+                    }
+                }
+
+               exploringNode = exploringNode.Next;
+            }
+
+            foreach(var node in collapseFromTo)
+            {
+                var (from, to) = node;
+                if(graph.DoesNodeExist(from) && graph.DoesNodeExist(to) && graph.IsConnected(from, to))
+                {
+                    graph.CollapseConnection(from, to);
+                }
+            }
+
+            collapseFromTo.Clear();
+            collapseMapping.Clear();
+        }
+        while (changes);
     }
 
     private void CollapseBetweenPoI(PixelPathGraph graph)

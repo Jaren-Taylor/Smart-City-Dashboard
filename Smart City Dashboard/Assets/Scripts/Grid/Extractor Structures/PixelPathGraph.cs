@@ -73,15 +73,28 @@ public class PixelPathGraph
 
     public void CollapseConnection(Vector2Int node1, Vector2Int node2)
     {
+        if(node1 == new Vector2Int(0, 1) && node2 == Vector2Int.zero)
+        {
+            var test = graphData[node1].Connections;
+            var test2 = graphData[node2].Connections;
+
+            int i = 103;
+        }
+
         if(IsConnected(node1, node2))
         {
             foreach(var node in graphData[node1].Connections)
             {
                 if (node == node2) continue;
-                ReplaceConnection(node, node1, node2); //Replace the connection node has to node1 with a connection to node2
-                ReplaceConnection(node2, node1, node);  //Replace the same connection but from node2's persp
+                if(!IsConnected(node, node2))
+                {
+                    graphData[node].Connections.Add(node2);
+                    graphData[node2].Connections.Add(node);
+                }
+                graphData[node].Connections.Remove(node1);
+                
             }
-            //pixelData[node2] += pixelData[node1]; //Mix the pixel data
+            graphData[node2].Connections.Remove(node1);
             pixelData.Remove(node1); //Remove node1 from the graph
             graphData.Remove(node1);
         }

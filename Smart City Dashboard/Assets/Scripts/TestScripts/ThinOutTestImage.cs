@@ -25,6 +25,7 @@ public class ThinOutTestImage : MonoBehaviour
 
         var moneyAng = extract.GetMoneyShot(graph);
 
+
         var rasterTexture = extract.DrawToTextureAtAngle(graph, nodeTexture.width, nodeTexture.height, moneyAng);
 
         Debug.Log(this.gameObject.name + " : ang = " + moneyAng);
