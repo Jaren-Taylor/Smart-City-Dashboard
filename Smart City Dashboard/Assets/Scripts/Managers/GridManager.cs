@@ -9,6 +9,9 @@ using UnityEngine.SceneManagement;
 
 public class GridManager : MonoBehaviour
 {
+    public float LoadProgress = 0f;
+    public bool isDoneLoading = false;
+
     [Range(5, 100)]
     public int gridSize;
 
@@ -65,20 +68,23 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        if (Instance != null) Destroy(this);
+        Instance = this;
+
         if (!TryLoadFile())
         {
             Grid = new TileGrid(gridSize, gridSize);
         }
 
         GridSM = new GridController(EGridControlState.PlaceRoads);
-        if (Instance != null) Destroy(this);
-        Instance = this;
         
         ground = CreateGround();
 
         SurroundGround(gridSize);
 
         Grid.RefreshGrid();
+
+        isDoneLoading = true;
     }
 
     private void SurroundGround(int gridSize)
@@ -287,7 +293,7 @@ public class GridManager : MonoBehaviour
     public void LoadGame()
     {
         GridSM.SuspendState(cursor);
-        SceneManager.LoadScene(0);
+        GameSceneManager.LoadScene(SceneIndexes.BUILD);
         GridSM.ResumeState(cursor);
     }
 

@@ -92,12 +92,20 @@ public class TileGrid
     {
         var TileLocations = GetLocations();
 
+        float total = TileLocations.Count;
+        float current = 0f;
+
         foreach (var location in TileLocations)
         {
             grid[location].CreateManaged(location, GetNeighbors(location));
             grid[location].SpawnHeldSensors();
+            current++;
+
+            GridManager.Instance.LoadProgress = current / total;
         }
-        //foreach (var buildingLocation in BuildingTiles)
+
+        GridManager.Instance.LoadProgress = 1f;
+
     }
 
     /// <summary>
