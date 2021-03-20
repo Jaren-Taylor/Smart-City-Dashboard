@@ -8,6 +8,8 @@ using UnityEngine;
 
 public static class SaveGameManager 
 {
+    public static string FileName = "";
+
     public static string LoadFromFile = "";
     /// <summary>
     /// Loads the game from XML
