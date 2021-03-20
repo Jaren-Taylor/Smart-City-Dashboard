@@ -815,3 +815,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingScreen: {fileID: 1240587126}
   progressBar: {fileID: 1578669930}
+  loadingScreenTitle: {fileID: 555696533}

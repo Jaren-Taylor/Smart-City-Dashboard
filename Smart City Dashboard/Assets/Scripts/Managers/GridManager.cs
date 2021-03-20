@@ -293,7 +293,7 @@ public class GridManager : MonoBehaviour
     public void LoadGame()
     {
         GridSM.SuspendState(cursor);
-        GameSceneManager.LoadScene(SceneIndexes.BUILD);
+        GameSceneManager.LoadScene(SceneIndexes.BUILD, SaveGameManager.FileName);
         GridSM.ResumeState(cursor);
     }
 

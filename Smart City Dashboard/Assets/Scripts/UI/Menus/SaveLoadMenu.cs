@@ -63,6 +63,7 @@ public class SaveLoadMenu : Menu
         strBuilder.Append(detailedCard.Header);
         strBuilder.Append(".xml");
         SaveGameManager.LoadFromFile = strBuilder.ToString();
+        SaveGameManager.FileName = detailedCard.Header;
         GridManager.Instance.LoadGame();
     }
     
