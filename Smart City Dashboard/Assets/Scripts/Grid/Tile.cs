@@ -59,7 +59,8 @@ public abstract class Tile
     [DataMember(Name="IsPermanent")]
     public bool IsPermanent { get; private set; }
 
-    [DataMember(Name="IsTransparent")]
+    //[DataMember(Name="IsTransparent")]
+    [IgnoreDataMember]
     private bool isTransparent = true;
 
     [DataMember(Name="Sensors")]
@@ -83,6 +84,8 @@ public abstract class Tile
 #pragma warning disable UNT0008 // Null propagation on Unity objects
     public NodeCollectionController NodeCollection => cachedCollection ??= GetComponent<PathfindingTileInterface>()?.NodeCollection;
 #pragma warning restore UNT0008 // Null propagation on Unity objects
+
+    public Tile(bool isPermanent) { this.IsPermanent = isPermanent; }
 
     public Tile()
     {
@@ -275,4 +278,69 @@ public abstract class Tile
     /// <param name="neighbors">The neighbor information required to determine orientation</param>
     /// <returns>Returns true when this object is flagged for deletion from grid!</returns>
     protected abstract bool CalculateAndSetModelFromNeighbors(NeighborInfo neighbors);
+}
+
+
+public static class FacingExtension
+{
+    public static Vector2Int ToVector2(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => Vector2Int.right,
+        Tile.Facing.Left => Vector2Int.left,
+        Tile.Facing.Top => Vector2Int.up,
+        Tile.Facing.Bottom => Vector2Int.down,
+        _ => throw new Exception()
+    };
+
+    public static Tile.Facing Oppisite(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => Tile.Facing.Left,
+        Tile.Facing.Left => Tile.Facing.Right,
+        Tile.Facing.Top => Tile.Facing.Bottom,
+        Tile.Facing.Bottom => Tile.Facing.Top,
+        _ => throw new Exception()
+    };
+
+    public static Tile.Facing TurnLeft(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => Tile.Facing.Top,
+        Tile.Facing.Left => Tile.Facing.Bottom,
+        Tile.Facing.Top => Tile.Facing.Left,
+        Tile.Facing.Bottom => Tile.Facing.Right,
+        _ => throw new Exception()
+    };
+
+    public static Tile.Facing TurnRight(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => Tile.Facing.Bottom,
+        Tile.Facing.Left => Tile.Facing.Top,
+        Tile.Facing.Top => Tile.Facing.Right,
+        Tile.Facing.Bottom => Tile.Facing.Left,
+        _ => throw new Exception()
+    };
+
+    public static Vector2Int DiagonalLeftVector(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => new Vector2Int(1, 1),
+        Tile.Facing.Left => new Vector2Int(-1, -1),
+        Tile.Facing.Top => new Vector2Int(-1, 1),
+        Tile.Facing.Bottom => new Vector2Int(1, -1),
+        _ => throw new Exception()
+    };
+
+    public static Vector2Int DiagonalRightVector(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => new Vector2Int(1, -1),
+        Tile.Facing.Left => new Vector2Int(-1, 1),
+        Tile.Facing.Top => new Vector2Int(1, 1),
+        Tile.Facing.Bottom => new Vector2Int(-1, -1),
+        _ => throw new Exception()
+    };
+
+    public static bool IsHorizontal(this Tile.Facing facing) => facing switch
+    {
+        Tile.Facing.Right => true,
+        Tile.Facing.Left => true,
+        _ => false
+    };
 }
