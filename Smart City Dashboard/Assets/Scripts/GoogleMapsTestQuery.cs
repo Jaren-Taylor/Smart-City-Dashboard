@@ -15,12 +15,10 @@ public class GoogleMapsTestQuery : MonoBehaviour
     public Texture2D texture;
     public Image picture;
     private string apikey;
-    private bool KeyCreated = false; 
 
-    private void Update()
+    private void Start()
     {
-        //crude quickfix
-        if(KeyCreated) StartCoroutine(GetTexture(CreateQuery(apikey)));
+       StartCoroutine(GetTexture(CreateQuery(apikey)));
     }
 
     /// <summary>
@@ -51,7 +49,6 @@ public class GoogleMapsTestQuery : MonoBehaviour
 
     public IEnumerator GetTexture(string uri)
     {
-        KeyCreated = false;
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(uri);
         yield return www.SendWebRequest();
 
@@ -70,7 +67,6 @@ public class GoogleMapsTestQuery : MonoBehaviour
     {
         apikey = input;
         Debug.Log(apikey);
-        KeyCreated = true;
     }
 
 }
