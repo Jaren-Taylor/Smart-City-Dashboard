@@ -11,6 +11,8 @@ public class PulsingButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private float defaultWidth;
     private Vector3 defaultScale;
 
+    private bool resetSelf = false;
+
     public void OnPointerClick(PointerEventData eventData)
     {
         LeanTween.scale(gameObject, CalculateEvenHeightBasedScale(scaleAmount + .1f), .1f);
@@ -18,7 +20,7 @@ public class PulsingButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        LeanTween.scale(gameObject, CalculateEvenHeightBasedScale(scaleAmount), 1f).setLoopPingPong();
+        LeanTween.scale(gameObject, CalculateEvenHeightBasedScale(scaleAmount), 1.091f).setLoopPingPong();
     }
 
     private Vector3 CalculateEvenHeightBasedScale(float heightScale)
@@ -41,6 +43,21 @@ public class PulsingButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         LeanTween.cancel(gameObject);
         transform.localScale = defaultScale;
+    }
+
+    void OnDisable()
+    {
+        LeanTween.cancel(gameObject);
+        resetSelf = true;
+    }
+
+    void OnEnable()
+    {
+        if (resetSelf)
+        {
+            transform.localScale = defaultScale;
+            resetSelf = false;
+        }
     }
 
     // Start is called before the first frame update
