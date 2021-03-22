@@ -73,14 +73,6 @@ public class PixelPathGraph
 
     public void CollapseConnection(Vector2Int node1, Vector2Int node2)
     {
-        if(node1 == new Vector2Int(0, 1) && node2 == Vector2Int.zero)
-        {
-            var test = graphData[node1].Connections;
-            var test2 = graphData[node2].Connections;
-
-            int i = 103;
-        }
-
         if(IsConnected(node1, node2))
         {
             foreach(var node in graphData[node1].Connections)

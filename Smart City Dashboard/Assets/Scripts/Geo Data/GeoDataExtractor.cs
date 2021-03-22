@@ -63,10 +63,6 @@ public class GeoDataExtractor
         for (int row = 0; row < height; row++)
         {
             output[row] = new PixelType[height];
-            if(row == 43)
-            {
-                int i = 0;
-            }
 
             for (int col = 0; col < width; col++)
             {

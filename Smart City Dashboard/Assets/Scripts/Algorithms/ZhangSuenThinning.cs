@@ -126,11 +126,6 @@ public static class ZhangSuenThinning
             {
                 for (int col = 1; col < width - 1; col++)
                 {
-                    if(row == 4 && col == 80)
-                    {
-                        int i = 420;
-                    }
-
                     if (image[row][col] is false) continue; //First check (common to both stages)
 
                     PopulateNeighborSequence(image, checkingSequence, row, col); //Fills the checking sequence array the 3x3 values show in documents

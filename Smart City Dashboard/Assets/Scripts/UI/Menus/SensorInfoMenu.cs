@@ -32,9 +32,8 @@ public class SensorInfoMenu : MonoBehaviour
     public Action ToggleCursor;
     private RoadTile currentRoad;
     private TrafficLightController currentTrafficLight;
-    private bool isCurrentlyEastWest  = false;
     private bool isShowing = false;
-    private bool hasRun = false;
+
     private void Start()
     {
         sensorInfoMenu.SetActive(isShowing);
@@ -91,7 +90,6 @@ public class SensorInfoMenu : MonoBehaviour
         if (currentTrafficLight != null)
             currentTrafficLight.TurnedGreen -= SwapLights;
         DisableMenu();
-        hasRun = false;
         ResetLights();
         var tilePosition = tileTransform.ToGridInt();
         ResetViewButton.SetActive(true);
@@ -101,7 +99,6 @@ public class SensorInfoMenu : MonoBehaviour
             currentRoad = road;
             currentTrafficLight = road.TrafficLight;
             currentTrafficLight.TurnedGreen += SwapLights;
-            isCurrentlyEastWest = road.TrafficLight.isEastWest;
             switch (road.Type)
             {
                 case RoadTile.TileType.Road3Way:
