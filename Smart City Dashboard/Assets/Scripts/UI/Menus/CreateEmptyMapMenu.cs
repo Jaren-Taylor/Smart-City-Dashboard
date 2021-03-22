@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class CreateEmtpyMapMenu : MonoBehaviour
+public class CreateEmptyMapMenu : MonoBehaviour
 {
     [SerializeField]
     private MainMenu mainMenu;
@@ -21,17 +21,22 @@ public class CreateEmtpyMapMenu : MonoBehaviour
 
     public void TryCreateCity()
     {
-        string text = cityName.text.Trim();
+        string fileName = cityName.text.Trim();
 
         if (int.TryParse(citySize.text, out int size))
         {
-            if(SaveGameManager.FileNameInvalidOrTaken(text, out string response))
+            if(SaveGameManager.FileNameInvalidOrTaken(fileName, out string response))
             {
                 mainMenu.ShowPopup("Invalid Filename", response);
             }
             else //Input validated
             {
+                var tileGrid = new TileGrid(size, size);
 
+                SaveGameManager.SetFileName(fileName);
+                SaveGameManager.WriteMapToFile(tileGrid);
+
+                GameSceneManager.LoadScene(SceneIndexes.BUILD, fileName);
             }
         }
     }

@@ -9,8 +9,10 @@ public static class APIKey
     private static readonly string keyPath = Application.persistentDataPath + "/APIKey.txt";
     private static string storedKey = "";
 
+    public static bool HasKey() => TryGetKey(out storedKey);
+
     public static void ClearKeyCache() => storedKey = "";
-    
+
     public static bool TrySaveAPIKey(string key)
     {
         storedKey = key;

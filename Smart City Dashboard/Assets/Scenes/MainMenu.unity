@@ -635,8 +635,8 @@ RectTransform:
   m_Father: {fileID: 839200801}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2035,7 +2035,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &288139575
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2576,7 +2576,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &378235595
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3971,6 +3971,7 @@ GameObject:
   - component: {fileID: 491315914}
   - component: {fileID: 491315913}
   - component: {fileID: 491315912}
+  - component: {fileID: 491315915}
   m_Layer: 5
   m_Name: Geo Data Button
   m_TagString: Untagged
@@ -4054,9 +4055,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1663137974}
+      - m_Target: {fileID: 378235594}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
+        m_MethodName: 
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4104,6 +4105,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 491315910}
   m_CullTransparentMesh: 1
+--- !u!114 &491315915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 491315910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b08fe5084df74d44bc8acc8a16dffdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &492674614
 GameObject:
   m_ObjectHideFlags: 0
@@ -4351,7 +4364,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &500489327
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4520,6 +4533,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 545550549}
+  - component: {fileID: 545550550}
   m_Layer: 5
   m_Name: SettingsMenu
   m_TagString: Untagged
@@ -4548,6 +4562,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &545550550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545550548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0322e9e7c4534724ab0cb0817234f4de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenu: {fileID: 288139576}
+  apiKeyField: {fileID: 72848312}
 --- !u!1 &554097008
 GameObject:
   m_ObjectHideFlags: 0
@@ -4599,7 +4627,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &565155326
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5010,6 +5038,7 @@ GameObject:
   - component: {fileID: 659334638}
   - component: {fileID: 659334637}
   - component: {fileID: 659334636}
+  - component: {fileID: 659334639}
   m_Layer: 5
   m_Name: Preview Location Button
   m_TagString: Untagged
@@ -5131,6 +5160,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 659334634}
   m_CullTransparentMesh: 1
+--- !u!114 &659334639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659334634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b08fe5084df74d44bc8acc8a16dffdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &691907383
 GameObject:
   m_ObjectHideFlags: 0
@@ -6515,6 +6556,7 @@ GameObject:
   - component: {fileID: 889713257}
   - component: {fileID: 889713256}
   - component: {fileID: 889713255}
+  - component: {fileID: 889713258}
   m_Layer: 5
   m_Name: Empty Map Button
   m_TagString: Untagged
@@ -6586,7 +6628,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1663137974}
+      - m_Target: {fileID: 378235594}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -6648,6 +6690,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 889713253}
   m_CullTransparentMesh: 1
+--- !u!114 &889713258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 889713253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b08fe5084df74d44bc8acc8a16dffdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &901172675
 GameObject:
   m_ObjectHideFlags: 0
@@ -10383,7 +10437,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1335118058}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 545550550}
+        m_TargetAssemblyTypeName: ApplySettingsMenu, Assembly-CSharp
+        m_MethodName: TrySaveAPIKey
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1335118058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11376,6 +11442,7 @@ GameObject:
   - component: {fileID: 1489702132}
   - component: {fileID: 1489702131}
   - component: {fileID: 1489702130}
+  - component: {fileID: 1489702133}
   m_Layer: 5
   m_Name: Create Map Button
   m_TagString: Untagged
@@ -11497,6 +11564,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1489702128}
   m_CullTransparentMesh: 1
+--- !u!114 &1489702133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489702128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b08fe5084df74d44bc8acc8a16dffdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1495010422
 GameObject:
   m_ObjectHideFlags: 0
@@ -12150,8 +12229,8 @@ RectTransform:
   m_Father: {fileID: 554097009}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.2857143, y: 0}
+  m_AnchorMax: {x: 0.2857143, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -13165,7 +13244,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.2857143, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -14100,7 +14179,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

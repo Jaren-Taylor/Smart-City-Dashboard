@@ -183,9 +183,14 @@ public static class SaveGameManager
 
     public static void LoadGame(string fileName)
     {
+        SetFileName(fileName);
+        GridManager.Instance.LoadGame();
+    }
+
+    public static void SetFileName(string fileName)
+    {
         LoadFromFile = BuildSaveFilePath(fileName);
         FileName = fileName;
-        GridManager.Instance.LoadGame();
     }
 
     public static void DeleteSaveFile(string fileName)

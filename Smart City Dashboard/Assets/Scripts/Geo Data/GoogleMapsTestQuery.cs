@@ -23,12 +23,12 @@ public class GoogleMapsTestQuery : MonoBehaviour
        StartCoroutine(GetTexture(CreateQuery(apikey)));
     }
 
-    public static bool MakeQuery(int size, int zoom, string location)
+    public static bool MakeQuery(int size, int zoom, string rawTextLocation)
     {
         if(APIKey.TryGetKey(out string apiKey))
         {
-            string query = CreateQuery(size, zoom, location, apiKey);
-
+            string query = CreateQuery(size, zoom, rawTextLocation, apiKey);
+            //TODO: Use query
             return true;
         }
         return false;

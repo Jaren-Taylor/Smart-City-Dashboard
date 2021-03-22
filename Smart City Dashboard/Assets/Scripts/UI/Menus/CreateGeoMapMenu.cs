@@ -26,7 +26,18 @@ public class CreateGeoMapMenu : MonoBehaviour
         (locationField.text, (int)zoomLevel.value, (int)mapSize.value);
     public void TryShowMapPreview()
     {
-       // GoogleMapsTestQuery.
+        if (APIKey.HasKey())
+        {
+            var (rawLocationName, zoomLevel, rawMapSize) = GetRawQueryInputs();
+            int querySize = Mathf.RoundToInt(rawMapSize * 4.6f + 40);
+
+            if(GoogleMapsTestQuery.MakeQuery(querySize, zoomLevel, rawLocationName))
+            {
+
+            }
+            else mainMenu.ShowPopup("Query Failed", "The query could not be completed at this time.");
+        }
+        else mainMenu.ShowPopup("No stored API Key", "Please enter a Google Maps API Key in the settings page.");
     }
 
     public void TryCreateCity()
