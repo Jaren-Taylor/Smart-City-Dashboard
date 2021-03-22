@@ -20,6 +20,8 @@ public static class SaveGameManager
 
     private static readonly StringBuilder strBuilder = new StringBuilder();
 
+    private static readonly HashSet<char> InvalidCharacters = new HashSet<char>(System.IO.Path.GetInvalidFileNameChars());
+
     /// <summary>
     /// Loads the game from XML
     /// </summary>
@@ -127,6 +129,17 @@ public static class SaveGameManager
         return true;
     }
 
+    public static bool FileExists(string fileName) => File.Exists(BuildSaveFilePath(fileName));
+
+    public static bool FileNameValid(string fileName)
+    {
+        foreach(char c in fileName)
+        {
+            if (InvalidCharacters.Contains(c)) return false;
+        }
+        return true;
+    }
+
     public static void LoadGame(string fileName)
     {
         LoadFromFile = BuildSaveFilePath(fileName);
@@ -134,9 +147,9 @@ public static class SaveGameManager
         GridManager.Instance.LoadGame();
     }
 
-    public static void DeleteSaveFile(string name)
+    public static void DeleteSaveFile(string fileName)
     {
-        File.Delete(@BuildSaveFilePath(name));
+        File.Delete(@BuildSaveFilePath(fileName));
     }
 
     private static string BuildSaveFilePath(string fileName)
