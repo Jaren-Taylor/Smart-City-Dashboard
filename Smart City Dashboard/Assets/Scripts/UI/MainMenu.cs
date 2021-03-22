@@ -22,7 +22,6 @@ public class MainMenu : MonoBehaviour
         notificationPopup.SetValues(title, body);
         notificationPopup.gameObject.SetActive(true);
     }
-    
 
     public void NavigateToMenu(GameObject menu)
     {

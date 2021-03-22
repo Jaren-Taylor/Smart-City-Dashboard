@@ -129,15 +129,56 @@ public static class SaveGameManager
         return true;
     }
 
+    public static bool FileNameInvalidOrTaken(string fileName, out string response)
+    {
+        if(FileNameInvalid(fileName, out response))
+        {
+            return true;
+        }
+        else if (FileExists(fileName))
+        {
+            response = "That filename already exists";
+            return true;
+        }
+
+        response = "";
+        return false;
+    }
+
     public static bool FileExists(string fileName) => File.Exists(BuildSaveFilePath(fileName));
 
-    public static bool FileNameValid(string fileName)
+    public static bool FileNameInvalid(string fileName, out string response)
     {
-        foreach(char c in fileName)
+        strBuilder.Clear();
+        strBuilder.Append("The filename is not valid because ");
+
+        if (string.IsNullOrEmpty(fileName))
         {
-            if (InvalidCharacters.Contains(c)) return false;
+            strBuilder.Append("it is empty.");
+            response = strBuilder.ToString();
+            return true;
         }
-        return true;
+
+        bool found = false;
+        foreach (char c in fileName)
+        {
+            if (InvalidCharacters.Contains(c))
+            {
+                if (!found) strBuilder.Append("it contains the character(s): ( ");
+                if (found) strBuilder.Append(", "); 
+                found = true;
+                strBuilder.Append(c);
+            }
+        }
+        if (found)
+        {
+            strBuilder.Append(").");
+            response = strBuilder.ToString();
+            return true;
+        }
+
+        response = "";
+        return false;
     }
 
     public static void LoadGame(string fileName)

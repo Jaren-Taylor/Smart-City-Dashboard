@@ -8,9 +8,11 @@ using System.IO;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using NUnit.Framework;
+using System.Text;
 
 public class GoogleMapsTestQuery : MonoBehaviour
 {
+    private static readonly StringBuilder stringBuilder = new StringBuilder();
     static readonly HttpClient Http = new HttpClient();
     public Texture2D texture;
     public Image picture;
@@ -19,6 +21,44 @@ public class GoogleMapsTestQuery : MonoBehaviour
     private void Start()
     {
        StartCoroutine(GetTexture(CreateQuery(apikey)));
+    }
+
+    public static bool MakeQuery(int size, int zoom, string location)
+    {
+        if(APIKey.TryGetKey(out string apiKey))
+        {
+            string query = CreateQuery(size, zoom, location, apiKey);
+
+            return true;
+        }
+        return false;
+    }
+
+    private static string ReformatLocation(string location)
+    {
+        stringBuilder.Clear();
+        stringBuilder.Append(location);
+        stringBuilder.Replace(" ", "+");
+        stringBuilder.Replace(",", "+");
+        return stringBuilder.ToString();
+    }
+
+    private static string CreateQuery(int size, int zoom, string location, string apiKey)
+    {
+        string fixedLocation = ReformatLocation(location);
+        stringBuilder.Clear();
+        stringBuilder.Append("https://maps.googleapis.com/maps/api/staticmap?size=");
+        stringBuilder.Append(size);
+        stringBuilder.Append("x");
+        stringBuilder.Append(size);
+        stringBuilder.Append("&zoom=");
+        stringBuilder.Append(zoom);
+        stringBuilder.Append("&center=");
+        stringBuilder.Append(fixedLocation);
+        stringBuilder.Append("&style=feature:landscape|color:0x000000&style=element:labels|invert_lightness:true&style=feature:road|color:0x880000&style=feature:road.local|geometry|color:0x008800&style=feature:road|weight:1&style=feature:road|element:labels|visibility:off&style=feature:poi|element:labels|visibility:off&style=feature:poi|geometry|color:0x880000&style=feature:transit|visibility:off&style=feature:water|visibility:off&style=feature:administrative|visibility:off&key=");
+        stringBuilder.Append(apiKey);
+
+        return stringBuilder.ToString();
     }
 
     /// <summary>

@@ -23,14 +23,16 @@ public class CreateEmtpyMapMenu : MonoBehaviour
     {
         string text = cityName.text.Trim();
 
-        if (int.TryParse(citySize.text, out int size) && !string.IsNullOrEmpty(text))
+        if (int.TryParse(citySize.text, out int size))
         {
-            if (SaveGameManager.FileNameValid(text))
+            if(SaveGameManager.FileNameInvalidOrTaken(text, out string response))
+            {
+                mainMenu.ShowPopup("Invalid Filename", response);
+            }
+            else //Input validated
             {
 
             }
-            else mainMenu.ShowPopup("Invalid Filename", "The filename contains invalid characters.");
         }
-        else mainMenu.ShowPopup("Invalid Filename", "The filename cannot be empty.");
     }
 }

@@ -975,7 +975,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &154745487
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2210,8 +2210,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 134.52748, y: 70.72516}
-  m_SizeDelta: {x: 57.3713, y: 62.8503}
+  m_AnchoredPosition: {x: 168.15, y: 61.566376}
+  m_SizeDelta: {x: 57.3713, y: 44.5328}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &320632039
 GameObject:
@@ -4365,10 +4365,10 @@ RectTransform:
   m_Children:
   - {fileID: 1536556909}
   - {fileID: 1207511606}
-  - {fileID: 1489702129}
   - {fileID: 1784719503}
   - {fileID: 1468053264}
   - {fileID: 740797504}
+  - {fileID: 1489702129}
   m_Father: {fileID: 1241358532}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4427,9 +4427,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a390fe2817078d42bff2e4b9041f6af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  previewStatusMessage: {fileID: 0}
-  previewImage: {fileID: 0}
-  locationField: {fileID: 0}
+  mainMenu: {fileID: 288139576}
+  previewStatusMessage: {fileID: 624595236}
+  previewImage: {fileID: 154745488}
+  locationField: {fileID: 1121571180}
+  zoomLevel: {fileID: 597065932}
+  mapSize: {fileID: 2125468027}
+  filenameField: {fileID: 1855646596}
 --- !u!1 &508174561
 GameObject:
   m_ObjectHideFlags: 0
@@ -5079,7 +5083,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 500489330}
         m_TargetAssemblyTypeName: CreateGeoMapMenu, Assembly-CSharp
-        m_MethodName: ShowMapPreview
+        m_MethodName: TryShowMapPreview
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5366,7 +5370,7 @@ RectTransform:
   - {fileID: 1542149230}
   - {fileID: 1855646595}
   m_Father: {fileID: 500489327}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -11219,7 +11223,7 @@ RectTransform:
   - {fileID: 850176745}
   - {fileID: 2125468025}
   m_Father: {fileID: 500489327}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -11392,7 +11396,7 @@ RectTransform:
   m_Children:
   - {fileID: 901172676}
   m_Father: {fileID: 500489327}
-  m_RootOrder: 2
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -11445,7 +11449,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 500489330}
         m_TargetAssemblyTypeName: CreateGeoMapMenu, Assembly-CSharp
-        m_MethodName: TryGenerateMap
+        m_MethodName: TryCreateCity
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12632,8 +12636,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22.069702, y: 70.72516}
-  m_SizeDelta: {x: 167.5364, y: 62.8503}
+  m_AnchoredPosition: {x: 38.8835, y: 61.566}
+  m_SizeDelta: {x: 201.1641, y: 44.533}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1693043457
 MonoBehaviour:
@@ -12655,7 +12659,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Map Size:'
+  m_text: 'ZOom Level:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
   m_sharedMaterial: {fileID: 2289601916686910481, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
@@ -13121,7 +13125,7 @@ RectTransform:
   - {fileID: 314169785}
   - {fileID: 597065930}
   m_Father: {fileID: 500489327}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
