@@ -13,11 +13,11 @@ public static class APIKey
     
     public static bool TrySaveAPIKey(string key)
     {
+        storedKey = key;
         try
         {
             using StreamWriter stream = new StreamWriter(File.Open(keyPath, FileMode.Create));
             stream.WriteLine(key);
-            storedKey = key;
             return true;
         }
         catch (IOException)
@@ -44,6 +44,14 @@ public static class APIKey
         }
     }
 
+    public static bool IsKeyValid(string key)
+    {
+        if (string.IsNullOrEmpty(key)) return false;
+        else return true;
+    }
+
+    public static bool IsAPIKeyValid() => IsKeyValid(storedKey);
+
     private static bool TryLoadingKey(out string key)
     {
         if (File.Exists(keyPath))
@@ -65,4 +73,6 @@ public static class APIKey
             return false;
         }
     }
+
+
 }
