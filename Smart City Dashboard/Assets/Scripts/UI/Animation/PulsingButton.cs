@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
+[RequireComponent(typeof(Button))]
 public class PulsingButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    private Button attachedButton;
+
     private float scaleAmount = 1.15f;
     
     private float defaultHeight;
@@ -13,14 +17,23 @@ public class PulsingButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private bool resetSelf = false;
 
+    public void Start()
+    {
+        attachedButton = GetComponent<Button>();
+
+        defaultScale = transform.localScale;
+        defaultWidth = transform.RectTransform().rect.width;
+        defaultHeight = transform.RectTransform().rect.height;
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        LeanTween.scale(gameObject, CalculateEvenHeightBasedScale(scaleAmount + .1f), .1f);
+        if(attachedButton.interactable) LeanTween.scale(gameObject, CalculateEvenHeightBasedScale(scaleAmount + .1f), .1f);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        LeanTween.scale(gameObject, CalculateEvenHeightBasedScale(scaleAmount), 1.091f).setLoopPingPong();
+        if (attachedButton.interactable) LeanTween.scale(gameObject, CalculateEvenHeightBasedScale(scaleAmount), 1.091f).setLoopPingPong();
     }
 
     private Vector3 CalculateEvenHeightBasedScale(float heightScale)
@@ -41,8 +54,11 @@ public class PulsingButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        LeanTween.cancel(gameObject);
-        transform.localScale = defaultScale;
+        if (attachedButton.interactable)
+        {
+            LeanTween.cancel(gameObject);
+            transform.localScale = defaultScale;
+        }
     }
 
     void OnDisable()
@@ -58,13 +74,5 @@ public class PulsingButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             transform.localScale = defaultScale;
             resetSelf = false;
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        defaultScale = transform.localScale;
-        defaultWidth = transform.RectTransform().rect.width;
-        defaultHeight = transform.RectTransform().rect.height;
     }
 }

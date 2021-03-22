@@ -16,10 +16,10 @@ public class ApplySettingsMenu : MonoBehaviour
         {
             if (APIKey.TrySaveAPIKey(apiKeyField.text))
             {
-                mainMenu.ShowPopup("Success!", "The API Key was saved successfuly!");
+                mainMenu.ShowMessagePopup("Success!", "The API Key was saved successfuly!");
             }
-            else mainMenu.ShowPopup("IO Error", "Unable to write the Key to disk. It will be stored for this session only.");
+            else mainMenu.ShowMessagePopup("IO Error", "Unable to write the Key to disk. It will be stored for this session only.");
         }
-        else mainMenu.ShowPopup("Invalid API Key", "The API Key entered was invalid.");
+        else mainMenu.ShowMessagePopup("Invalid API Key", "The API Key entered was invalid.");
     }
 }

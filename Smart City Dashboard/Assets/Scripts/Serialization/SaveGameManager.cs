@@ -87,6 +87,16 @@ public static class SaveGameManager
         return WriteMapToFile(FileName, saveData);
     }
 
+    internal static void RenameFile(string currentFilename, string enteredText)
+    {
+        if (FileNameInvalidOrTaken(enteredText, out _)) return;
+        if (FileExists(currentFilename, out string currentPath))
+        {
+            string newPath = BuildSaveFilePath(enteredText);
+            File.Move(currentPath, newPath);
+        }
+    }
+
     /// <summary>
     /// Enumerates the saves directory. Creates it if it doesn't exist
     /// </summary>
@@ -145,7 +155,12 @@ public static class SaveGameManager
         return false;
     }
 
-    public static bool FileExists(string fileName) => File.Exists(BuildSaveFilePath(fileName));
+    public static bool FileExists(string fileName) => FileExists(fileName, out _);
+    public static bool FileExists(string fileName, out string filePath)
+    {
+        filePath = BuildSaveFilePath(fileName);
+        return File.Exists(filePath);
+    }
 
     public static bool FileNameInvalid(string fileName, out string response)
     {

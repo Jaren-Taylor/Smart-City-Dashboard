@@ -66,10 +66,11 @@ public class HeaderCard : UIClickable
         get { return spriteEnum; }
         set {
             BackgroundImageErrorCheck();
-            if (bkgImage.sprite != UIManager.BackgroundSprites[value]) 
+            if (bkgImage.sprite != UIResourcePool.GetBackgroundSprite(value))
+                //UIManager.BackgroundSprites[value]) 
             {
                 spriteEnum = value;
-                bkgImage.sprite = UIManager.BackgroundSprites[value];
+                bkgImage.sprite = UIResourcePool.GetBackgroundSprite(value);
             }
         }
     }

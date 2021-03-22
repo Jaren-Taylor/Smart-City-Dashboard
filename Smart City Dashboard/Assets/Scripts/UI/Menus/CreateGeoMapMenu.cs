@@ -35,9 +35,9 @@ public class CreateGeoMapMenu : MonoBehaviour
             {
 
             }
-            else mainMenu.ShowPopup("Query Failed", "The query could not be completed at this time.");
+            else mainMenu.ShowMessagePopup("Query Failed", "The query could not be completed at this time.");
         }
-        else mainMenu.ShowPopup("No stored API Key", "Please enter a Google Maps API Key in the settings page.");
+        else mainMenu.ShowMessagePopup("No stored API Key", "Please enter a Google Maps API Key in the settings page.");
     }
 
     public void TryCreateCity()
@@ -46,7 +46,7 @@ public class CreateGeoMapMenu : MonoBehaviour
 
         if (SaveGameManager.FileNameInvalidOrTaken(text, out string response))
         {
-            mainMenu.ShowPopup("Invalid Filename", response);
+            mainMenu.ShowMessagePopup("Invalid Filename", response);
             return;
         }
     }

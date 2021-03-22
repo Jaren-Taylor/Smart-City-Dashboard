@@ -27,7 +27,7 @@ public class CreateEmptyMapMenu : MonoBehaviour
         {
             if(SaveGameManager.FileNameInvalidOrTaken(fileName, out string response))
             {
-                mainMenu.ShowPopup("Invalid Filename", response);
+                mainMenu.ShowMessagePopup("Invalid Filename", response);
             }
             else //Input validated
             {

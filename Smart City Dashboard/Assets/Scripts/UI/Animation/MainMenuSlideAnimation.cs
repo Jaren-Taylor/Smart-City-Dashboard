@@ -38,6 +38,7 @@ public class MainMenuSlideAnimation : MonoBehaviour
             localOffset.y += Buttons[i].gameObject.RectTransform().rect.height / 2f;
 
             Buttons[i].transform.localPosition = localOffset;
+            Buttons[i].interactable = false;
         }
 
         Vector3 offset = new Vector3(0, Screen.height / 2f + MenuContent.RectTransform().rect.height / 2);

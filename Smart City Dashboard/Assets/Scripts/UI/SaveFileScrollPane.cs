@@ -13,6 +13,38 @@ public class SaveFileScrollPane : MonoBehaviour
 
     private List<DictionaryCard> cards = new List<DictionaryCard>();
 
+    public string GetSelectedFile() => TextArea.text;
+
+    public bool TryRenameSelection(string newName, out string errorResponse)
+    {
+        string currentText = TextArea.text;
+        if (!string.IsNullOrEmpty(currentText))
+        {
+            if (SaveGameManager.FileNameInvalidOrTaken(newName, out errorResponse)) return false;
+            else
+            {
+                RenameCardWithHeader(TextArea.text, newName);
+                SaveGameManager.RenameFile(TextArea.text, newName);
+                TextArea.SetText(newName);
+                //TODO: Change the date modified to right now
+                return true;
+            }
+        }
+        else
+        {
+            errorResponse = "No selection to rename";
+            return false;
+        }
+    }
+
+    public void RenameCardWithHeader(string currentText, string newText)
+    {
+        foreach(var card in cards)
+        {
+            if(card.Header == currentText) card.Header = newText;
+        }
+    }
+
     public void PopulateRegion()
     {
         FetchFiles();

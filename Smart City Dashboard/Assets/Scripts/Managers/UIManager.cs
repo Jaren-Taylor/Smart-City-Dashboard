@@ -164,4 +164,21 @@ public enum UIBackgroundSprite
     Blue,
     Yellow,
     Orange,
+    OrangeButton,
+    Purple
+}
+
+public static class UIBackgroundSpriteExtensions
+{
+    public static string GetAddress(this UIBackgroundSprite sprite) => sprite switch
+    {
+        UIBackgroundSprite.Red => "UI/UI Elements/Buttons/red button",
+        UIBackgroundSprite.Green => "UI/UI Elements/Buttons/green button",
+        UIBackgroundSprite.Blue => "UI/UI Elements/Buttons/blue button",
+        UIBackgroundSprite.Yellow => "UI/UI Elements/Buttons/yellow button",
+        UIBackgroundSprite.Orange => "UI/UI Elements/Buttons/Orange background",
+        UIBackgroundSprite.OrangeButton => "UI/UI Elements/Buttons/Orange_button",
+        UIBackgroundSprite.Purple => "UI/ UI Elements/Buttons/purple_button_inverted",
+        _ => ""
+    };
 }

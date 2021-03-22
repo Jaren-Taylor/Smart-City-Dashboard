@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,9 +18,15 @@ public class MainMenu : MonoBehaviour
     [SerializeField]
     private PopupMenu notificationPopup;
 
-    public void ShowPopup(string title, string body)
+    public void ShowMessagePopup(string title, string body)
     {
-        notificationPopup.SetValues(title, body);
+        notificationPopup.ShowMessageBox(title, body);
+        notificationPopup.gameObject.SetActive(true);
+    }
+
+    public void ShowInputPrompt(string title, string inputRequest, string defaultText, Action<bool, string> cancelSubmitCallback)
+    {
+        notificationPopup.ShowInputField(title, inputRequest, defaultText, cancelSubmitCallback);
         notificationPopup.gameObject.SetActive(true);
     }
 
