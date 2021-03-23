@@ -8,6 +8,22 @@ public static class TextureModifications
 	/// <param name="tex"></param>
 	/// <param name="width"></param>
 	/// <param name="height"></param>
+	public static Texture2D CopyAndTrimToSize(this Texture2D tex, int width, int height)
+	{
+		if (width > tex.width || height > tex.height) throw new System.Exception("Cannot trim to be larger");
+
+		tex = CopyTexture(tex);
+		TrimToSize(tex, width, height);
+
+		return tex;
+	}
+
+	/// <summary>
+	/// Trims texture to specified width / height cropping from the edges inward.
+	/// </summary>
+	/// <param name="tex"></param>
+	/// <param name="width"></param>
+	/// <param name="height"></param>
 	public static void TrimToSize(this Texture2D tex, int width, int height)
     {
 		if (width > tex.width || height > tex.height) throw new System.Exception("Cannot trim to be larger");
@@ -19,13 +35,21 @@ public static class TextureModifications
     }
 
 
+	public static Texture2D CopyAndRescale(this Texture2D tex, int newWidth, int newHeight)
+    {
+		tex = CopyTexture(tex);
+		Rescale(tex, newWidth, newHeight);
+
+		return tex;
+	}
+
 	/// <summary>
 	/// Uses Nearest-Neighbor scaling to scale to target width and height
 	/// </summary>
 	/// <param name="tex"></param>
 	/// <param name="newWidth"></param>
 	/// <param name="newHeight"></param>
-	public static void Rescale(Texture2D tex, int newWidth, int newHeight)
+	public static void Rescale(this Texture2D tex, int newWidth, int newHeight)
 	{
 		Color[] texColors = tex.GetPixels();
 		Color[] newColors = new Color[newWidth * newHeight];
@@ -46,5 +70,15 @@ public static class TextureModifications
 		tex.Resize(newWidth, newHeight);
 		tex.SetPixels(newColors);
 		tex.Apply();
+	}
+
+	public static Texture2D CopyTexture(Texture2D texture)
+	{
+		Texture2D newTexture = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
+		newTexture.filterMode = FilterMode.Point;
+
+		newTexture.SetPixels32(texture.GetPixels32());
+
+		return newTexture;
 	}
 }

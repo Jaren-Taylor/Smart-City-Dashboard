@@ -57,7 +57,7 @@ public class GoogleMapsTestQuery: MonoBehaviour
         stringBuilder.Append(zoom);
         stringBuilder.Append("&center=");
         stringBuilder.Append(fixedLocation);
-        stringBuilder.Append("&style=feature:landscape|color:0x000000&style=element:labels|invert_lightness:true&style=feature:road|color:0x880000&style=feature:road.local|geometry|color:0x008800&style=feature:road|weight:1&style=feature:road|element:labels|visibility:off&style=feature:poi|element:labels|visibility:off&style=feature:poi|geometry|color:0x880000&style=feature:transit|visibility:off&style=feature:water|visibility:off&style=feature:administrative|visibility:off&key=");
+        stringBuilder.Append("&style=feature:landscape|color:0x000000&style=element:labels|invert_lightness:true&style=feature:road|color:0x880000&style=feature:road.local|geometry|color:0x008800&style=feature:road|weight:2&style=feature:road|element:labels|visibility:off&style=feature:poi|element:labels|visibility:off&style=feature:poi|visibility:off&style=feature:transit|visibility:off&style=feature:water|visibility:off&style=feature:administrative|visibility:off&key=");
         stringBuilder.Append(apiKey);
 
         return stringBuilder.ToString();

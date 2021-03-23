@@ -17,16 +17,17 @@ public class ThinOutTestImage : MonoBehaviour
     void Start()
     {
 
-        var extract = new GeoDataExtractor(source.sprite.texture, this.gameObject.name);
+        //var extract = new GeoDataExtractor(source.sprite.texture, this.gameObject.name);
 
-        var graph = extract.Extract();
+        var graph = GeoDataExtractor.ExtractPixelGraph(source.sprite.texture);
 
         var nodeTexture = DrawGraphToTexture(graph, source.sprite.texture.width, source.sprite.texture.height, true);
 
-        var moneyAng = extract.GetMoneyShot(graph);
+        var moneyAng = GeoDataExtractor.GetMoneyShot(graph);
 
 
-        var rasterTexture = extract.DrawToTextureAtAngle(graph, nodeTexture.width, nodeTexture.height, moneyAng);
+        var rasterTexture = GeoDataExtractor.DrawToTextureAtAngle(graph, nodeTexture.width, nodeTexture.height, moneyAng);
+            //extract.DrawToTextureAtAngle(graph, nodeTexture.width, nodeTexture.height, moneyAng);
 
         Debug.Log(this.gameObject.name + " : ang = " + moneyAng);
 
@@ -54,7 +55,7 @@ public class ThinOutTestImage : MonoBehaviour
            new Vector2(0, 1));
 
 
-        extract.WriteGraphToFile(this.gameObject.name, rasterTexture);
+        GeoDataExtractor.WriteGraphToFile(this.gameObject.name, rasterTexture);
     }
 
 

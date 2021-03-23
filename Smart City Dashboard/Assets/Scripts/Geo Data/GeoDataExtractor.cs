@@ -6,25 +6,26 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class GeoDataExtractor
+public static class GeoDataExtractor
 {
-    private readonly Texture2D dataSource;
-    private readonly string name;
+    private static readonly Color maskColor = Color.black;
 
-    private readonly Color maskColor = Color.black;
-    private readonly Color replaceColor = Color.black;
-    private readonly Color highlightColor = Color.blue;
 
-    public GeoDataExtractor(Texture2D dataSource, string name)
+    public static (TileGrid grid, Texture2D texture) ExtractTileMap(Texture2D dataSource)
     {
-        this.dataSource = dataSource;
-        this.name = name;
+        var graph = ExtractPixelGraph(dataSource);
+        var moneyAng = GetMoneyShot(graph);
+        var rasterTexture = DrawToTextureAtAngle(graph, dataSource.width, dataSource.height, moneyAng);
+
+        return (CreateMap(rasterTexture), rasterTexture);
     }
+
+
 
     /// <summary>
     /// Extracts out the data from the image source
     /// </summary>
-    public PixelPathGraph Extract()
+    public static PixelPathGraph ExtractPixelGraph(Texture2D dataSource)
     {
         Color[] backgroundMaskColors = new[] { maskColor }; //Colors to be ignored
         bool[][] forgroudMask = TextureToBinary(dataSource, backgroundMaskColors); //Mask where every background index is false
@@ -47,13 +48,13 @@ public class GeoDataExtractor
         return graph;
     }
 
-    public void WriteGraphToFile(string fileName, Texture2D mapTexture)
+    public static void WriteGraphToFile(string fileName, Texture2D mapTexture)
     {
         TileGrid generatedGrid = CreateMap(mapTexture);
         SaveGameManager.WriteMapToFile(fileName, generatedGrid);
     }
 
-    private PixelType[][] ExtractDataWithMask(bool[][] image, Texture2D texture)
+    private static PixelType[][] ExtractDataWithMask(bool[][] image, Texture2D texture)
     {
         int width = texture.width;
         int height = texture.height;
@@ -82,7 +83,7 @@ public class GeoDataExtractor
         return output;
     }
 
-    private TileGrid CreateMap(Texture2D mapTexture)
+    private static TileGrid CreateMap(Texture2D mapTexture)
     {
         int height = mapTexture.height;
         int width = mapTexture.width;
@@ -111,7 +112,7 @@ public class GeoDataExtractor
         return grid;
     }
 
-    private void TryPlacingHousesAround(Vector2Int tilePos, TileGrid grid, Texture2D mapTexture, ref int densityOffset)
+    private static void TryPlacingHousesAround(Vector2Int tilePos, TileGrid grid, Texture2D mapTexture, ref int densityOffset)
     {
         foreach (Tile.Facing directions in Enum.GetValues(typeof(Tile.Facing)))
         {
@@ -131,7 +132,7 @@ public class GeoDataExtractor
         }
     }
 
-    private TileGrid CreateMap(bool[][] image, PixelType[][] pixelInfo)
+    private static TileGrid CreateMap(bool[][] image, PixelType[][] pixelInfo)
     {
         int height = image.Length;
         int width = image[0].Length;
@@ -160,7 +161,7 @@ public class GeoDataExtractor
         return grid;
     }
 
-    private void TryPlacingHousesAround(Vector2Int tilePos, TileGrid grid, PixelType[][] pixelInfo, ref int densityOffset)
+    private static void TryPlacingHousesAround(Vector2Int tilePos, TileGrid grid, PixelType[][] pixelInfo, ref int densityOffset)
     {
         foreach(Tile.Facing directions in Enum.GetValues(typeof(Tile.Facing)))
         {
@@ -180,7 +181,7 @@ public class GeoDataExtractor
         }
     }
 
-    private PixelPathGraph FloodFillCheck(PixelType[][] pixelInfo, HashSet<Vector2Int> pointsOfInterest)
+    private static PixelPathGraph FloodFillCheck(PixelType[][] pixelInfo, HashSet<Vector2Int> pointsOfInterest)
     {
         PixelPathGraph pathGraph = new PixelPathGraph();
         if (pointsOfInterest.Count == 0) return pathGraph;
@@ -265,7 +266,7 @@ public class GeoDataExtractor
     }
 
 
-    private void CollapseSmallLoops(PixelPathGraph graph)
+    private static void CollapseSmallLoops(PixelPathGraph graph)
     {
         var changes = false;
         do
@@ -319,7 +320,7 @@ public class GeoDataExtractor
         while (changes);
     }
 
-    private void CollapseBetweenPoI(PixelPathGraph graph)
+    private static void CollapseBetweenPoI(PixelPathGraph graph)
     {
         LinkedList<Vector2Int> unexploredPoI = new LinkedList<Vector2Int>(graph.GetPointsOfInterest());
 
@@ -407,7 +408,7 @@ public class GeoDataExtractor
         }
     }
 
-    private void CleanConnectionUntilNextPoI(Vector2Int currentPoI, Vector2Int connectedPoint, PixelPathGraph graph)
+    private static void CleanConnectionUntilNextPoI(Vector2Int currentPoI, Vector2Int connectedPoint, PixelPathGraph graph)
     {
         LinkedList<Vector2Int> markersUntilNextPoI = new LinkedList<Vector2Int>();
         markersUntilNextPoI.AddFirst(currentPoI);
@@ -462,23 +463,23 @@ public class GeoDataExtractor
 
     }
 
-    private float DistanceToLine(Vector2 point, Vector2 lineP1, Vector2 lineP2)
+    private static float DistanceToLine(Vector2 point, Vector2 lineP1, Vector2 lineP2)
     {
         return point.DistanceToLine(lineP1, lineP2);
     }
 
-    private float SignedDistanceToLine(Vector2 point, Vector2 lineP1, Vector2 lineP2)
+    private static float SignedDistanceToLine(Vector2 point, Vector2 lineP1, Vector2 lineP2)
     {
         return point.SignedDistanceToLine(lineP1, lineP2);
     }
 
-    private Vector2Int GetNextPointOn2WayConnection(Vector2Int previousPoint, Vector2Int currentPoint, PixelPathGraph graph)
+    private static Vector2Int GetNextPointOn2WayConnection(Vector2Int previousPoint, Vector2Int currentPoint, PixelPathGraph graph)
     {
         var connection = graph.GetConnections(currentPoint).ToList();
         return (connection[0] == previousPoint) ? connection[1] : connection[0];
     }
 
-    public float GetMoneyShot(PixelPathGraph graph)
+    public static float GetMoneyShot(PixelPathGraph graph)
     {
         List<(int sqrLength, float angle)> angleSqrLength = new List<(int sqrLength, float angle)>();
 
@@ -536,7 +537,7 @@ public class GeoDataExtractor
         return total / Buckets[max].Count;
     }
 
-    public Texture2D DrawToTexture(PixelPathGraph graph, int width, int height)
+    public static  Texture2D DrawToTexture(PixelPathGraph graph, int width, int height)
     {
         Texture2D newTexture = new Texture2D(width, height, TextureFormat.RGBA32, false);
         newTexture.filterMode = FilterMode.Point;
@@ -573,7 +574,7 @@ public class GeoDataExtractor
         return newTexture;
     }
 
-    public Texture2D DrawToTextureAtAngle(PixelPathGraph graph, int width, int height, float angleInDeg)
+    public static Texture2D DrawToTextureAtAngle(PixelPathGraph graph, int width, int height, float angleInDeg)
     {
         Texture2D newTexture = new Texture2D(width * 2, height * 2, TextureFormat.RGBA32, false);
         newTexture.filterMode = FilterMode.Point;
@@ -626,7 +627,7 @@ public class GeoDataExtractor
         return punchedTexture;
     }
 
-    private void DrawLineToTexture(Texture2D texture, Vector2Int pos1, Vector2Int pos2, Color color, bool excludeEnds = false, int xOffset = 0, int yOffset = 0)
+    private static void DrawLineToTexture(Texture2D texture, Vector2Int pos1, Vector2Int pos2, Color color, bool excludeEnds = false, int xOffset = 0, int yOffset = 0)
     {
         int dx = pos2.x - pos1.x;
         int dy = pos2.y - pos1.y;
@@ -661,19 +662,19 @@ public class GeoDataExtractor
         }
     }
 
-    private bool Are2AxisAligned(Vector2Int position1, Vector2Int position2)
+    private static bool Are2AxisAligned(Vector2Int position1, Vector2Int position2)
     {
         var delta = position2 - position1;
         return (delta.x == 0 || delta.y == 0);
     }
 
-    private bool AreDiagonallyAlligned(Vector2Int position1, Vector2Int position2)
+    private static bool AreDiagonallyAlligned(Vector2Int position1, Vector2Int position2)
     {
         var delta = position2 - position1;
         return Mathf.Abs(delta.x) == Mathf.Abs(delta.y);
     }
 
-    private void RepopulateCheckable(List<Vector2Int> checkableDir)
+    private static void RepopulateCheckable(List<Vector2Int> checkableDir)
     {
         checkableDir.Clear();
         checkableDir.Add(new Vector2Int(0, 1));
@@ -686,19 +687,19 @@ public class GeoDataExtractor
         checkableDir.Add(new Vector2Int(-1, 1));
     }
 
-    private void FoundDir(Tile.Facing direction, List<Vector2Int> checkableDir)
+    private static void FoundDir(Tile.Facing direction, List<Vector2Int> checkableDir)
     {
         Vector2Int vec = direction.ToVector2();
         if (direction.IsHorizontal()) checkableDir.RemoveAll(v => v.x == vec.x);
         else checkableDir.RemoveAll(v => v.y == vec.y);
     }
 
-    private void NotFoundDir(Tile.Facing direction, List<Vector2Int> checkableDir)
+    private static void NotFoundDir(Tile.Facing direction, List<Vector2Int> checkableDir)
     {
         checkableDir.Remove(direction.ToVector2());
     }
 
-    private bool PixelExists(PixelType[][] pixelInfo, Vector2Int position, int width, int height, out PixelType pixel)
+    private static bool PixelExists(PixelType[][] pixelInfo, Vector2Int position, int width, int height, out PixelType pixel)
     {
         pixel = PixelType.None;
         if (position.x < 0 || position.x > width - 1 || position.y < 0 || position.y > height - 1) return false;
@@ -709,7 +710,7 @@ public class GeoDataExtractor
     /// <summary>
     /// Creates a 2d boolean array and fills it with true for each pixel where the color does not match the mask
     /// </summary>
-    private bool[][] TextureToBinary(Texture2D texture, Color[] maskedColors)
+    private static bool[][] TextureToBinary(Texture2D texture, Color[] maskedColors)
     {
         int width = texture.width;
         int height = texture.height;
@@ -727,7 +728,7 @@ public class GeoDataExtractor
     /// <summary>
     /// Fills target array with true for each pixel where the color does not match the mask
     /// </summary>
-    private void TextureToBinary(Texture2D texture, Color[] maskedColors, bool[][] target)
+    private static void TextureToBinary(Texture2D texture, Color[] maskedColors, bool[][] target)
     {
         int width = texture.width;
         int height = texture.height;
@@ -745,7 +746,7 @@ public class GeoDataExtractor
     /// <summary>
     /// Compares a color against a list of colors. True if match
     /// </summary>
-    private bool MatchMask(Color test, Color[] mask)
+    private static bool MatchMask(Color test, Color[] mask)
     {
         foreach (Color m in mask)
         {
