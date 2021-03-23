@@ -32,7 +32,6 @@ public class EntityManager : MonoBehaviour
                 PeriodicallySpawn();
             totalTime -= spawnDelay;
             RecalculateSpawnDelay();
-            //Debug.Log($"Entity Count: {Entities.Count}  SpawnRate: {1f/spawnDelay} TargetTotal: {TargetTotal}");
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
