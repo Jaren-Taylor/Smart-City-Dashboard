@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class EntityManager : MonoBehaviour
 {
-    private List<Vector2Int> BuildingLocations => GridManager.Instance.Grid.GetBuildingLocations();
+    private IReadOnlyList<Vector2Int> BuildingLocations => GridManager.Instance.Grid.GetBuildingLocations();
     private readonly List<Entity> Entities = new List<Entity>();
     private int spawnLimit = 5000;
     private float spawnDelay = .5f;
@@ -127,8 +127,9 @@ public class EntityManager : MonoBehaviour
             spawnLocation = buildings[randIndex];
             if (buildings.Count > 1)
             {
-                buildings.RemoveAt(randIndex);
-                targetLocation = buildings[UnityEngine.Random.Range(0, buildings.Count)];
+                int targetIndex = UnityEngine.Random.Range(0, buildings.Count - 1);
+                if (targetIndex == randIndex) targetIndex++;
+                targetLocation = buildings[targetIndex];
                 return true;
             }
 
