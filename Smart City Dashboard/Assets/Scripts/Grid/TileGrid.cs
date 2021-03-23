@@ -38,7 +38,7 @@ public class TileGrid
     /// <returns></returns>
     public Tile this[Vector2Int point]
     {
-        get => this[point.x, point.y];
+        get => SafeLookup(point);
         set => this[point.x, point.y] = value;
     }
 
@@ -52,8 +52,7 @@ public class TileGrid
     {
         get
         {
-            if (!InBounds(x,y)) return null;
-            else return SafeLookup(x, y);
+            return SafeLookup(x, y);
         }
         set
         {
@@ -87,6 +86,7 @@ public class TileGrid
     public List<Vector2Int> GetRoadLocations() => grid.Where(x => ((x.Value is RoadTile) && (x.Value.IsPermanent))).Select(x => x.Key).ToList();
 
     private Tile SafeLookup(int x, int y) => grid.TryGetValue(new Vector2Int(x, y), out Tile output) ? output : null;
+    private Tile SafeLookup(Vector2Int tilePos) => grid.TryGetValue(tilePos, out Tile output) ? output : null;
 
     internal void RefreshGrid()
     {
