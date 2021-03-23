@@ -10,7 +10,9 @@ public class TrafficLightController : MonoBehaviour
     public float totalTime { private set; get; } = 0f;
     public float switchDelay { private set; get; } = 10f;
     private Dictionary<NodeCollectionController.Direction, LightAnimationController> TrafficLights = new Dictionary<NodeCollectionController.Direction, LightAnimationController>();
-    private SortedDictionary<NodeCollectionController.Direction, float> TrafficLightDownTime = new SortedDictionary<NodeCollectionController.Direction, float>(); 
+    private Dictionary<NodeCollectionController.Direction, float> TrafficLightDownTime = new Dictionary<NodeCollectionController.Direction, float>();
+    private List<NodeCollectionController.Direction> TrafficLightDirections = new List<NodeCollectionController.Direction>();
+
     public bool isEastWest { private set; get; } = false;
     private bool isTransitioning = false;
     private bool isInitialized = false;
@@ -60,6 +62,7 @@ public class TrafficLightController : MonoBehaviour
         lightController.transform.localPosition = Vector3.zero;
         spanWire.TrafficLights.Add(direction, lightController);
         spanWire.TrafficLightDownTime.Add(direction, 0f);
+        spanWire.TrafficLightDirections.Add(direction);
     }
 
     // Update is called once per frame
@@ -127,15 +130,16 @@ public class TrafficLightController : MonoBehaviour
             totalTime < 4f) return;
 
         //Sort the kvp by the smallest value and return the sorted keys in order
-        var sortedDirections = (from kvp in TrafficLightDownTime orderby kvp.Value ascending select kvp.Key).ToList();
+        var sortedDirection = GetShortestDirection();
+            //(from kvp in TrafficLightDownTime orderby kvp.Value ascending select kvp.Key).ToList();
 
 
 
-        if ((TrafficLightDownTime[sortedDirections[0]] > 0.1f) ||
-            (isEastWest && (sortedDirections[0] == NodeCollectionController.Direction.EastBound || sortedDirections[0] == NodeCollectionController.Direction.WestBound)) ||
-            (!isEastWest && (sortedDirections[0] == NodeCollectionController.Direction.NorthBound || sortedDirections[0] == NodeCollectionController.Direction.SouthBound))) return;
+        if ((TrafficLightDownTime[sortedDirection] > 0.1f) ||
+            (isEastWest && (sortedDirection == NodeCollectionController.Direction.EastBound || sortedDirection == NodeCollectionController.Direction.WestBound)) ||
+            (!isEastWest && (sortedDirection == NodeCollectionController.Direction.NorthBound || sortedDirection == NodeCollectionController.Direction.SouthBound))) return;
 
-        switch (sortedDirections[0])
+        switch (sortedDirection)
         {
             case NodeCollectionController.Direction.EastBound: case NodeCollectionController.Direction.WestBound:
                 if ((TrafficLightDownTime.TryGetValue(NodeCollectionController.Direction.NorthBound, out float northTime) && northTime < 0.1f) ||
@@ -151,15 +155,29 @@ public class TrafficLightController : MonoBehaviour
                 //Debug.Log($"Switch early for: {sortedDirections[0]} | Early by {switchDelay - totalTime} seconds.");
                 totalTime = switchDelay; //Switch light directions
                 break;
+        } 
+    }
+
+    private NodeCollectionController.Direction GetShortestDirection()
+    {
+        NodeCollectionController.Direction shortestDir = TrafficLightDirections[0];
+        float shortestTime = TrafficLightDownTime[shortestDir];
+
+        foreach(var kvp in TrafficLightDownTime)
+        {
+            if(kvp.Value < shortestTime)
+            {
+                shortestTime = kvp.Value;
+                shortestDir = kvp.Key;
+            }
         }
 
-
-        
+        return shortestDir;
     }
 
     private void IncrementTrafficTimers(float timeDelta)
     {
-        foreach (var key in TrafficLightDownTime.Keys.ToList()) TrafficLightDownTime[key] += timeDelta;
+        foreach (var direction in TrafficLightDirections) TrafficLightDownTime[direction] += timeDelta;
     }
 
     private void InitializeLights()
