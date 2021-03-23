@@ -140,10 +140,15 @@ public abstract class Tile
     {
         if (!sensors.Contains(sensorType) && SpawnSensor(sensorType))
         {
-            sensors.Add(sensorType);
+            ForceAddSensor(sensorType);
             return true;
         }
         return false;
+    }
+
+    public void ForceAddSensor(SensorType sensorType)
+    {
+        sensors.Add(sensorType);
     }
 
     public void RemoveSensor(SensorType sensorType)

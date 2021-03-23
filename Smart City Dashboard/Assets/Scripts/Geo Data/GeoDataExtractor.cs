@@ -17,7 +17,7 @@ public static class GeoDataExtractor
         var moneyAng = GetMoneyShot(graph);
         var rasterTexture = DrawToTextureAtAngle(graph, dataSource.width, dataSource.height, moneyAng);
 
-        return (CreateMap(rasterTexture), rasterTexture);
+        return (CreateMap(rasterTexture, true), rasterTexture);
     }
 
 
@@ -83,7 +83,7 @@ public static class GeoDataExtractor
         return output;
     }
 
-    private static TileGrid CreateMap(Texture2D mapTexture)
+    private static TileGrid CreateMap(Texture2D mapTexture, bool addSensors = false)
     {
         int height = mapTexture.height;
         int width = mapTexture.width;
@@ -109,6 +109,34 @@ public static class GeoDataExtractor
             }
         }
 
+        if (addSensors)
+        {
+            int lastCameraX = 0;
+            for (int y = 0; y < height; y++)
+            {
+                for(int x = 0; x < width; x++)
+                {
+                    if (grid[x, y] is RoadTile)
+                    {
+                        var neigh = grid.GetNeighbors(x, y);
+
+                        if(neigh.GetRoadCount() > 2)
+                        {
+                            grid[x, y].ForceAddSensor(SensorType.TrafficLight);
+                        }
+
+                        if(lastCameraX == 2 && y % 3 == 1)
+                        {
+                            grid[x, y].ForceAddSensor(SensorType.Camera);
+                            lastCameraX = 0;
+                        }
+                    }
+
+                    if (lastCameraX < 2) lastCameraX++; 
+                }
+            }
+        }
+
         return grid;
     }
 
@@ -122,7 +150,8 @@ public static class GeoDataExtractor
                 if (densityOffset == 0)
                 {
                     grid[checkPos] = new BuildingTile(BuildingTile.StructureType.House, directions.Oppisite(), true);
-                    densityOffset = UnityEngine.Random.Range(3, 6);
+                    //densityOffset = 2;
+                    densityOffset = UnityEngine.Random.Range(1, 3);
                 }
                 else
                 {

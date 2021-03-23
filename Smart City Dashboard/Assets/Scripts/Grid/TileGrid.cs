@@ -170,5 +170,16 @@ public struct NeighborInfo
         this.top = top;
         this.bottom = bottom;
     }
+
+    public int GetRoadCount()
+    {
+        int count = 0;
+        if (left is RoadTile) count++;
+        if (right is RoadTile) count++;
+        if (top is RoadTile) count++;
+        if (bottom is RoadTile) count++;
+
+        return count;
+    }
 }
 
