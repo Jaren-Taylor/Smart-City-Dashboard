@@ -9,28 +9,30 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using NUnit.Framework;
 using System.Text;
+using System;
+using JetBrains.Annotations;
 
-public class GoogleMapsTestQuery : MonoBehaviour
+public class GoogleMapsTestQuery: MonoBehaviour
 {
     private static readonly StringBuilder stringBuilder = new StringBuilder();
     static readonly HttpClient Http = new HttpClient();
     public Texture2D texture;
     public Image picture;
+    protected Action RetrieveAPIKey;
     private string apikey;
 
     private void Start()
     {
-       StartCoroutine(GetTexture(CreateQuery(apikey)));
     }
 
-    public static bool MakeQuery(int size, int zoom, string rawTextLocation)
+    public static bool TryCreateQuery(int size, int zoom, string rawTextLocation, out string url)
     {
         if(APIKey.TryGetKey(out string apiKey))
         {
-            string query = CreateQuery(size, zoom, rawTextLocation, apiKey);
-            //TODO: Use query
+            url = CreateQuery(size, zoom, rawTextLocation, apiKey);
             return true;
         }
+        url = "";
         return false;
     }
 
@@ -87,26 +89,25 @@ public class GoogleMapsTestQuery : MonoBehaviour
     }
 
 
-    public IEnumerator GetTexture(string uri)
+    public static IEnumerator GetTexture(string uri, Action<Texture2D> callback)
     {
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(uri);
         yield return www.SendWebRequest();
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log(www.error);
+            callback(null);
         }
         else
         {
-           texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
-           picture.sprite = Sprite.Create(texture, new Rect(0,0,texture.width, texture.height) , Vector2.zero);
+            callback(((DownloadHandlerTexture)www.downloadHandler).texture);
+             
         }
     }
 
     public void SetApiKey(string input)
     {
-        apikey = input;
-        Debug.Log(apikey);
+        RetrieveAPIKey?.Invoke();
     }
 
 }
