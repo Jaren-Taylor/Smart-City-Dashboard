@@ -11,7 +11,7 @@ public class Path
     private Vector3 lastTarget;
     private float tStep = 0f;
 
-    public Path(List<Vector2Int> tilePoints, Vector3 startingPosition, NodeController endingPoint, NodeCollectionController.TargetUser userType)
+    public Path(IEnumerable<Vector2Int> tilePoints, Vector3 startingPosition, NodeController endingPoint, NodeCollectionController.TargetUser userType)
     {
         Initialize(tilePoints, startingPosition, endingPoint, userType);
     }

@@ -5,77 +5,129 @@ using UnityEngine;
 
 public static class Pathfinding 
 {
-    private class PathNode
+    private static Vector2Int Target;
+
+    private static readonly Vector2Int NullParent = new Vector2Int(-1, -1);
+
+    private static Dictionary<Vector2Int, PathNode> activeNodes = new Dictionary<Vector2Int, PathNode>();
+    private static Dictionary<Vector2Int, PathNode> visitedNodes = new Dictionary<Vector2Int, PathNode>();
+
+    private struct PathNode
     {
-        public int X;
-        public int Y;
-        public Vector2Int Position { get => new Vector2Int(X, Y); set { X = value.x; Y = value.y; } }
-        public Vector2Int Target { set => SetDistance(value); }
+        public int X => Position.x;
+        public int Y => Position.y;
+        public Vector2Int Position { get; set; }
 
         public int Cost; //How many tiles have been traversed to get here
         public int Distance { get; private set; } //Manhattan distance to target
         public int CostDistance => Cost + Distance;
 
-        public PathNode Parent; //What tile we came from
+        public Vector2Int Parent; //What tile we came from
 
-        public void SetDistance(Vector2Int target)
+        public PathNode(Vector2Int position, Vector2Int parent, int cost)
         {
-            this.Distance = Mathf.Abs(target.x - X) + Mathf.Abs(target.y - Y);
+            Position = position;
+            Parent = parent;
+            Cost = cost;
+            Distance = Mathf.Abs(Target.x - position.x) + Mathf.Abs(Target.y - position.y);
+        }
+
+        public static int CalculateDistanceToTarget(Vector2Int position)
+        {
+            return Mathf.Abs(Target.x - position.x) + Mathf.Abs(Target.y - position.y);
         }
     }
 
-    public static List<Vector2Int> GetListOfPositionsFromTo(Vector2Int fromTile, Vector2Int toTile) 
+    private static PathNode FindSmallestCostDistance(Dictionary<Vector2Int, PathNode> pathNodes)
+    {
+        int smallest = -1;
+        Vector2Int position = Vector2Int.zero;
+        foreach(var kvp in pathNodes)
+        {
+            if(smallest == -1)
+            {
+                smallest = kvp.Value.CostDistance;
+                position = kvp.Key;
+            }
+            else
+            {
+                int cd = kvp.Value.CostDistance;
+                if (cd < smallest)
+                {
+                    smallest = cd;
+                    position = kvp.Key;
+                }
+            }
+        }
+
+        return pathNodes[position];
+    }
+
+
+    public static LinkedList<Vector2Int> GetListOfPositionsFromToReduced(Vector2Int fromTile, Vector2Int toTile)
     {
         var grid = GridManager.Instance.Grid;
 
-        var start = new PathNode() { Position = fromTile };
-        var finish = new PathNode() { Position = toTile };
+        Target = toTile;
 
-        start.SetDistance(toTile); //Calculates the distance the start tile is away from the end tile
+        var start = new PathNode(fromTile, new Vector2Int(-1, -1), 0);
+        //var finish = new PathNode() { Position = toTile };
+        activeNodes.Clear();
+        visitedNodes.Clear();
 
-        var activeNodes = new List<PathNode>();
-        activeNodes.Add(start);
-        var visitedNodes = new List<PathNode>();
+        activeNodes.Add(fromTile, start);
 
-        var walkableNodes = new List<PathNode>();
-
-        while (activeNodes.Any())
+        while (activeNodes.Count > 0)
         {
-            var checkNode = activeNodes.OrderBy(x => x.CostDistance).First();
+            var checkNode = FindSmallestCostDistance(activeNodes);
+                //activeNodes.OrderBy(x => x.Value.CostDistance).First().Value;
 
-            if(checkNode.X == finish.X && checkNode.Y == finish.Y)
+            if (checkNode.X == Target.x && checkNode.Y == Target.y)
             {
                 return PathNodeToVectorList(checkNode);
             }
 
-            visitedNodes.Add(checkNode);
-            activeNodes.Remove(checkNode);
+            visitedNodes.Add(checkNode.Position,checkNode);
+            activeNodes.Remove(checkNode.Position);
 
-            GetWalkableNodes(grid, checkNode, finish, walkableNodes);
+            int nextCost = checkNode.Cost + 1;
 
-            foreach(var walkableNode in walkableNodes)
+            for(int i = 0; i < 4; i++)
             {
-                //If this node has already been visited. 
-                if (visitedNodes.Any(node => node.X == walkableNode.X && node.Y == walkableNode.Y)) 
-                    continue; //Then skip it. Been there, done that.
-
-                //If this node is in the active list
-                if (activeNodes.Any(node => node.X == walkableNode.X && node.Y == walkableNode.Y))
+                if(IsWalkableInDirection(grid, checkNode.Position, (Tile.Facing)i))
                 {
-                    //Get the node that it's in the list
-                    var existingNode = activeNodes.First(node => node.X == walkableNode.X && node.Y == walkableNode.Y);
+                    var walkedPosition = checkNode.Position + Tile.Directions[i];
 
-                    //If the current cost for getting to this tile is better than a previously found tile
-                    if(existingNode.CostDistance > walkableNode.CostDistance) //TODO : Check if this should be checkTile instead
-                    { //Switch it out!
-                        activeNodes.Remove(existingNode); //Swap out parent and cost
-                        activeNodes.Add(walkableNode);
+                    //If this node has already been visited. 
+                    if (visitedNodes.ContainsKey(walkedPosition))
+                        continue; //Then skip it. Been there, done that.
+
+                    if(activeNodes.TryGetValue(walkedPosition, out PathNode existingNode))
+                    {
+                        //Get the node that it's in the list
+                        //var existingNode = activeNodes.First(node => node.X == walkedPosition.x && node.Y == walkedPosition.y);
+
+                        int distance = PathNode.CalculateDistanceToTarget(walkedPosition);
+                        int costDistance = distance + nextCost;
+
+                        //If the current cost for getting to this tile is better than a previously found tile
+                        if (existingNode.CostDistance > costDistance)
+                        {
+                            //Swap out parent and cost
+                            existingNode.Cost = nextCost;
+                            existingNode.Parent = checkNode.Position;
+                        }
                     }
-                }
-                else
-                {
-                    //If I haven't see it, it's new to me!
-                    activeNodes.Add(walkableNode); //Allocate new data
+                    else
+                    {
+                        //If I haven't see it, it's new to me!
+                        activeNodes.Add(walkedPosition,
+                            new PathNode() { 
+                                Position = walkedPosition,
+                                Parent = checkNode.Position,
+                                Cost = nextCost
+                            }); //Allocate new data
+                    }
                 }
             }
         }
@@ -84,90 +136,19 @@ public static class Pathfinding
 
     }
 
-    public static List<Vector2Int> GetListOfPositionsFromToReduced(Vector2Int fromTile, Vector2Int toTile)
+    private static LinkedList<Vector2Int> PathNodeToVectorList(PathNode endNode)
     {
-        var grid = GridManager.Instance.Grid;
-
-        var start = new PathNode() { Position = fromTile };
-        var finish = new PathNode() { Position = toTile };
-
-        start.SetDistance(toTile); //Calculates the distance the start tile is away from the end tile
-
-        var activeNodes = new List<PathNode>();
-        activeNodes.Add(start);
-        var visitedNodes = new List<PathNode>();
-
-        var walkableNodes = new List<PathNode>();
-
-        while (activeNodes.Any())
-        {
-            var checkNode = activeNodes.OrderBy(x => x.CostDistance).First();
-
-            if (checkNode.X == finish.X && checkNode.Y == finish.Y)
-            {
-                return PathNodeToVectorList(checkNode);
-            }
-
-            visitedNodes.Add(checkNode);
-            activeNodes.Remove(checkNode);
-
-            GetWalkableNodes(grid, checkNode, finish, walkableNodes);
-
-            foreach (var walkableNode in walkableNodes)
-            {
-                //If this node has already been visited. 
-                if (visitedNodes.Any(node => node.X == walkableNode.X && node.Y == walkableNode.Y))
-                    continue; //Then skip it. Been there, done that.
-
-                //If this node is in the active list
-                if (activeNodes.Any(node => node.X == walkableNode.X && node.Y == walkableNode.Y))
-                {
-                    //Get the node that it's in the list
-                    var existingNode = activeNodes.First(node => node.X == walkableNode.X && node.Y == walkableNode.Y);
-
-                    //If the current cost for getting to this tile is better than a previously found tile
-                    if (existingNode.CostDistance > walkableNode.CostDistance) //TODO : Check if this should be checkTile instead
-                    { //Switch it out!
-                        activeNodes.Remove(existingNode); //Swap out parent and cost
-                        activeNodes.Add(walkableNode);
-                    }
-                }
-                else
-                {
-                    //If I haven't see it, it's new to me!
-                    activeNodes.Add(walkableNode); //Allocate new data
-                }
-            }
-        }
-
-        return null;
-
-    }
-
-    private static List<Vector2Int> PathNodeToVectorList(PathNode endNode)
-    {
-        if (endNode == null) return new List<Vector2Int>();
-        Stack<Vector2Int> output = new Stack<Vector2Int>();
-        PathNode node = endNode;
+        if (endNode.Parent == NullParent) return null;
+        LinkedList<Vector2Int> output = new LinkedList<Vector2Int>();
+        output.AddFirst(endNode.Position);
+        Vector2Int position = endNode.Parent;
         do
         {
-            output.Push(node.Position);
-            node = node.Parent;
-        } while (node != null);
+            output.AddFirst(position);
+            position = visitedNodes[position].Parent;
+        } while (position != NullParent);
 
-        return output.ToList();
-    }
-
-    private static void GetWalkableNodes(TileGrid grid, PathNode current, PathNode target, List<PathNode> possibleTiles) 
-    {
-        possibleTiles.Clear();
-        //var possibleTiles = new List<PathNode>();
-
-        for(int i = 0; i < 4; i++) //For each direction (Tile.Facing enums can be cast from ints)
-        {
-            if (IsWalkableInDirection(grid, current.Position, (Tile.Facing)i)) //If walkable in said direction
-                possibleTiles.Add(new PathNode() { Position = current.Position + Tile.Directions[i], Target = target.Position, Cost = current.Cost + 1, Parent = current}); //Add a node for that direction
-        }
+        return output;
     }
 
     private static bool IsWalkableInDirection(TileGrid grid, Vector2Int current, Tile.Facing direction)
