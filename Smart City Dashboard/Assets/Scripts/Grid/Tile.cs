@@ -17,6 +17,7 @@ public abstract class Tile
         Top = 2,
         Bottom = 3
     }
+
     public static Facing OppositeDirection(Facing direction)
     {
         if (direction == Facing.Left) return Facing.Right;
@@ -24,6 +25,7 @@ public abstract class Tile
         else if (direction == Facing.Top) return Facing.Bottom;
         else return Facing.Top;
     }
+
     public static readonly Vector2Int[] Directions = { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
 
     public static Facing VectorToFacing(Vector2 delta)
@@ -295,6 +297,15 @@ public static class FacingExtension
         Tile.Facing.Top => Vector2Int.up,
         Tile.Facing.Bottom => Vector2Int.down,
         _ => throw new Exception()
+    };
+
+    public static bool IsOppisite(this Tile.Facing facing, Tile.Facing other) => (facing, other) switch
+    {
+        (Tile.Facing.Right, Tile.Facing.Left) => true,
+        (Tile.Facing.Left, Tile.Facing.Right) => true,
+        (Tile.Facing.Top, Tile.Facing.Bottom) => true,
+        (Tile.Facing.Bottom, Tile.Facing.Top) => true,
+        _ => false,
     };
 
     public static Tile.Facing Oppisite(this Tile.Facing facing) => facing switch

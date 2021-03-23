@@ -209,16 +209,17 @@ public static class Pathfinding
 
     private static bool IsWalkableInDirectionReduced(TileGrid grid, Tile currentTile, Vector2Int current, Tile.Facing direction)
     {
-        if (currentTile is BuildingTile buildingTile)
-        {
-            return buildingTile.currentFacing == direction;
-        }
-        else if (currentTile is RoadTile)
+        if (currentTile is RoadTile)
         {
             var tilePos = current + Tile.Directions[(int)direction];
             Tile tileInDirection = grid[tilePos];
-            if (tileInDirection is RoadTile) return true;
-            else if (tileInDirection is BuildingTile && ((BuildingTile)tileInDirection).currentFacing == Tile.OppositeDirection(direction)) return true;
+            if (tileInDirection is null) return false;
+            else if (tileInDirection is RoadTile) return true;
+            else if (tileInDirection is BuildingTile buildingTile && buildingTile.currentFacing == direction.Oppisite()) return true;
+        }
+        else if (currentTile is BuildingTile buildingTile)
+        {
+            return buildingTile.currentFacing == direction;
         }
         return false;
     }
