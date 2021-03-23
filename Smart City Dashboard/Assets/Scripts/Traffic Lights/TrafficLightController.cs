@@ -10,7 +10,9 @@ public class TrafficLightController : MonoBehaviour
     public float totalTime { private set; get; } = 0f;
     public float switchDelay { private set; get; } = 10f;
     private Dictionary<NodeCollectionController.Direction, LightAnimationController> TrafficLights = new Dictionary<NodeCollectionController.Direction, LightAnimationController>();
-    private SortedDictionary<NodeCollectionController.Direction, float> TrafficLightDownTime = new SortedDictionary<NodeCollectionController.Direction, float>(); 
+    private SortedDictionary<NodeCollectionController.Direction, float> TrafficLightDownTime = new SortedDictionary<NodeCollectionController.Direction, float>();
+    private List<NodeCollectionController.Direction> TrafficLightDirections = new List<NodeCollectionController.Direction>();
+
     public bool isEastWest { private set; get; } = false;
     private bool isTransitioning = false;
     private bool isInitialized = false;
@@ -60,6 +62,7 @@ public class TrafficLightController : MonoBehaviour
         lightController.transform.localPosition = Vector3.zero;
         spanWire.TrafficLights.Add(direction, lightController);
         spanWire.TrafficLightDownTime.Add(direction, 0f);
+        spanWire.TrafficLightDirections.Add(direction);
     }
 
     // Update is called once per frame
@@ -159,7 +162,7 @@ public class TrafficLightController : MonoBehaviour
 
     private void IncrementTrafficTimers(float timeDelta)
     {
-        foreach (var key in TrafficLightDownTime.Keys.ToList()) TrafficLightDownTime[key] += timeDelta;
+        foreach (var direction in TrafficLightDirections) TrafficLightDownTime[direction] += timeDelta;
     }
 
     private void InitializeLights()
