@@ -108,6 +108,14 @@ public class TileGrid
 
     }
 
+    private ReducedTileMap reducedTileMap;
+
+    public LinkedList<Vector2Int> GetListOfPositionsFromToReduced(Vector2Int fromTile, Vector2Int toTile)
+    {
+        if(reducedTileMap is null) reducedTileMap = new ReducedTileMap(this);
+        return reducedTileMap.GetListOfPositionsFromToReduced(fromTile, toTile);
+    }
+
     /// <summary>
     /// Checks if a point is in bounds given the current grid size
     /// </summary>

@@ -96,7 +96,12 @@ public class ReducedTileMap
     {
         LinkedList<Vector2Int> output = new LinkedList<Vector2Int>();
 
-        var grid = GridManager.Instance.Grid;
+        foreach(var kvp in interestsToNodes)
+        {
+            kvp.Value.visited = false;
+            kvp.Value.ParentNode = null;
+            kvp.Value.ToParentDelta = Vector2Int.zero;
+        }
 
         activeNodes.Clear();
         costDistSortedActiveNodes.Clear();
@@ -275,6 +280,10 @@ public class ReducedTileMap
             }
 
             outputList.AddFirst(parentPos);
+        }
+        else
+        {
+            outputList.AddFirst(waypoint.Position);
         }
         
         outputList.AddFirst(FromTilePos.Value);
