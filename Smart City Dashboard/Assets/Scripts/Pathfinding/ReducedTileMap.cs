@@ -1,12 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ReducedTileMap 
 {
-    private readonly int height;
-    private readonly int width;
-    private readonly TileGrid grid;
+    private static int height;
+    private static int width;
+    private static TileGrid grid;
 
     private static Vector2Int Target;
     private Vector2Int? FromTilePos = null;
@@ -18,12 +19,22 @@ public class ReducedTileMap
     private HashSet<TileIntersectionNode> activeNodes = new HashSet<TileIntersectionNode>();
     private LinkedList<TileIntersectionNode> costDistSortedActiveNodes = new LinkedList<TileIntersectionNode>();
 
+    private readonly Queue<TileIntersectionNode> pool = new Queue<TileIntersectionNode>();
+
+    private readonly Dictionary<Tile.Facing, Func<Vector2Int, bool>> facingBoundCheck = new Dictionary<Tile.Facing, Func<Vector2Int, bool>>()
+    { 
+        {Tile.Facing.Top, (x) => x.y < height },
+        {Tile.Facing.Bottom, (x) => x.y >= 0 },
+        {Tile.Facing.Left, (x) => x.x >= 0 },
+        {Tile.Facing.Right, (x) => x.x < width }
+    };
+
 
     public ReducedTileMap(TileGrid grid)
     {
-        this.grid = grid;
-        this.height = grid.Height;
-        this.width = grid.Width;
+        ReducedTileMap.grid = grid;
+        ReducedTileMap.height = grid.Height;
+        ReducedTileMap.width = grid.Width;
         CalculateGraph();
     }
 
@@ -92,10 +103,400 @@ public class ReducedTileMap
         }
     }
 
+    public void AddRoad(Vector2Int position)
+    {
+        var neigh = grid.GetNeighbors(position);
+
+        Vector2Int topCandidate = position + Tile.Facing.Top.ToVector2();
+        Vector2Int bottomCandidate = position + Tile.Facing.Bottom.ToVector2();
+        Vector2Int leftCandidate = position + Tile.Facing.Left.ToVector2();
+        Vector2Int rightCandidate = position + Tile.Facing.Right.ToVector2();
+        bool topFound = interestsToNodes.TryGetValue(topCandidate, out var topNode);
+        bool bottomFound = interestsToNodes.TryGetValue(bottomCandidate, out var bottomNode);
+        bool leftFound = interestsToNodes.TryGetValue(leftCandidate, out var leftNode);
+        bool rightFound = interestsToNodes.TryGetValue(rightCandidate, out var rightNode);
+
+        TileIntersectionNode newIntersection = null;
+
+        if (topFound)
+        {
+            if (newIntersection is null) newIntersection = new TileIntersectionNode() { Position = position };
+            newIntersection.Connections.Add(Tile.Facing.Top, topNode);
+            newIntersection.ConnectionCost.Add(Tile.Facing.Top, 1);
+            topNode.Connections.Add(Tile.Facing.Bottom, newIntersection);
+            topNode.ConnectionCost.Add(Tile.Facing.Bottom, 1);
+        }
+        else
+        {
+            if (neigh.top is RoadTile && TryFindHorizontalConnectionCandidate(topCandidate, out Vector2Int connectedPosition, out Tile.Facing direction))
+            {
+                if (newIntersection is null) newIntersection = new TileIntersectionNode() { Position = position };
+                TileIntersectionNode connectedNode = interestsToNodes[connectedPosition];
+                topNode = InsertNodeAlongConnection(connectedNode, direction, topCandidate);
+                ConnectNodes(newIntersection, topNode, Tile.Facing.Top);
+                interestsToNodes.Add(topCandidate, topNode);
+                pointsOfInterests.Add(topCandidate);
+            }
+        }
+
+        if (bottomFound)
+        {
+            if (newIntersection is null) newIntersection = new TileIntersectionNode() { Position = position };
+            newIntersection.Connections.Add(Tile.Facing.Bottom, bottomNode);
+            newIntersection.ConnectionCost.Add(Tile.Facing.Bottom, 1);
+            bottomNode.Connections.Add(Tile.Facing.Top, newIntersection);
+            bottomNode.ConnectionCost.Add(Tile.Facing.Top, 1);
+        }
+        else
+        {
+            if (neigh.bottom is RoadTile && TryFindHorizontalConnectionCandidate(bottomCandidate, out Vector2Int connectedPosition, out Tile.Facing direction))
+            {
+                if (newIntersection is null) newIntersection = new TileIntersectionNode() { Position = position };
+                TileIntersectionNode connectedNode = interestsToNodes[connectedPosition];
+                bottomNode = InsertNodeAlongConnection(connectedNode, direction, bottomCandidate);
+                ConnectNodes(newIntersection, bottomNode, Tile.Facing.Bottom);
+                interestsToNodes.Add(bottomCandidate, bottomNode);
+                pointsOfInterests.Add(bottomCandidate);
+            }
+        }
+
+        if (leftFound)
+        {
+            if (newIntersection is null) newIntersection = new TileIntersectionNode() { Position = position };
+            newIntersection.Connections.Add(Tile.Facing.Left, leftNode);
+            newIntersection.ConnectionCost.Add(Tile.Facing.Left, 1);
+            leftNode.Connections.Add(Tile.Facing.Right, newIntersection);
+            leftNode.ConnectionCost.Add(Tile.Facing.Right, 1);
+        }
+        else
+        {
+            if (neigh.left is RoadTile && TryFindVerticalConnectionCandidate(leftCandidate, out Vector2Int connectedPosition, out Tile.Facing direction))
+            {
+                if (newIntersection is null) newIntersection = new TileIntersectionNode() { Position = position };
+                TileIntersectionNode connectedNode = interestsToNodes[connectedPosition];
+                leftNode = InsertNodeAlongConnection(connectedNode, direction, leftCandidate);
+                ConnectNodes(newIntersection, leftNode, Tile.Facing.Left);
+                interestsToNodes.Add(leftCandidate, leftNode);
+                pointsOfInterests.Add(leftCandidate);
+            }
+        }
+
+        if (rightFound)
+        {
+            if (newIntersection is null) newIntersection = new TileIntersectionNode() { Position = position };
+            newIntersection.Connections.Add(Tile.Facing.Right, rightNode);
+            newIntersection.ConnectionCost.Add(Tile.Facing.Right, 1);
+            rightNode.Connections.Add(Tile.Facing.Left, newIntersection);
+            rightNode.ConnectionCost.Add(Tile.Facing.Left, 1);
+        }
+        else
+        {
+            if (neigh.right is RoadTile && TryFindVerticalConnectionCandidate(rightCandidate, out Vector2Int connectedPosition, out Tile.Facing direction))
+            {
+                if (newIntersection is null) newIntersection = new TileIntersectionNode() { Position = position };
+                TileIntersectionNode connectedNode = interestsToNodes[connectedPosition];
+                rightNode = InsertNodeAlongConnection(connectedNode, direction, rightCandidate);
+                ConnectNodes(newIntersection, rightNode, Tile.Facing.Right);
+                interestsToNodes.Add(rightCandidate, rightNode);
+                pointsOfInterests.Add(rightCandidate);
+            }
+        }
+
+        if (newIntersection is null) newIntersection = new TileIntersectionNode() { Position = position };
+        interestsToNodes.Add(position, newIntersection);
+        pointsOfInterests.Add(position);
+
+        if (topNode != null) TryDissolveNode(topNode);
+        if (bottomNode != null) TryDissolveNode(bottomNode);
+        if (leftNode != null) TryDissolveNode(leftNode);
+        if (rightNode != null) TryDissolveNode(rightNode);
+        TryDissolveNode(newIntersection);
+    }
+
+
+    public void RemoveRoad(Vector2Int position)
+    {
+        if(interestsToNodes.TryGetValue(position, out TileIntersectionNode node))
+        {
+            Tile.Facing checkFacing = Tile.Facing.Top;
+            for(int i = 0; i < 4; i++)
+            {
+                if (node.Connections.TryGetValue(checkFacing, out var farNode)) 
+                {
+                    var oppDir = checkFacing.Oppisite();
+                    if(node.ConnectionCost[checkFacing] == 1) //The nodes are adjacent
+                    {
+                        farNode.Connections.Remove(oppDir);
+                        farNode.ConnectionCost.Remove(oppDir);
+                        TryDissolveNode(farNode);
+                    }
+                    else
+                    {
+                        //int cost = node.ConnectionCost[checkFacing] - 1;
+                        Vector2Int newNodePos = node.Position + checkFacing.ToVector2();
+                        var newNode = new TileIntersectionNode() { Position = newNodePos };
+
+                        ConnectNodes(newNode, farNode, checkFacing);
+
+                        pointsOfInterests.Add(newNodePos);
+                        interestsToNodes.Add(newNodePos, newNode);
+                    }
+                }
+                checkFacing = checkFacing.TurnRight();
+            }
+
+            pointsOfInterests.Remove(position);
+            interestsToNodes.Remove(position);
+        }
+        else if(TryFindConnectionCandidate(position, out Vector2Int forwardPosition, out Tile.Facing backwardDirection))
+        {
+            var forwardDirection = backwardDirection.Oppisite();
+            var forwardNode = interestsToNodes[forwardPosition];
+            var backwardNode = forwardNode.Connections[backwardDirection];
+
+            var (forwardDistance, backwardDistance) = (backwardDirection.IsHorizontal()) 
+                ? (Mathf.Abs(forwardNode.Position.x - position.x), Mathf.Abs(backwardNode.Position.x - position.x)) 
+                : (Mathf.Abs(forwardNode.Position.y - position.y), Mathf.Abs(backwardNode.Position.y - position.y));
+
+            if(forwardDistance == 1)
+            {
+                forwardNode.Connections.Remove(backwardDirection);
+                forwardNode.ConnectionCost.Remove(backwardDirection);
+                TryDissolveNode(forwardNode);
+            }
+            else
+            {
+                var newPosNode = new TileIntersectionNode() { Position = position + forwardDirection.ToVector2() };
+
+                ConnectNodes(forwardNode, newPosNode, backwardDirection);
+
+                pointsOfInterests.Add(newPosNode.Position);
+                interestsToNodes.Add(newPosNode.Position, newPosNode);
+            }
+
+            if (backwardDistance == 1)
+            {
+                backwardNode.Connections.Remove(forwardDirection);
+                backwardNode.ConnectionCost.Remove(forwardDirection);
+                TryDissolveNode(backwardNode);
+            }
+            else
+            {
+                var newNegNode = new TileIntersectionNode() { Position = position + backwardDirection.ToVector2() };
+
+                ConnectNodes(backwardNode, newNegNode, forwardDirection);
+                pointsOfInterests.Add(newNegNode.Position);
+                interestsToNodes.Add(newNegNode.Position, newNegNode);
+            }
+
+            pointsOfInterests.Remove(position);
+            interestsToNodes.Remove(position);
+        }
+        else
+        {
+            throw new Exception("This should have been connected");
+        }
+    }
+
+    private bool TryDissolveNode(TileIntersectionNode node)
+    {
+        if (node.Connections.Count == 2 && !(node.Connections.ContainsKey(Tile.Facing.Top) ^ node.Connections.ContainsKey(Tile.Facing.Bottom)))
+        {
+            Tile.Facing posDir = (node.Connections.ContainsKey(Tile.Facing.Top)) ? Tile.Facing.Top : Tile.Facing.Right;
+            Tile.Facing negDir = posDir.Oppisite();
+
+            var posNode = node.Connections[posDir];
+            var negNode = node.Connections[negDir];
+
+            int cost = node.ConnectionCost[posDir] + node.ConnectionCost[negDir];
+
+            posNode.Connections[negDir] = negNode;
+            negNode.Connections[posDir] = posNode;
+            posNode.ConnectionCost[negDir] = cost;
+            negNode.ConnectionCost[posDir] = cost;
+
+            interestsToNodes.Remove(node.Position);
+            pointsOfInterests.Remove(node.Position);
+            return true;
+        }
+        return false;
+    }
+
+    private void ConnectNodes(TileIntersectionNode fromNode, TileIntersectionNode toNode, Tile.Facing direction)
+    {
+        var oppDir = direction.Oppisite();
+        var cost = (direction.IsHorizontal()) ? Mathf.Abs(fromNode.Position.x - toNode.Position.x) : Mathf.Abs(fromNode.Position.y - toNode.Position.y);
+
+        if (fromNode.Connections.ContainsKey(direction))
+        {
+            fromNode.Connections[direction] = toNode;
+            fromNode.ConnectionCost[direction] = cost;
+        }
+        else
+        {
+            fromNode.Connections.Add(direction, toNode);
+            fromNode.ConnectionCost.Add(direction, cost);
+        }
+
+        if (toNode.Connections.ContainsKey(oppDir))
+        {
+            toNode.Connections[oppDir] = fromNode;
+            toNode.ConnectionCost[oppDir] = cost;
+        }
+        else
+        {
+            toNode.Connections.Add(oppDir, fromNode);
+            toNode.ConnectionCost.Add(oppDir, cost);
+        }
+    }
+
+    private TileIntersectionNode InsertNodeAlongConnection(TileIntersectionNode node, Tile.Facing direction, Vector2Int position)
+    {
+        var oppDir = direction.Oppisite();
+        TileIntersectionNode newNode = new TileIntersectionNode() { Position = position };
+        TileIntersectionNode farNode = node.Connections[direction];
+
+        ConnectNodes(node, newNode, direction);
+        ConnectNodes(newNode, farNode, direction);
+
+        return newNode;
+    }
+
+    private bool IsAdjacentToPoI(Vector2Int position, out Tile.Facing direction)
+    {
+        direction = Tile.Facing.Top;
+        for(int i = 0; i < 4; i++)
+        {
+            Vector2Int checkPos = position + direction.ToVector2();
+            if (pointsOfInterests.Contains(checkPos)) return true;
+            direction.TurnRight();
+        }
+        return false;
+    }
+
+    private bool TryFindHorizontalConnectionCandidate(Vector2Int position, out Vector2Int connectedPosition, out Tile.Facing direction)
+    {
+        var (xSign, xFlippedFacing) = (position.x < width / 2) ? (-1, Tile.Facing.Right) : (1, Tile.Facing.Left);
+        Vector2Int xSearch = position;
+        
+        while (xSign != 0)
+        {
+
+            xSearch.x += xSign;
+            if (xSearch.x >= 0 && xSearch.x < width)
+            {
+                if (interestsToNodes.TryGetValue(xSearch, out TileIntersectionNode node))
+                {
+                    if (node.Connections.ContainsKey(xFlippedFacing))
+                    {
+                        //Found nearest connecition
+                        connectedPosition = xSearch;
+                        direction = xFlippedFacing;
+                        return true;
+                    }
+                    else xSign = 0; //Reached Edge of searching in this direction
+                }
+            }
+            else xSign = 0; //Reached Edge of searching
+        }
+
+        connectedPosition = Vector2Int.zero;
+        direction = Tile.Facing.Top;
+        return false;
+    }
+
+    private bool TryFindVerticalConnectionCandidate(Vector2Int position, out Vector2Int connectedPosition, out Tile.Facing direction)
+    {        
+        var (ySign, yFlippedFacing) = (position.y < height / 2) ? (-1, Tile.Facing.Top) : (1, Tile.Facing.Bottom);
+        Vector2Int ySearch = position;
+
+        while (ySign != 0)
+        {
+            ySearch.y += ySign;
+            if (ySearch.y >= 0 && ySearch.y < height)
+            {
+                if (interestsToNodes.TryGetValue(ySearch, out TileIntersectionNode node))
+                {
+                    if (node.Connections.ContainsKey(yFlippedFacing))
+                    {
+                        //Found nearest connecition
+                        connectedPosition = ySearch;
+                        direction = yFlippedFacing;
+                        return true;
+                    }
+                    else ySign = 0; //Reached Edge of searching in this direction
+                }
+            }
+            else ySign = 0; //Reached Edge of searching
+        }
+
+        connectedPosition = Vector2Int.zero;
+        direction = Tile.Facing.Top;
+        return false;
+    }
+
+    private bool TryFindConnectionCandidate(Vector2Int position, out Vector2Int connectedPosition, out Tile.Facing direction)
+    {
+        var (xSign, xFlippedFacing) = (position.x < width / 2) ? (-1, Tile.Facing.Right) : (1, Tile.Facing.Left);
+        var (ySign, yFlippedFacing) = (position.y < height / 2) ? (-1, Tile.Facing.Top) : (1, Tile.Facing.Bottom);
+
+        Vector2Int xSearch = position;
+        Vector2Int ySearch = position;
+
+        while (xSign != 0 || ySign != 0)
+        {
+            if(xSign != 0)
+            {
+                xSearch.x += xSign; 
+                if(xSearch.x >= 0 && xSearch.x < width)
+                {
+                    if (interestsToNodes.TryGetValue(xSearch, out TileIntersectionNode node))
+                    {
+                        if (node.Connections.ContainsKey(xFlippedFacing))
+                        {
+                            //Found nearest connecition
+                            connectedPosition = xSearch;
+                            direction = xFlippedFacing;
+                            return true;
+                        }
+                        else xSign = 0; //Reached Edge of searching in this direction
+                    }
+                }
+                else xSign = 0; //Reached Edge of searching
+            }
+
+            if(ySign != 0)
+            {
+                ySearch.y += ySign;
+                if (ySearch.y >= 0 && ySearch.y < height)
+                {
+                    if (interestsToNodes.TryGetValue(ySearch, out TileIntersectionNode node))
+                    {
+                        if (node.Connections.ContainsKey(yFlippedFacing))
+                        {
+                            //Found nearest connecition
+                            connectedPosition = ySearch;
+                            direction = yFlippedFacing;
+                            return true;
+                        }
+                        else ySign = 0; //Reached Edge of searching in this direction
+                    }
+                }
+                else ySign = 0; //Reached Edge of searching
+            }
+        }
+
+        connectedPosition = Vector2Int.zero;
+        direction = Tile.Facing.Top;
+        return false;
+    }
+
     public LinkedList<Vector2Int> GetListOfPositionsFromToReduced(Vector2Int fromTile, Vector2Int toTile)
     {
+
         LinkedList<Vector2Int> output = new LinkedList<Vector2Int>();
 
+        if (!(grid[toTile] is BuildingTile targetBuilding)) return output;
         foreach(var kvp in interestsToNodes)
         {
             kvp.Value.visited = false;
@@ -108,7 +509,9 @@ public class ReducedTileMap
 
         output.AddLast(toTile);
 
-        var frontOfToTile = toTile + ((BuildingTile)grid[toTile]).currentFacing.ToVector2();
+
+
+        var frontOfToTile = toTile + targetBuilding.currentFacing.ToVector2();
 
         Target = frontOfToTile;
 

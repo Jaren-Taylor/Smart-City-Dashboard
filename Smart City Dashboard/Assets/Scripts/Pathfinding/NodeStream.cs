@@ -76,10 +76,10 @@ public class NodeStream
 
     private void InitializeBuffer(Vector3 startingPosition)
     {
-        buffer = new LinkedList<NodeController>();
 
-        if (source[path.First.Value] is Tile tile && !(tile.NodeCollection is null) && path.First is LinkedListNode<Vector2Int> first && path.First.Next is LinkedListNode<Vector2Int> second)
+        if (path.First is LinkedListNode<Vector2Int> first && source[path.First.Value] is Tile tile && !(tile.NodeCollection is null) && path.First.Next is LinkedListNode<Vector2Int> second)
         {
+            buffer = new LinkedList<NodeController>();
             var exitingDirection = NodeCollectionController.GetDirectionFromDelta(second.Value, first.Value);
             AddIntoBuffer(tile.NodeCollection.GetExitDrivewayPath(tile.NodeCollection.GetClosestNodeTo(startingPosition), exitingDirection));
         }

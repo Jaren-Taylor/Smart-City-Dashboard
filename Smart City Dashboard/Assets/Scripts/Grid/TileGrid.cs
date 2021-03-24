@@ -10,11 +10,15 @@ using UnityEngine;
 public class TileGrid
 {
 
+    private const bool USE_OPTIMIZED_PATHFINDING = true;
+
     [DataMember(Name="Grid")]
     /// <summary>
     /// Holds all the tiles present on the map
     /// </summary>
     private Dictionary<Vector2Int, Tile> grid;
+
+    private ReducedTileMap reducedTileMap;
 
     public Action<Vector2Int, Tile> positionChanged;
 
@@ -108,12 +112,29 @@ public class TileGrid
 
     }
 
-    private ReducedTileMap reducedTileMap;
-
-    public LinkedList<Vector2Int> GetListOfPositionsFromToReduced(Vector2Int fromTile, Vector2Int toTile)
+    public void RoadAdded(Vector2Int position)
     {
-        if(reducedTileMap is null) reducedTileMap = new ReducedTileMap(this);
-        return reducedTileMap.GetListOfPositionsFromToReduced(fromTile, toTile);
+        if (reducedTileMap is null) return;
+        reducedTileMap.AddRoad(position);
+    }
+
+    public void RoadRemoved(Vector2Int position)
+    {
+        if (reducedTileMap is null) return;
+        reducedTileMap.RemoveRoad(position);
+    }
+
+    public LinkedList<Vector2Int> GetListOfPositionsFromTo(Vector2Int fromTile, Vector2Int toTile)
+    {
+        if (USE_OPTIMIZED_PATHFINDING)
+        {
+            if(reducedTileMap is null) reducedTileMap = new ReducedTileMap(this);
+            return reducedTileMap.GetListOfPositionsFromToReduced(fromTile, toTile);
+        }
+        else
+        {
+            return Pathfinding.GetListOfPositionsFromToReduced(fromTile, toTile);
+        }
     }
 
     /// <summary>
