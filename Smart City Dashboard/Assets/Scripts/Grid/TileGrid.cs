@@ -16,6 +16,8 @@ public class TileGrid
     /// </summary>
     private Dictionary<Vector2Int, Tile> grid;
 
+    public Action<Vector2Int, Tile> positionChanged;
+
     [DataMember(Name="Width")]
     public readonly int Width;
     [DataMember(Name="Height")]
@@ -72,8 +74,6 @@ public class TileGrid
     }
 
     private List<Vector2Int> GetLocations() => new List<Vector2Int>(grid.Keys);
-
-    private int XyToGrid(int x, int y) => x + y * Width;
 
     public bool Contains(Vector2Int position) => grid.ContainsKey(position);
 
