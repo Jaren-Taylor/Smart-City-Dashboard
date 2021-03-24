@@ -19,7 +19,11 @@ public class RemoveTileState : IGridControlState
 
     public void OnMouseDown(DigitalCursor location)
     {
-        if (location.IsValid()) GridManager.Instance.RemoveTile(location.Position);
+        if (location.IsValid() && GridManager.GetTile(location.Position) is Tile tile && tile.IsPermanent)
+        {
+            GridManager.Instance.RemoveTile(location.Position);
+            if (tile is RoadTile) GridManager.Instance.Grid.RoadRemoved(location.Position);
+        }
     }
 
     public void OnMouseEnterTile(DigitalCursor location)

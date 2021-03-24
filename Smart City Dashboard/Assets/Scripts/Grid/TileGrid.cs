@@ -10,11 +10,17 @@ using UnityEngine;
 public class TileGrid
 {
 
+    private const bool USE_OPTIMIZED_PATHFINDING = true;
+
     [DataMember(Name="Grid")]
     /// <summary>
     /// Holds all the tiles present on the map
     /// </summary>
     private Dictionary<Vector2Int, Tile> grid;
+
+    private ReducedTileMap reducedTileMap;
+
+    public Action<Vector2Int, Tile> positionChanged;
 
     [DataMember(Name="Width")]
     public readonly int Width;
@@ -73,8 +79,6 @@ public class TileGrid
 
     private List<Vector2Int> GetLocations() => new List<Vector2Int>(grid.Keys);
 
-    private int XyToGrid(int x, int y) => x + y * Width;
-
     public bool Contains(Vector2Int position) => grid.ContainsKey(position);
 
     
@@ -106,6 +110,31 @@ public class TileGrid
 
         GridManager.Instance.LoadProgress = 1f;
 
+    }
+
+    public void RoadAdded(Vector2Int position)
+    {
+        if (reducedTileMap is null) return;
+        reducedTileMap.AddRoad(position);
+    }
+
+    public void RoadRemoved(Vector2Int position)
+    {
+        if (reducedTileMap is null) return;
+        reducedTileMap.RemoveRoad(position);
+    }
+
+    public LinkedList<Vector2Int> GetListOfPositionsFromTo(Vector2Int fromTile, Vector2Int toTile)
+    {
+        if (USE_OPTIMIZED_PATHFINDING)
+        {
+            if(reducedTileMap is null) reducedTileMap = new ReducedTileMap(this);
+            return reducedTileMap.GetListOfPositionsFromToReduced(fromTile, toTile);
+        }
+        else
+        {
+            return Pathfinding.GetListOfPositionsFromToReduced(fromTile, toTile);
+        }
     }
 
     /// <summary>

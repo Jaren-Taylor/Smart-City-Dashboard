@@ -50,7 +50,8 @@ public class PathWalker : MonoBehaviour
         {
             trafficTolerance = UnityEngine.Random.Range(15f, 20f);
         }
-        var pathList = Pathfinding.GetListOfPositionsFromToReduced(MyPosition.ToGridInt(), tileLocation);
+        var pathList = GridManager.Instance.Grid.GetListOfPositionsFromTo(MyPosition.ToGridInt(), tileLocation);
+            //Pathfinding.GetListOfPositionsFromToReduced(MyPosition.ToGridInt(), tileLocation);
         if (pathList is null)
             return false; 
         path = new Path(pathList, MyPosition, null, targetUser);

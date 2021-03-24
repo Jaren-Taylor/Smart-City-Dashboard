@@ -27,6 +27,8 @@ public abstract class Tile
     }
 
     public static readonly Vector2Int[] Directions = { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
+    public static readonly Tile.Facing[] Facings = { Facing.Left, Facing.Right, Facing.Top, Facing.Bottom };
+
 
     public static Facing VectorToFacing(Vector2 delta)
     {

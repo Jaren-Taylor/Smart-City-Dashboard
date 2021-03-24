@@ -24,7 +24,7 @@ public class Path
         currentlyTraversing.Add(lastTarget);
     }
 
-    public bool IsValid() => !stream.IsEndOfStream() && !stream.IsCorrupted();
+    public bool IsValid() => !stream.IsCorrupted() && !stream.IsEndOfStream();
 
     public bool ReachedDestination() => stream.IsEndOfStream() && currentlyTraversing.Count == 0;
 
