@@ -107,7 +107,6 @@ public class EntityManager : MonoBehaviour
             PathWalker pathwalker = entity.GetComponent<PathWalker>();
             pathwalker.SpawnPosition = controller;
             pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;
-            //entity.transform.position = controller.GetNodeForVehicleByDirection()
             entity.gameObject.SetActive(true);
         }
         else

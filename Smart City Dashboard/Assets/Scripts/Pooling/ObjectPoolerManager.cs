@@ -49,6 +49,9 @@ public class ObjectPoolerManager : MonoBehaviour
         var vehicle = PooledVehicleEntityList[PooledVehicleEntityList.Count - 1];
         PooledVehicleEntityList.RemoveAt(PooledVehicleEntityList.Count - 1);
         LoanedEntities.Add(vehicle);
+        vehicle.transform.position = vehicle.GetComponent<PathWalker>().SpawnPosition.Position;
+        var buildingTile = GridManager.Instance.Grid[vehicle.transform.position.ToGridInt()] as BuildingTile;
+        vehicle.transform.rotation = Tile.FacingToQuaternion[buildingTile.currentFacing];
         return vehicle;
     }
 
@@ -57,6 +60,7 @@ public class ObjectPoolerManager : MonoBehaviour
         var pedestrian = PooledPedestrianEntityList[PooledPedestrianEntityList.Count - 1];
         PooledPedestrianEntityList.RemoveAt(PooledPedestrianEntityList.Count - 1);
         LoanedEntities.Add(pedestrian);
+        pedestrian.transform.position = pedestrian.GetComponent<PathWalker>().SpawnPosition.Position;
         return pedestrian;
     }
 
