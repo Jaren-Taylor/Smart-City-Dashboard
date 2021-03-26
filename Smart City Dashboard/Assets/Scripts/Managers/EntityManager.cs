@@ -51,6 +51,10 @@ public class EntityManager : MonoBehaviour
         {
             CameraManager.Instance.StopFollowEntity();
         }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            ObjectPoolerManager.FillPools();
+        }
     }
 
     private void RandomlySpawnPedestrian()
@@ -75,13 +79,41 @@ public class EntityManager : MonoBehaviour
 
     public PedestrianEntity SpawnPedestrian(NodeController controller)
     {
-        PedestrianEntity entity = PedestrianEntity.Spawn(controller);
+        PedestrianEntity entity;
+        if (ObjectPoolerManager.CanLoanPedestrian())
+        {
+            Debug.Log("I AM RUNNING");
+            entity = ObjectPoolerManager.GetPedestrianEntityFromPool();
+            PathWalker pathwalker = entity.GetComponent<PathWalker>();
+            pathwalker.SpawnPosition = controller;
+            pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;
+            entity.gameObject.SetActive(true);
+        }
+        else
+        {
+            entity = PedestrianEntity.Spawn(controller);
+        }
         Register(entity);
         return entity;
+        
     }
     public VehicleEntity SpawnVehicle(VehicleEntity.VehicleType type, NodeController controller)
     {
-        VehicleEntity entity = VehicleEntity.Spawn(controller, type);
+        VehicleEntity entity;
+        if (ObjectPoolerManager.CanLoanVehicle())
+        {
+            Debug.Log("I AM RUNNING");
+            entity = ObjectPoolerManager.GetVehicleEntityFromPool();
+            PathWalker pathwalker = entity.GetComponent<PathWalker>();
+            pathwalker.SpawnPosition = controller;
+            pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;
+            //entity.transform.position = controller.GetNodeForVehicleByDirection()
+            entity.gameObject.SetActive(true);
+        }
+        else
+        {
+            entity = VehicleEntity.Spawn(controller, type);
+        }
         Register(entity);
         return entity;
     }
@@ -141,7 +173,7 @@ public class EntityManager : MonoBehaviour
     {
         if (Entities.Contains(entity))
         {
-            Destroy(entity.gameObject);
+            ObjectPoolerManager.ReclaimObject(entity);
             Entities.Remove(entity);
         }
     }
