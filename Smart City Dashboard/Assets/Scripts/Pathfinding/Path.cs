@@ -8,7 +8,9 @@ public class Path
 {
     private NodeStream stream;
     private List<Vector3> currentlyTraversing = new List<Vector3>();
-    private Vector3 lastTarget;
+    public Vector3 lastTarget { private set; get; }
+    public List<Vector3> CurrentlyTraversing { get => currentlyTraversing; set => currentlyTraversing = value; }
+
     private float tStep = 0f;
 
     public Path(IEnumerable<Vector2Int> tilePoints, Vector3 startingPosition, NodeController endingPoint, NodeCollectionController.TargetUser userType)
@@ -20,13 +22,13 @@ public class Path
     {
         stream = new NodeStream(GridManager.Instance.Grid, tilePoints, startingPosition, endingPoint, userType);
         lastTarget = startingPosition;
-        currentlyTraversing.Add(lastTarget);
-        currentlyTraversing.Add(lastTarget);
+        CurrentlyTraversing.Add(lastTarget);
+        CurrentlyTraversing.Add(lastTarget);
     }
 
     public bool IsValid() => !stream.IsCorrupted() && !stream.IsEndOfStream();
 
-    public bool ReachedDestination() => stream.IsEndOfStream() && currentlyTraversing.Count == 0;
+    public bool ReachedDestination() => stream.IsEndOfStream() && CurrentlyTraversing.Count == 0;
 
     public Vector3 GetNextTarget(Vector3 currentPosition, float timeDelta)
     {
@@ -37,7 +39,7 @@ public class Path
             if (tStep < 1)
             {
                 tStep += timeDelta;
-                lastTarget = CalculateTarget(currentlyTraversing, tStep);
+                lastTarget = CalculateTarget(CurrentlyTraversing, tStep);
                 if (tStep <= 1)
                 {
                     return lastTarget;
@@ -46,23 +48,23 @@ public class Path
                 {
                     excessDelta = tStep - 1;
                     tStep = 0f;
-                    currentlyTraversing.Clear();
+                    CurrentlyTraversing.Clear();
                 }
             }
             else
             {
                 excessDelta = timeDelta;
-                currentlyTraversing.Clear();
+                CurrentlyTraversing.Clear();
             }
         }
         else return lastTarget;
 
-        if (currentlyTraversing.Count == 0)
+        if (CurrentlyTraversing.Count == 0)
         {
             if (TryPopulateTraversingList())
             {
                 tStep = excessDelta;
-                lastTarget = CalculateTarget(currentlyTraversing, tStep);
+                lastTarget = CalculateTarget(CurrentlyTraversing, tStep);
                 return lastTarget;
             }
             else tStep = 1f;
@@ -82,15 +84,15 @@ public class Path
 
     private bool TryPopulateTraversingList()
     {
-        if (currentlyTraversing.Count > 0) return false; //Already populated
+        if (CurrentlyTraversing.Count > 0) return false; //Already populated
        
-        currentlyTraversing.Add(stream.GetCurrent());
+        CurrentlyTraversing.Add(stream.GetCurrent());
 
         while (TryIncreaseTraversalList());
 
-        if (currentlyTraversing.Count == 1)
+        if (CurrentlyTraversing.Count == 1)
         {
-            currentlyTraversing.Clear();
+            CurrentlyTraversing.Clear();
             return false;
         }
 
@@ -101,13 +103,13 @@ public class Path
     {
         if(stream.PeekNext(out Vector3 position).IsSuccessful())
         {
-            currentlyTraversing.Add(position);
+            CurrentlyTraversing.Add(position);
             if (TraverseListValid())
             {
                 stream.MoveNext();
                 return true;
             }
-            currentlyTraversing.RemoveAt(currentlyTraversing.Count - 1);
+            CurrentlyTraversing.RemoveAt(CurrentlyTraversing.Count - 1);
         }
         return false;
     }
@@ -118,13 +120,13 @@ public class Path
     /// <returns></returns>
     private bool TraverseListValid()
     {
-        int count = currentlyTraversing.Count;
+        int count = CurrentlyTraversing.Count;
         if (count < 2) return false;
         else if (count == 2) return true; //If there are not 3 points present, then they certainly can't be collinear
         else
         {
             //Only checks the last 3 values because it is assumed that when creating a traversal list, the only new point is the last one
-            return !currentlyTraversing[count - 1].IsCollinearWith(currentlyTraversing[count - 2], currentlyTraversing[count - 3]);
+            return !CurrentlyTraversing[count - 1].IsCollinearWith(CurrentlyTraversing[count - 2], CurrentlyTraversing[count - 3]);
         }
     }
 }

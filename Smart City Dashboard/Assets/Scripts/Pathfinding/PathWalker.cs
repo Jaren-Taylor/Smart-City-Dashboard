@@ -35,7 +35,7 @@ public class PathWalker : MonoBehaviour
     public NodeCollectionController.TargetUser User => userType;
     public float CurrentStopTime => stopTime;
     public Vector3 LastMoveDelta { get; private set; } = Vector3.zero;
-
+    public Path Path { get => path; set => path = value; }
 
     public bool TrySetDestination(Vector2Int tileLocation, NodeCollectionController.TargetUser targetUser)
     {
@@ -54,11 +54,11 @@ public class PathWalker : MonoBehaviour
             //Pathfinding.GetListOfPositionsFromToReduced(MyPosition.ToGridInt(), tileLocation);
         if (pathList is null)
             return false; 
-        path = new Path(pathList, MyPosition, null, targetUser);
-        if (path.IsValid()) return true;
+        Path = new Path(pathList, MyPosition, null, targetUser);
+        if (Path.IsValid()) return true;
         else
         {
-            path = null;
+            Path = null;
             return false;
         }
     }
@@ -73,12 +73,12 @@ public class PathWalker : MonoBehaviour
 
     private void TryMoveAlongPath()
     {
-        Vector3 target = path.GetNextTarget(transform.position, Time.deltaTime);
+        Vector3 target = Path.GetNextTarget(transform.position, Time.deltaTime);
 
         if (MyPosition.IsBasicallyEqualTo(target))
         {
-            if (path.ReachedDestination()) DestroyPath(2f);
-            else if (!path.IsValid() && !TrySetDestination(currentDestination, userType)) DestroyPath(0f); 
+            if (Path.ReachedDestination()) DestroyPath(2f);
+            else if (!Path.IsValid() && !TrySetDestination(currentDestination, userType)) DestroyPath(0f); 
             else
             {
                 //Just wait ¯\_(-.-)_/¯
@@ -127,8 +127,8 @@ public class PathWalker : MonoBehaviour
     }
     private void DestroyPath(float delay)
     {
-        path = null;
+        Path = null;
         OnReachedDestination?.Invoke(delay);
     }
-    private bool HasPath() => !(path is null);
+    private bool HasPath() => !(Path is null);
 }

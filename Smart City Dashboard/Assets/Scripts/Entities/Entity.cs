@@ -18,9 +18,13 @@ public abstract class Entity : MonoBehaviour
 
     [SerializeField]
     private Renderer childRenderer;
+    private static bool isPooledObject = false;
+
     public Material ChildMaterial => childRenderer.material;
 
+    public HashSet<Vector2Int> PreviousDestinations { get; private set; } = new HashSet<Vector2Int>();
 
+    public static int i = 0;
     /// <summary>
     /// Sets the destination to the tile specified for the target specified
     /// </summary>
@@ -50,6 +54,7 @@ public abstract class Entity : MonoBehaviour
     /// </summary>
     /// <param name="delay">How long should wait until destroy</param>
     private void ReachedEndOfPath(float delay) => OnReachedDestination?.Invoke(this, delay);
+    public void ReachedEndOfPathAccessor(float delay) => ReachedEndOfPath(delay);
 
     /// <summary>
     /// Spawns Entity of type T on tile position from the address specificied
@@ -58,8 +63,19 @@ public abstract class Entity : MonoBehaviour
     {
         Tile tile = GridManager.GetTile(tilePosition);
         NodeCollectionController.Direction spawnDirection = GetValidDirectionForTile(tile);
-        NodeController spawnLocation = tile.NodeCollection.GetInboundNodeFrom(spawnDirection, 2);
-
+        NodeController spawnLocation;
+        if (!isPooledObject)
+        {
+            spawnLocation = tile.NodeCollection.GetInboundNodeFrom(spawnDirection, 2);
+        }
+        else
+        {
+            GameObject empty = new GameObject();
+            empty.AddComponent<NodeController>();
+            spawnLocation = empty.GetComponent<NodeController>();
+            empty.transform.position = new Vector3(0, 0, 0);
+        }
+        isPooledObject = false;
         //Uses location found to spawn prefab
         return Spawn<T>(spawnLocation, prefabAddress, matAddress);
     }
@@ -77,6 +93,7 @@ public abstract class Entity : MonoBehaviour
         {
             return GetValidRoadDirection(road);
         }
+            
         throw new System.Exception("Invalid Tile Type...HOW?");
     }
 
@@ -109,7 +126,6 @@ public abstract class Entity : MonoBehaviour
         childRenderer.material=material;
 
     }
-
     /// <summary>
     /// True if the destination was successfully set to the target tile
     /// </summary>

@@ -51,12 +51,17 @@ public class EntityManager : MonoBehaviour
         {
             CameraManager.Instance.StopFollowEntity();
         }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            ObjectPoolerManager.FillPools();
+        }
     }
 
     private void RandomlySpawnPedestrian()
     {
         if (GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation))
         {
+
             PedestrianEntity pedestrianEntity = SpawnPedestrian(spawnLocation);
             if(pedestrianEntity is Entity && !pedestrianEntity.TrySetDestination(targetLocation))
                     DestroyEntity(pedestrianEntity);
@@ -75,13 +80,40 @@ public class EntityManager : MonoBehaviour
 
     public PedestrianEntity SpawnPedestrian(NodeController controller)
     {
-        PedestrianEntity entity = PedestrianEntity.Spawn(controller);
+        if (ObjectPoolerManager.CanLoanPedestrian()
+            && ObjectPoolerManager.GetPedestrianEntityFromPool() is PedestrianEntity entity
+            && !entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt()))
+        {
+            PathWalker pathwalker = entity.GetComponent<PathWalker>();
+            pathwalker.SpawnPosition = controller;
+            pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;
+            entity.gameObject.SetActive(true);
+        }
+        else
+        {
+            entity = PedestrianEntity.Spawn(controller);
+        }
         Register(entity);
         return entity;
+        
     }
+
     public VehicleEntity SpawnVehicle(VehicleEntity.VehicleType type, NodeController controller)
     {
-        VehicleEntity entity = VehicleEntity.Spawn(controller, type);
+
+        if (ObjectPoolerManager.CanLoanVehicle() 
+            && ObjectPoolerManager.GetVehicleEntityFromPool() is VehicleEntity entity 
+            && !entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt()))
+        {
+            PathWalker pathwalker = entity.GetComponent<PathWalker>();
+            pathwalker.SpawnPosition = controller;
+            pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;
+            entity.gameObject.SetActive(true);
+        }
+        else
+        {
+            entity = VehicleEntity.Spawn(controller, type);
+        }
         Register(entity);
         return entity;
     }
@@ -141,7 +173,7 @@ public class EntityManager : MonoBehaviour
     {
         if (Entities.Contains(entity))
         {
-            Destroy(entity.gameObject);
+            ObjectPoolerManager.ReclaimObject(entity);
             Entities.Remove(entity);
         }
     }
