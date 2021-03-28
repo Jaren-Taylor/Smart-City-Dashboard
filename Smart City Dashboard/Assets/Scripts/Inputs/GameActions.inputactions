@@ -1059,6 +1059,17 @@
                     "action": "Open Menus",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "baeb7237-5c50-44a2-8392-9d2b31472c73",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Open Menus",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

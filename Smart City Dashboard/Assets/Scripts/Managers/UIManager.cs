@@ -62,6 +62,11 @@ public class UIManager : MonoBehaviour
         menu.Toggle();
     }
 
+    public void LoadMainMenuScene()
+    {
+        GameSceneManager.LoadScene(SceneIndexes.TITLE, "Loading Main Menu");
+    }
+
     private void RemoveMenu(Menu menu)
     {
         activeMenus.Remove(menu);
