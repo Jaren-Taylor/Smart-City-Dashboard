@@ -20,7 +20,7 @@ public class MainMenuLoadMenu : MonoBehaviour
     }
 
     /// <summary>
-    /// Edits selected map in the build moade
+    /// Edits selected map in the build moade 
     /// </summary>
     public void EditSelectedMap()
     {
@@ -39,7 +39,9 @@ public class MainMenuLoadMenu : MonoBehaviour
         if(ValidateSelection("Please select a file to monitor in dashboard", out string filename))
         {
             SaveGameManager.SetFileName(filename);
-            mainMenu.ShowMessagePopup("Build mode not implemented", "Sorry folks, the team hasn't created this feature yet :(");
+            GameSceneManager.LoadScene(SceneIndexes.DASHBOARD, filename);
+            UIManager.DashboardMode = true;
+            //mainMenu.ShowMessagePopup("Build mode not implemented", "Sorry folks, the team hasn't created this feature yet :(");
             //GameSceneManager.LoadScene(SceneIndexes.DASHBOARD, filename);
         }
     }

@@ -8,12 +8,19 @@ public class UIManager : MonoBehaviour
     public Action<bool> OnUIToggle;
     public Action OnEnteringUI;
     public Action OnExitingUI;
-    public Menu defaultMenu; 
-    public TileSensorMenu TileSensorPreview; 
+    [SerializeField]
+    private Menu defaultMenu;
+    [SerializeField]
+    private TileSensorMenu TileSensorPreview;
+    [SerializeField]
+    private Menu dashboardMenu;
+    [SerializeField]
+    private Menu pauseMenu;
     [HideInInspector]
     public Menu ActiveMenu;
+    public static bool DashboardMode = false;
 
-    private Dictionary<Key, Menu> keyToMenuDict;
+    private Dictionary<Key, Menu> keyToMenuDict = new Dictionary<Key, Menu>();
     private List<Menu> activeMenus = new List<Menu>();
 
     public static readonly Dictionary<UIBackgroundSprite, Sprite> BackgroundSprites = new Dictionary<UIBackgroundSprite, Sprite>();
@@ -34,15 +41,13 @@ public class UIManager : MonoBehaviour
 
     public void Subscribe(Menu menu)
     {
-        if (keyToMenuDict == null)
-        {
-            keyToMenuDict = new Dictionary<Key, Menu>();
-        }
         keyToMenuDict.Add(menu.Key, menu);
         menu.OnOpen += AddMenu;
         menu.OnClose += RemoveMenu;
         menu.OnEnter += OnPointerEnter;
         menu.OnExit += OnPointerExit;
+        if (DashboardMode && menu == dashboardMenu) return;
+        menu.Close();
     }
 
     public void ReceiveMenuKey(Key key)
@@ -59,7 +64,7 @@ public class UIManager : MonoBehaviour
 
     public void ToggleMenu(Menu menu)
     {
-        menu.Toggle();
+        if (!DashboardMode || menu == pauseMenu) menu.Toggle();
     }
 
     public void LoadMainMenuScene()

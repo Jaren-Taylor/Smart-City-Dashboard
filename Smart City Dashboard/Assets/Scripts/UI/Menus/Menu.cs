@@ -18,7 +18,6 @@ public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHa
 
     protected virtual void Start()
     {
-        Close();
         if (uiManager != null)
         {
             uiManager.Subscribe(this);

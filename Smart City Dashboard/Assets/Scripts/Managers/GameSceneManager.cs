@@ -124,7 +124,7 @@ public class GameSceneManager : MonoBehaviour
 public enum SceneIndexes
 {
     LOADING = 0,
-    TITLE = 1,   
+    TITLE = 1,
     BUILD = 2,
     DASHBOARD = 3
 }
