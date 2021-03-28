@@ -22,7 +22,9 @@ public abstract class Entity : MonoBehaviour
 
     public Material ChildMaterial => childRenderer.material;
 
+    public HashSet<Vector2Int> PreviousDestinations { get; private set; } = new HashSet<Vector2Int>();
 
+    public static int i = 0;
     /// <summary>
     /// Sets the destination to the tile specified for the target specified
     /// </summary>
@@ -90,11 +92,6 @@ public abstract class Entity : MonoBehaviour
         else if (tile is RoadTile road)
         {
             return GetValidRoadDirection(road);
-        }
-        else if(!(tile is BuildingTile) && !(tile is RoadTile))
-        {
-            isPooledObject = true;
-            return NodeCollectionController.Direction.NorthBound;
         }
             
         throw new System.Exception("Invalid Tile Type...HOW?");

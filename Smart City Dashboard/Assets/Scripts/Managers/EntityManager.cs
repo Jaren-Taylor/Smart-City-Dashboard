@@ -61,6 +61,7 @@ public class EntityManager : MonoBehaviour
     {
         if (GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation))
         {
+
             PedestrianEntity pedestrianEntity = SpawnPedestrian(spawnLocation);
             if(pedestrianEntity is Entity && !pedestrianEntity.TrySetDestination(targetLocation))
                     DestroyEntity(pedestrianEntity);
@@ -79,11 +80,10 @@ public class EntityManager : MonoBehaviour
 
     public PedestrianEntity SpawnPedestrian(NodeController controller)
     {
-        PedestrianEntity entity;
-        if (ObjectPoolerManager.CanLoanPedestrian())
+        if (ObjectPoolerManager.CanLoanPedestrian()
+            && ObjectPoolerManager.GetPedestrianEntityFromPool() is PedestrianEntity entity
+            && !entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt()))
         {
-            Debug.Log("I AM RUNNING");
-            entity = ObjectPoolerManager.GetPedestrianEntityFromPool();
             PathWalker pathwalker = entity.GetComponent<PathWalker>();
             pathwalker.SpawnPosition = controller;
             pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;
@@ -97,13 +97,14 @@ public class EntityManager : MonoBehaviour
         return entity;
         
     }
+
     public VehicleEntity SpawnVehicle(VehicleEntity.VehicleType type, NodeController controller)
     {
-        VehicleEntity entity;
-        if (ObjectPoolerManager.CanLoanVehicle())
+
+        if (ObjectPoolerManager.CanLoanVehicle() 
+            && ObjectPoolerManager.GetVehicleEntityFromPool() is VehicleEntity entity 
+            && !entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt()))
         {
-            Debug.Log("I AM RUNNING");
-            entity = ObjectPoolerManager.GetVehicleEntityFromPool();
             PathWalker pathwalker = entity.GetComponent<PathWalker>();
             pathwalker.SpawnPosition = controller;
             pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;

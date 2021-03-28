@@ -28,8 +28,10 @@ public class ObjectPoolerManager : MonoBehaviour
 
     public static void ReclaimObject(Entity entity)
     {
+        entity.PreviousDestinations.Add(entity.gameObject.transform.position.ToGridInt());
         entity.gameObject.SetActive(false);
         entity.transform.position = Vector3.zero;
+        entity.GetComponent<PathWalker>().Path = null;
         if (entity.GetComponentInChildren<VehicleEntity>() is VehicleEntity)
         {
             PooledVehicleEntityList.Add((VehicleEntity)entity);
@@ -51,7 +53,7 @@ public class ObjectPoolerManager : MonoBehaviour
         LoanedEntities.Add(vehicle);
         vehicle.transform.position = vehicle.GetComponent<PathWalker>().SpawnPosition.Position;
         var buildingTile = GridManager.Instance.Grid[vehicle.transform.position.ToGridInt()] as BuildingTile;
-        vehicle.transform.rotation = Tile.FacingToQuaternion[buildingTile.currentFacing];
+        //vehicle.transform.rotation = Tile.FacingToQuaternion[buildingTile.currentFacing];
         return vehicle;
     }
 
