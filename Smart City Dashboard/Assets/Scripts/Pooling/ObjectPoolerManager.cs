@@ -74,4 +74,10 @@ public class ObjectPoolerManager : MonoBehaviour
         }
         LoanedEntities.Clear();
     }
+    public static void ClearPools()
+    {
+        LoanedEntities.Clear();
+        PooledPedestrianEntityList.Clear();
+        PooledVehicleEntityList.Clear();
+    }
 }

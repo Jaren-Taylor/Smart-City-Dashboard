@@ -69,6 +69,7 @@ public class UIManager : MonoBehaviour
 
     public void LoadMainMenuScene()
     {
+        ObjectPoolerManager.ClearPools();
         GameSceneManager.LoadScene(SceneIndexes.TITLE, "Loading Main Menu");
     }
 
