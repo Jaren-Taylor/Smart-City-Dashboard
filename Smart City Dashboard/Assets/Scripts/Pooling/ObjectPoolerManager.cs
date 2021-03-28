@@ -70,18 +70,7 @@ public class ObjectPoolerManager : MonoBehaviour
     {
         foreach(Entity entity in LoanedEntities)
         {
-            entity.gameObject.SetActive(false);
-
-            if(entity.GetComponentInChildren<VehicleEntity>() is VehicleEntity)
-            {
-                PooledVehicleEntityList.Add((VehicleEntity)entity);
-            }
-
-            if(entity.GetComponentInChildren<PedestrianEntity>() is PedestrianEntity)
-            {
-                PooledPedestrianEntityList.Add((PedestrianEntity)entity);
-            }
-
+            ReclaimObject(entity);
         }
         LoanedEntities.Clear();
     }
