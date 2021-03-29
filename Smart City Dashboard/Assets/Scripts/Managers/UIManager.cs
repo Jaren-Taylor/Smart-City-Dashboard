@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour
 
     public void Subscribe(Menu menu)
     {
-        keyToMenuDict.Add(menu.Key, menu);
+        if (menu.Key!=Key.None)keyToMenuDict.Add(menu.Key, menu);
         menu.OnOpen += AddMenu;
         menu.OnClose += RemoveMenu;
         menu.OnEnter += OnPointerEnter;
