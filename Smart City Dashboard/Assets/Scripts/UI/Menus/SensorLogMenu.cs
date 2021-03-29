@@ -33,7 +33,7 @@ public class SensorLogMenu : MonoBehaviour
 
     private void CardClicked(UIClickable card)
     {
-        if(cardMapping.TryGetValue(card, out ISensor sensor))
+        if(!UIManager.DashboardMode && cardMapping.TryGetValue(card, out ISensor sensor))
         {
             sensorInfoMenu.DisableUserInput();
             var tilePosition = sensor.GetTilePosition();
