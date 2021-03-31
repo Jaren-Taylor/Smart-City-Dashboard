@@ -51,10 +51,6 @@ public class EntityManager : MonoBehaviour
         {
             CameraManager.Instance.StopFollowEntity();
         }
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            ObjectPoolerManager.FillPools();
-        }
     }
 
     private void RandomlySpawnPedestrian()
@@ -80,14 +76,13 @@ public class EntityManager : MonoBehaviour
 
     public PedestrianEntity SpawnPedestrian(NodeController controller)
     {
-        if (ObjectPoolerManager.CanLoanPedestrian()
-            && ObjectPoolerManager.GetPedestrianEntityFromPool() is PedestrianEntity entity
+        if (ObjectPoolerManager.CanLoan(typeof(PedestrianEntity))
+            && ObjectPoolerManager.GetEntityFromPool(typeof(PedestrianEntity)) is PedestrianEntity entity
             && !entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt()))
         {
             PathWalker pathwalker = entity.GetComponent<PathWalker>();
             pathwalker.SpawnPosition = controller;
             pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;
-            entity.gameObject.SetActive(true);
         }
         else
         {
@@ -101,14 +96,13 @@ public class EntityManager : MonoBehaviour
     public VehicleEntity SpawnVehicle(VehicleEntity.VehicleType type, NodeController controller)
     {
 
-        if (ObjectPoolerManager.CanLoanVehicle() 
-            && ObjectPoolerManager.GetVehicleEntityFromPool() is VehicleEntity entity 
+        if (ObjectPoolerManager.CanLoan(typeof(VehicleEntity)) 
+            && ObjectPoolerManager.GetEntityFromPool(typeof(VehicleEntity)) is VehicleEntity entity 
             && !entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt()))
         {
             PathWalker pathwalker = entity.GetComponent<PathWalker>();
             pathwalker.SpawnPosition = controller;
             pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;
-            entity.gameObject.SetActive(true);
         }
         else
         {
@@ -149,6 +143,7 @@ public class EntityManager : MonoBehaviour
     {
         DestroyEntity(Entities[0]);
     }
+
     private bool GenerateStartStop(out Vector2Int spawnLocation, out Vector2Int targetLocation)
     {
         var buildings = BuildingLocations;
@@ -173,8 +168,9 @@ public class EntityManager : MonoBehaviour
     {
         if (Entities.Contains(entity))
         {
-            ObjectPoolerManager.ReclaimObject(entity);
+            ObjectPoolerManager.ReclaimEntity(entity);
             Entities.Remove(entity);
+            
         }
     }
     IEnumerator DestroyAfterDelay(Entity entity, float delay)
