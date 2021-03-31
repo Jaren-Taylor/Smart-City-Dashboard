@@ -4,8 +4,16 @@ using UnityEngine;
 
 public interface IPoolable
 {
-    void OnLoanOut();
-    void OnReclaim();
+    /*HashSet<object> Loaned { get; set; }
+    Queue Pool { get; set; }
+
+    public void Reclaim(object poolable);
+
+    public object Loan();
+
+    public void Clear();
+
+    public bool CanLoan();*/
 }
 
 public enum ObjectType

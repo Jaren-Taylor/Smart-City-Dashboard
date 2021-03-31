@@ -73,13 +73,46 @@ public class EntityManager : MonoBehaviour
                 DestroyEntity(vehicleEntity);
         }
     }
+    public static void ReclaimEntity(Entity entity)
+    {
+        Type type = entity.GetComponentInChildren<Entity>().GetType();
+        if (type == typeof(VehicleEntity))
+        {
+            ObjectPoolerManager.VehiclePool.Reclaim((VehicleEntity)entity);
+        }
+        else if (type == typeof(PedestrianEntity))
+        {
+            ObjectPoolerManager.PedestrianPool.Reclaim((PedestrianEntity)entity);
+        }
+        entity.PreviousDestinations.Add(entity.gameObject.transform.position.ToGridInt());
+        entity.transform.position = Vector3.zero;
+        entity.GetComponent<PathWalker>().Path = null;
+        entity.transform.SetParent(ObjectPoolerManager.Instance.transform);
+        entity.gameObject.SetActive(false);
+    }
+
+    private void ReclaimAllLoanedEntities()
+    {
+        foreach (var poolable in ObjectPoolerManager.PedestrianPool.Loaned)
+        {
+            ReclaimEntity(poolable);
+        }
+        foreach (var poolable in ObjectPoolerManager.VehiclePool.Loaned)
+        {
+            ReclaimEntity(poolable);
+        }
+    }
 
     public PedestrianEntity SpawnPedestrian(NodeController controller)
     {
-        if (ObjectPoolerManager.CanLoan(typeof(PedestrianEntity))
-            && ObjectPoolerManager.GetEntityFromPool(typeof(PedestrianEntity)) is PedestrianEntity entity
-            && !entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt()))
+        PedestrianEntity entity;
+        if (ObjectPoolerManager.PedestrianPool.CanLoan())
         {
+            entity = ObjectPoolerManager.PedestrianPool.Loan();
+            entity.transform.SetParent(transform);
+            entity.transform.position = entity.GetComponent<PathWalker>().SpawnPosition.Position;
+            entity.gameObject.SetActive(true);
+            if (entity is null || entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt())) return PedestrianEntity.Spawn(controller);
             PathWalker pathwalker = entity.GetComponent<PathWalker>();
             pathwalker.SpawnPosition = controller;
             pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;
@@ -95,11 +128,14 @@ public class EntityManager : MonoBehaviour
 
     public VehicleEntity SpawnVehicle(VehicleEntity.VehicleType type, NodeController controller)
     {
-
-        if (ObjectPoolerManager.CanLoan(typeof(VehicleEntity)) 
-            && ObjectPoolerManager.GetEntityFromPool(typeof(VehicleEntity)) is VehicleEntity entity 
-            && !entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt()))
+        VehicleEntity entity;
+        if (ObjectPoolerManager.VehiclePool.CanLoan())
         {
+            entity = ObjectPoolerManager.VehiclePool.Loan();
+            entity.transform.SetParent(transform);
+            entity.transform.position = entity.GetComponent<PathWalker>().SpawnPosition.Position;
+            entity.gameObject.SetActive(true);
+            if (entity is null || entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt())) return VehicleEntity.Spawn(controller, type);
             PathWalker pathwalker = entity.GetComponent<PathWalker>();
             pathwalker.SpawnPosition = controller;
             pathwalker.OnReachedDestination += entity.ReachedEndOfPathAccessor;
@@ -168,7 +204,7 @@ public class EntityManager : MonoBehaviour
     {
         if (Entities.Contains(entity))
         {
-            ObjectPoolerManager.ReclaimEntity(entity);
+            ReclaimEntity(entity);
             Entities.Remove(entity);
             
         }

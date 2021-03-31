@@ -5,7 +5,7 @@ using UnityEngine;
 public class Pool<T>
 {
     private Queue<T> pool = new Queue<T>();
-    public HashSet<T> loaned = new HashSet<T>();
+    public HashSet<T> Loaned = new HashSet<T>();
 
     public Pool() { }
 
@@ -25,7 +25,7 @@ public class Pool<T>
 
     public void Reclaim(T poolable)
     {
-        if (loaned.Contains(poolable)) loaned.Remove(poolable);
+        if (Loaned.Contains(poolable)) Loaned.Remove(poolable);
         pool.Enqueue(poolable);
     }
 
@@ -38,7 +38,7 @@ public class Pool<T>
         else
         {
             T poolable = pool.Dequeue();
-            loaned.Add(poolable);
+            Loaned.Add(poolable);
             return poolable;
         }
     }
@@ -46,7 +46,7 @@ public class Pool<T>
     public void Clear()
     {
         pool.Clear();
-        loaned.Clear();
+        Loaned.Clear();
     }
 
     public bool CanLoan() => pool.Count > 0;
