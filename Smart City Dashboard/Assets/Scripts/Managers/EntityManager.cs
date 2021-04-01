@@ -78,17 +78,14 @@ public class EntityManager : MonoBehaviour
         Type type = entity.GetComponentInChildren<Entity>().GetType();
         if (type == typeof(VehicleEntity))
         {
-            ObjectPoolerManager.VehiclePool.Reclaim((VehicleEntity)entity);
+            ObjectPoolerManager.VehiclePool.Claim((VehicleEntity)entity);
         }
         else if (type == typeof(PedestrianEntity))
         {
-            ObjectPoolerManager.PedestrianPool.Reclaim((PedestrianEntity)entity);
+            ObjectPoolerManager.PedestrianPool.Claim((PedestrianEntity)entity);
         }
         entity.PreviousDestinations.Add(entity.gameObject.transform.position.ToGridInt());
-        entity.transform.position = Vector3.zero;
         entity.GetComponent<PathWalker>().Path = null;
-        entity.transform.SetParent(ObjectPoolerManager.Instance.transform);
-        entity.gameObject.SetActive(false);
     }
 
     private void ReclaimAllLoanedEntities()
@@ -206,7 +203,6 @@ public class EntityManager : MonoBehaviour
         {
             ReclaimEntity(entity);
             Entities.Remove(entity);
-            
         }
     }
     IEnumerator DestroyAfterDelay(Entity entity, float delay)

@@ -9,21 +9,7 @@ public class Pool<T>
 
     public Pool() { }
 
-    /*public Pool(MonoBehaviour original, int fillCount)
-    {
-        Fill(original, fillCount);
-        MonoBehaviour.Destroy(original);
-    }
-
-    private void Fill(MonoBehaviour original, int fillCount)
-    {
-        for (int i = 0; i < fillCount; i++)
-        {
-            pool.Enqueue(MonoBehaviour.Instantiate(original));
-        }
-    }*/
-
-    public void Reclaim(T poolable)
+    public void Claim(T poolable)
     {
         if (Loaned.Contains(poolable)) Loaned.Remove(poolable);
         pool.Enqueue(poolable);
