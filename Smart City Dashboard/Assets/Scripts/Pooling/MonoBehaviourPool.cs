@@ -10,35 +10,13 @@ public class MonoBehaviourPool<T> where T : MonoBehaviour
 
     public HashSet<T> Loaned { get; private set; } = new HashSet<T>();
 
-    #region Constructors
-
-    public MonoBehaviourPool(string name) 
-    {
-        poolObject.name = name;
-    }
-
-    public MonoBehaviourPool(string name, bool deactivateOnClaim)
-    {
-        poolObject.name = name;
-        this.deactivateOnClaim = deactivateOnClaim;
-    }
-
-    public MonoBehaviourPool(string name, Transform parent)
-    {
-        poolObject.name = name;
-        poolObject.transform.SetParent(parent);
-        poolObject.transform.localPosition = Vector3.zero;
-    }
-
-    public MonoBehaviourPool(string name, Transform parent, bool deactivateOnClaim)
+    public MonoBehaviourPool(string name, Transform parent, bool deactivateOnClaim = true)
     {
         poolObject.name = name;
         poolObject.transform.SetParent(parent);
         poolObject.transform.localPosition = Vector3.zero;
         this.deactivateOnClaim = deactivateOnClaim;
     }
-
-    #endregion
 
     public void Claim(T item)
     {
