@@ -10,7 +10,7 @@ public class SensorLogUIController : MonoBehaviour
     private ListeningStage stage = ListeningStage.Disabled;
 
     [SerializeField]
-    private GlideMenu glideMenu;
+    private Menu Menu;
 
     [SerializeField]
     private GameObject pageReference;
@@ -24,7 +24,7 @@ public class SensorLogUIController : MonoBehaviour
         switch (stage)
         {
             case ListeningStage.Disabled:
-                if (pageReference.activeInHierarchy && glideMenu.IsOpen()) stage = ListeningStage.FullRefresh;
+                if (pageReference.activeInHierarchy && Menu.IsOpen()) stage = ListeningStage.FullRefresh;
                 break;
             case ListeningStage.FullRefresh:
                 FullRefreshLog();
@@ -32,7 +32,7 @@ public class SensorLogUIController : MonoBehaviour
                 stage = ListeningStage.ChangeOnly;
                 break;
             case ListeningStage.ChangeOnly:
-                if(!pageReference.activeInHierarchy || !glideMenu.IsOpen())
+                if(!pageReference.activeInHierarchy || !Menu.IsOpen())
                 {
                     SetActiveListenMode(false);
                     stage = ListeningStage.Disabled;

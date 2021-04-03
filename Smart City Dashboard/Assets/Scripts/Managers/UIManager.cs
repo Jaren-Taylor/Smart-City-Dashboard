@@ -42,12 +42,12 @@ public class UIManager : MonoBehaviour
     public void Subscribe(Menu menu)
     {
         if (menu.Key!=Key.None)keyToMenuDict.Add(menu.Key, menu);
+        if (DashboardMode && menu == dashboardMenu) return;
         menu.Close();
         menu.OnOpen += AddMenu;
         menu.OnClose += RemoveMenu;
         menu.OnEnter += OnPointerEnter;
         menu.OnExit += OnPointerExit;
-        if (DashboardMode && menu == dashboardMenu) return;
     }
 
     public void ReceiveMenuKey(Key key)
