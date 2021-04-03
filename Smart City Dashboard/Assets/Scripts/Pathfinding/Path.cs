@@ -13,12 +13,12 @@ public class Path
 
     private float tStep = 0f;
 
-    public Path(IEnumerable<Vector2Int> tilePoints, Vector3 startingPosition, NodeController endingPoint, NodeCollectionController.TargetUser userType)
+    public Path(LinkedList<Vector2Int> tilePoints, Vector3 startingPosition, NodeController endingPoint, NodeCollectionController.TargetUser userType)
     {
         Initialize(tilePoints, startingPosition, endingPoint, userType);
     }
 
-    private void Initialize(IEnumerable<Vector2Int> tilePoints, Vector3 startingPosition, NodeController endingPoint, NodeCollectionController.TargetUser userType)
+    private void Initialize(LinkedList<Vector2Int> tilePoints, Vector3 startingPosition, NodeController endingPoint, NodeCollectionController.TargetUser userType)
     {
         stream = new NodeStream(GridManager.Instance.Grid, tilePoints, startingPosition, endingPoint, userType);
         lastTarget = startingPosition;

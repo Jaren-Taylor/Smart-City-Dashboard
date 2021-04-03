@@ -13,10 +13,10 @@ public class NodeStream
     private bool isCorrupted;
     private Dictionary<LinkedListNode<NodeController>, Vector2Int> nodeDeregistrationMapping;
 
-    public NodeStream(TileGrid dataSource, IEnumerable<Vector2Int> dataPath, Vector3 startingPosition, NodeController endingNode, NodeCollectionController.TargetUser targetUser)
+    public NodeStream(TileGrid dataSource, LinkedList<Vector2Int> dataPath, Vector3 startingPosition, NodeController endingNode, NodeCollectionController.TargetUser targetUser)
     {
         source = dataSource;
-        path = new LinkedList<Vector2Int>(dataPath);
+        path = dataPath;
         ending = endingNode;
         userType = targetUser;
         nodeDeregistrationMapping = new Dictionary<LinkedListNode<NodeController>, Vector2Int>();
