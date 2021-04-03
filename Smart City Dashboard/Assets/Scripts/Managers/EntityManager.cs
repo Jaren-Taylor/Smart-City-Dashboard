@@ -130,7 +130,7 @@ public class EntityManager : MonoBehaviour
         {
             entity = ObjectPoolerManager.VehiclePool.Loan();
             entity.transform.SetParent(transform);
-            entity.transform.position = entity.GetComponent<PathWalker>().SpawnPosition.Position;
+            entity.transform.position = controller.Position;
             entity.gameObject.SetActive(true);
             if (entity is null || entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt())) return VehicleEntity.Spawn(controller, type);
             PathWalker pathwalker = entity.GetComponent<PathWalker>();
@@ -154,7 +154,7 @@ public class EntityManager : MonoBehaviour
     }
     public VehicleEntity SpawnVehicle(VehicleEntity.VehicleType type, Vector2Int spawnLocation)
     {
-        if (GridManager.GetTile(spawnLocation) is Tile tile)
+        if (GridManager.GetTile(spawnLocation) is Tile tile) 
             return SpawnVehicle(type, tile.NodeCollection.GetVehicleSpawnNode(tile));
         else return null;
     }
