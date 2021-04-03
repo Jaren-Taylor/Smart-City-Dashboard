@@ -16590,9 +16590,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'The last thing you''d want in your Burger King burger is someone''s foot
-    fungus. But as it turns out, that might be what you get. A 4channer uploaded
-    a photo anonymously to the site showcasing his '
+  m_text: 'Email: dlindner95@yahoo.com
+
+    Github: GitHub.com/d_lidz'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
   m_sharedMaterial: {fileID: 2289601916686910481, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
@@ -17664,7 +17664,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Team Member's Name
+  m_text: David Lindner
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
   m_sharedMaterial: {fileID: 2289601916686910481, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
