@@ -533,6 +533,11 @@ public class ReducedTileMap
                     int cost = 2;
                     while (!pointsOfInterests.Contains(rightSearch))
                     {
+                        if(rightSearch == Target)
+                        {
+                            //Found target early!
+                            return ReturnPathList(output, null, rightDir);
+                        }
                         rightSearch += rightDelta;
                         cost++;
                     }
@@ -553,6 +558,11 @@ public class ReducedTileMap
                     int cost = 2;
                     while (!pointsOfInterests.Contains(leftSearch))
                     {
+                        if (leftSearch == Target)
+                        {
+                            //Found target early!
+                            return ReturnPathList(output, null, leftDir);
+                        }
                         leftSearch += leftDelta;
                         cost++;
                     }
@@ -659,34 +669,46 @@ public class ReducedTileMap
     {
         Vector2Int tilePos = Target;
         Vector2Int initalDelta = lastDir.ToVector2() * -1;
-        while(tilePos != lastWaypoint.Position)
+        if(lastWaypoint != null)
         {
-            outputList.AddFirst(tilePos);
-            tilePos += initalDelta;
-        }
-
-        TileIntersectionNode waypoint = lastWaypoint;
-        while(waypoint.ParentNode != null)
-        {
-            LineToParent(outputList, waypoint);
-            waypoint = waypoint.ParentNode;
-        }
-
-        if(FirstRoadTilePos != null)
-        {
-            tilePos = waypoint.Position;
-            Vector2Int parentPos = FirstRoadTilePos.Value;
-            while (tilePos != parentPos)
+            while(tilePos != lastWaypoint.Position)
             {
                 outputList.AddFirst(tilePos);
-                tilePos += waypoint.ToParentDelta;
+                tilePos += initalDelta;
             }
 
-            outputList.AddFirst(parentPos);
+            TileIntersectionNode waypoint = lastWaypoint;
+            while(waypoint.ParentNode != null)
+            {
+                LineToParent(outputList, waypoint);
+                waypoint = waypoint.ParentNode;
+            }
+
+            if(FirstRoadTilePos != null)
+            {
+                tilePos = waypoint.Position;
+                Vector2Int parentPos = FirstRoadTilePos.Value;
+                while (tilePos != parentPos)
+                {
+                    outputList.AddFirst(tilePos);
+                    tilePos += waypoint.ToParentDelta;
+                }
+
+                outputList.AddFirst(parentPos);
+            }
+            else
+            {
+                outputList.AddFirst(waypoint.Position);
+            }
         }
         else
         {
-            outputList.AddFirst(waypoint.Position);
+            while(tilePos != FirstRoadTilePos)
+            {
+                outputList.AddFirst(tilePos);
+                tilePos += initalDelta;
+            }
+            outputList.AddFirst(FirstRoadTilePos.Value);
         }
         
         outputList.AddFirst(FromTilePos.Value);

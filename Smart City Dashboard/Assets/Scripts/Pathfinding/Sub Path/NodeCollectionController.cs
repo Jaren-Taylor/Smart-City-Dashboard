@@ -166,7 +166,10 @@ public class NodeCollectionController : MonoBehaviour
             crawler.MoveIn(direction);
         }
 
-        if (!crawler.CanMove(exitingDirection)) throw new Exception("Cannot enter and exit from same side");
+        if (!crawler.CanMove(exitingDirection))
+        {
+            throw new Exception("Cannot enter and exit from same side");
+        }
 
         int intendedOutboundPosition = (exitingDirection == Direction.NorthBound || exitingDirection == Direction.WestBound) ? 1 : 2;
 
