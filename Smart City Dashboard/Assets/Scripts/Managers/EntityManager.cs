@@ -106,9 +106,7 @@ public class EntityManager : MonoBehaviour
         if (ObjectPoolerManager.PedestrianPool.CanLoan())
         {
             entity = ObjectPoolerManager.PedestrianPool.Loan();
-            entity.transform.SetParent(transform);
-            entity.transform.position = entity.GetComponent<PathWalker>().SpawnPosition.Position;
-            entity.gameObject.SetActive(true);
+            entity.transform.position = controller.Position;
             if (entity is null || entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt())) return PedestrianEntity.Spawn(controller);
             PathWalker pathwalker = entity.GetComponent<PathWalker>();
             pathwalker.SpawnPosition = controller;
@@ -129,9 +127,7 @@ public class EntityManager : MonoBehaviour
         if (ObjectPoolerManager.VehiclePool.CanLoan())
         {
             entity = ObjectPoolerManager.VehiclePool.Loan();
-            entity.transform.SetParent(transform);
             entity.transform.position = controller.Position;
-            entity.gameObject.SetActive(true);
             if (entity is null || entity.PreviousDestinations.Contains(controller.transform.position.ToGridInt())) return VehicleEntity.Spawn(controller, type);
             PathWalker pathwalker = entity.GetComponent<PathWalker>();
             pathwalker.SpawnPosition = controller;
