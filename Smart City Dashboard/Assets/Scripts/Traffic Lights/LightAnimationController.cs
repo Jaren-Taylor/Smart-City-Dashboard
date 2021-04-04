@@ -51,7 +51,7 @@ public class LightAnimationController : MonoBehaviour
     private void ChangeLightState(LightColor nextState)
     {
         this.State = nextState;
-        var mats = Mesh.materials;
+        var mats = Mesh.sharedMaterials;
         switch (this.State)
         {
             case LightColor.Red:
@@ -72,7 +72,8 @@ public class LightAnimationController : MonoBehaviour
                 mats[3] = LightAddresses[1];
                 break;
         }
-        Mesh.materials = mats;
+        Mesh.sharedMaterials = mats;
+        //Debug.Log($"Top Light: {mats[1]} \n Mid Light: {mats[2]}, \n Bottom Light: {mats[3]}");
     }
     private void Update()
     {
