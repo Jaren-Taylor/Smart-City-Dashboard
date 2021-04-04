@@ -6,15 +6,14 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(RectTransform))]
 public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField]
-    private UIManager uiManager;
+    [SerializeField] private UIManager uiManager;
+    [SerializeField] private TabGroup tabGroup;
     public Key Key;
+
     public Action<Menu> OnOpen;
     public Action<Menu> OnClose;
     public Action OnEnter;
     public Action OnExit;
-    [SerializeField]
-    private TabGroup tabGroup;
 
     protected virtual void Start()
     {
@@ -22,11 +21,6 @@ public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHa
         {
             uiManager.Subscribe(this);
         }
-        else
-        {
-            throw new Exception("No UI Manager is set for this menu!");
-        }
-        
     }
 
     public virtual void Close()
@@ -35,11 +29,13 @@ public class Menu : MonoBehaviour, IWindow, IPointerEnterHandler, IPointerExitHa
         OnClose?.Invoke(this);
         gameObject.SetActive(false);
     }
+
     public virtual void Open()
     {
         OnOpen?.Invoke(this);
         gameObject.SetActive(true);
     }
+
     public virtual void Toggle()
     {
         if (IsOpen())

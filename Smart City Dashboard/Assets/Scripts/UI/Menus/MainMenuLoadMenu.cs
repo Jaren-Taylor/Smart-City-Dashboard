@@ -62,9 +62,13 @@ public class MainMenuLoadMenu : MonoBehaviour
     /// </summary>
     public void DeleteSelectedMap()
     {
-        if (ValidateSelection("Please select a file to delete", out string filename))
+        if (scrollPane.GetSelectedCard() is null)
         {
-            mainMenu.ShowMessagePopup("Delete not implemented", "Sorry folks, the team hasn't created this feature yet :(");
+            mainMenu.ShowMessagePopup("Delete a file", "Please select a file");
+        }
+        else
+        {
+            scrollPane.GetSelectedCard().GetCloseButton().onClick.Invoke();
         }
     }
 
