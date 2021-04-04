@@ -38,6 +38,28 @@ public class SaveFileScrollPane : MonoBehaviour
         }
     }
 
+    public bool TryDuplicateSelection(string newName, out string errorResponse)
+    {
+        string currentText = textArea.text;
+        if (!string.IsNullOrEmpty(currentText))
+        {
+            if (SaveGameManager.FileNameInvalidOrTaken(newName, out errorResponse)) return false;
+            else
+            {
+                SaveGameManager.CopyFile(textArea.text, newName);
+                textArea.SetText(newName);
+                ClearCards();
+                FetchFiles();
+                return true;
+            }
+        }
+        else
+        {
+            errorResponse = "Cannot create a file with no name";
+            return false;
+        }
+    }
+
     public void RenameCardWithHeader(string currentText, string newText)
     {
         foreach(var card in cards)

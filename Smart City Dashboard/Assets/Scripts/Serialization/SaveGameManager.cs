@@ -97,6 +97,14 @@ public static class SaveGameManager
         }
     }
 
+    internal static void CopyFile(string currentFilename, string enteredText)
+    {
+        if (!FileNameInvalidOrTaken(enteredText, out _) && FileExists(currentFilename, out string currentPath))
+        {
+            File.Copy(currentPath, BuildSaveFilePath(enteredText));
+        }
+    }
+
     /// <summary>
     /// Enumerates the saves directory. Creates it if it doesn't exist
     /// </summary>

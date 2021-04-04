@@ -51,9 +51,9 @@ public class MainMenuLoadMenu : MonoBehaviour
     /// </summary>
     public void DuplicateSelectedMap()
     {
-        if (ValidateSelection("Please select a file to duplicate", out string filename))
+        if (ValidateSelection("Please select a file to rename", out string filename))
         {
-            mainMenu.ShowMessagePopup("Duplicate not implemented", "Sorry folks, the team hasn't created this feature yet :(");
+            mainMenu.ShowInputPrompt("Rename File", "Enter new filename:", filename, DuplicateSubmittedCallback);
         }
     }
 
@@ -90,6 +90,17 @@ public class MainMenuLoadMenu : MonoBehaviour
         if (submitClicked)
         {
             if(!scrollPane.TryRenameSelection(enteredText, out string errorResponse))
+            {
+                mainMenu.ShowMessagePopup("Cannot change filename", errorResponse);
+            }
+        }
+    }
+
+    private void DuplicateSubmittedCallback(bool submitClicked, string enteredText)
+    {
+        if (submitClicked)
+        {
+            if (!scrollPane.TryDuplicateSelection(enteredText, out string errorResponse))
             {
                 mainMenu.ShowMessagePopup("Cannot change filename", errorResponse);
             }
