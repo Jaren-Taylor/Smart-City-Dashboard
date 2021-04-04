@@ -5,18 +5,12 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject mainMenu;
-    [SerializeField]
-    private GameObject createMenu;
-    [SerializeField]
-    private GameObject loadMenu;
-    [SerializeField]
-    private GameObject settingsMenu;
-    [SerializeField]
-    private GameObject aboutUsMenu;
-    [SerializeField]
-    private PopupMenu notificationPopup;
+    [SerializeField] private GameObject mainMenu;
+    [SerializeField] private GameObject createMenu;
+    [SerializeField] private GameObject loadMenu;
+    [SerializeField] private GameObject settingsMenu;
+    [SerializeField] private GameObject aboutUsMenu;
+    [SerializeField] private PopupMenu notificationPopup;
 
     public void ShowMessagePopup(string title, string body)
     {

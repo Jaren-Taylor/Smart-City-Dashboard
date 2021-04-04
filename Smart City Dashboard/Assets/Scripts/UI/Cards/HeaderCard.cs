@@ -48,19 +48,6 @@ public class HeaderCard : UIClickable
         }
     }
 
-    private void HeaderErrorCheck()
-    {
-        if (header is null) throw new System.Exception("Header was never set for this HeaderCard");
-    }
-
-    private void BackgroundImageErrorCheck()
-    {
-        if (bkgImage is null)
-            bkgImage = GetComponent<Image>();
-        if (bkgImage is null)
-            throw new System.Exception("Cannot find Image component");
-    }
-
     public UIBackgroundSprite BackgroundSprite
     {
         get { return spriteEnum; }
@@ -81,7 +68,22 @@ public class HeaderCard : UIClickable
         set { bkgImage.material = value; }
     }
 
+    public Button GetCloseButton() => closeButton;
+
     #endregion
+
+    private void HeaderErrorCheck()
+    {
+        if (header is null) throw new System.Exception("Header was never set for this HeaderCard");
+    }
+
+    private void BackgroundImageErrorCheck()
+    {
+        if (bkgImage is null)
+            bkgImage = GetComponent<Image>();
+        if (bkgImage is null)
+            throw new System.Exception("Cannot find Image component");
+    }
 
     #region Factories
 

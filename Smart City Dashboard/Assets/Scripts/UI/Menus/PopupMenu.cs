@@ -7,67 +7,45 @@ using UnityEngine.UI;
 
 public class PopupMenu : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject messageBox;
-    [SerializeField]
-    private GameObject inputField;
-
-    [SerializeField]
-    private TextMeshProUGUI mbTitle;
-    [SerializeField]
-    private TextMeshProUGUI mbMessage;
-
-    [SerializeField]
-    private TextMeshProUGUI tfTitle;
-    [SerializeField]
-    private TextMeshProUGUI tfFieldLabel;
-    [SerializeField]
-    private TMP_InputField tfInput;
-
-    private Action<bool, string> tfCallback;
+    [SerializeField] private InputBox inputField;
+    [SerializeField] private MessageBox messageBox;
 
     public void ShowMessageBox(string title, string message)
     {
-        SetMessageBoxValues(title, message);
-        ShowOnly(messageBox);
+        messageBox.SetValues(title, message);
+        ShowOnly(messageBox.gameObject);
     }
 
     public void ShowInputField(string title, string fieldLabel, string defaultText, Action<bool, string> closeSubmitFunction)
     {
         SetInputFieldValues(title, fieldLabel, defaultText, closeSubmitFunction);
-        ShowOnly(inputField);
-    }
-
-    private void SetMessageBoxValues(string title, string message)
-    {
-        this.mbTitle.SetText(title);
-        this.mbMessage.SetText(message);
+        ShowOnly(inputField.gameObject);
     }
 
     private void SetInputFieldValues(string title, string fieldLabel, string defaultText, Action<bool, string> closeSubmitFunction)
     {
-        tfTitle.SetText(title);
-        tfFieldLabel.SetText(fieldLabel);
-        tfInput.text = defaultText;
-        tfCallback = closeSubmitFunction;
+        inputField.Title.text = title;
+        inputField.Body.text = fieldLabel;
+        inputField.Input.text = defaultText;
+        inputField.Callback = closeSubmitFunction;
     }
     
     private void ShowOnly(GameObject popup)
     {
-        if (popup != messageBox) messageBox.SetActive(false);
-        if (popup != inputField) inputField.SetActive(false);
+        if (popup != messageBox.gameObject) messageBox.gameObject.SetActive(false);
+        if (popup != inputField.gameObject) inputField.gameObject.SetActive(false);
         popup.SetActive(true);
     }
 
     public void TFSubmitClicked()
     {
-        tfCallback?.Invoke(true, tfInput.text);
-        tfCallback = null;
+        inputField.Callback?.Invoke(true, inputField.Input.text);
+        inputField.Callback = null;
     }
 
     public void TFCloseClicked()
     {
-        tfCallback?.Invoke(false, "");
-        tfCallback = null;
+        inputField.Callback?.Invoke(false, "");
+        inputField.Callback = null;
     }
 }

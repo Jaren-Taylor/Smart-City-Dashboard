@@ -10,10 +10,11 @@ public class SaveFileScrollPane : MonoBehaviour
     private GameObject CardArea;
     [SerializeField]
     private TextMeshProUGUI TextArea;
-
+    private UIClickable selectedCard;
     private List<DictionaryCard> cards = new List<DictionaryCard>();
 
     public string GetSelectedFile() => TextArea.text;
+    public DictionaryCard GetSelectedCard() => (DictionaryCard)selectedCard;
 
     public bool TryRenameSelection(string newName, out string errorResponse)
     {
@@ -81,13 +82,13 @@ public class SaveFileScrollPane : MonoBehaviour
     private void CardDeleted(UIClickable card)
     {
         DictionaryCard detailedCard = (DictionaryCard)card;
-        Debug.Log("Safe file deleted!");
-        //SaveGameManager.DeleteSaveFile(detailedCard.Header);
+        SaveGameManager.DeleteSaveFile(detailedCard.Header);
         cards.Remove(detailedCard);
     }
 
     private void CardClicked(UIClickable card)
     {
+        selectedCard = card;
         DictionaryCard detailedCard = (DictionaryCard)card;
         string fileName = detailedCard.Header;
         TextArea.SetText(fileName);
