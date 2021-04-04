@@ -62,13 +62,15 @@ public class MainMenuLoadMenu : MonoBehaviour
     /// </summary>
     public void DeleteSelectedMap()
     {
-        if (scrollPane.GetSelectedCard() is null)
+        if (scrollPane.SelectedCard is null)
         {
             mainMenu.ShowMessagePopup("Delete a file", "Please select a file");
         }
         else
         {
-            scrollPane.GetSelectedCard().GetCloseButton().onClick.Invoke();
+            scrollPane.SelectedCard.GetCloseButton().onClick.Invoke();
+            scrollPane.SelectedCard = null;
+            scrollPane.Filename = "";
         }
     }
 
@@ -112,5 +114,5 @@ public class MainMenuLoadMenu : MonoBehaviour
         return false;
     }
 
-    private string GetSelectedFilename() => scrollPane.GetSelectedFile();
+    private string GetSelectedFilename() => scrollPane.Filename;
 }

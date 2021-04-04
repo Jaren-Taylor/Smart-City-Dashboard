@@ -9,24 +9,24 @@ public class SaveFileScrollPane : MonoBehaviour
     [SerializeField]
     private GameObject CardArea;
     [SerializeField]
-    private TextMeshProUGUI TextArea;
-    private UIClickable selectedCard;
+    private TextMeshProUGUI textArea;
+    [HideInInspector]
+    public DictionaryCard SelectedCard;
     private List<DictionaryCard> cards = new List<DictionaryCard>();
 
-    public string GetSelectedFile() => TextArea.text;
-    public DictionaryCard GetSelectedCard() => (DictionaryCard)selectedCard;
+    public string Filename { get => textArea.text; set => textArea.text = value; }
 
     public bool TryRenameSelection(string newName, out string errorResponse)
     {
-        string currentText = TextArea.text;
+        string currentText = textArea.text;
         if (!string.IsNullOrEmpty(currentText))
         {
             if (SaveGameManager.FileNameInvalidOrTaken(newName, out errorResponse)) return false;
             else
             {
-                RenameCardWithHeader(TextArea.text, newName);
-                SaveGameManager.RenameFile(TextArea.text, newName);
-                TextArea.SetText(newName);
+                RenameCardWithHeader(textArea.text, newName);
+                SaveGameManager.RenameFile(textArea.text, newName);
+                textArea.SetText(newName);
                 //TODO: Change the date modified to right now
                 return true;
             }
@@ -88,9 +88,8 @@ public class SaveFileScrollPane : MonoBehaviour
 
     private void CardClicked(UIClickable card)
     {
-        selectedCard = card;
-        DictionaryCard detailedCard = (DictionaryCard)card;
-        string fileName = detailedCard.Header;
-        TextArea.SetText(fileName);
+        SelectedCard = (DictionaryCard)card;
+        string fileName = SelectedCard.Header;
+        textArea.SetText(fileName);
     }
 }
