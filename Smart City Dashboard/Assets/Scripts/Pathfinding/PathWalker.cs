@@ -95,6 +95,10 @@ public class PathWalker : MonoBehaviour
         }
     }
 
+    private RaycastHit[] hitBuffer = new RaycastHit[20];
+
+    private Vector3 halfExtents = new Vector3(.05f, .05f, .01f);
+
     private void TryMoveTowardsPosition(Vector3 position)
     {
         var speed = maxSpeed;
@@ -103,6 +107,14 @@ public class PathWalker : MonoBehaviour
         {
             //TODO: Collision Check
             var timeDelta = Time.deltaTime;
+            Vector3 forward = transform.TransformDirection(Vector3.forward);
+            if (Physics.BoxCastNonAlloc(raycastSource.transform.position + forward * .01f, halfExtents, forward, hitBuffer, transform.localRotation, maxSpeed * .2f, layerMask) != 0)
+            {
+                speed = 0;
+                stopTime += timeDelta;
+            }
+            
+            /*
             if (Physics.Raycast(raycastSource.transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, maxSpeed * .25f, layerMask) ||
                 Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.left) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit2, maxSpeed * .25f, layerMask) ||
                 Physics.Raycast(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, transform.TransformDirection(Vector3.forward), out RaycastHit hit3, maxSpeed * .25f, layerMask) ||
@@ -116,7 +128,7 @@ public class PathWalker : MonoBehaviour
                 //Debug.DrawRay(raycastSource.transform.position + transform.TransformDirection(Vector3.right) * .05f, transform.TransformDirection(Vector3.forward) * maxSpeed * timeDelta, Color.white, 1f, false);
                 speed = 0;
                 stopTime += timeDelta;
-            }
+            }*/
 
             if (speed != 0) stopTime = 0f;
 
