@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6efe685c0a2bb84fa6d836aa35bd49c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Menu: {fileID: 7458114468960246476}
   pageReference: {fileID: 7458114468029047510}
   log: {fileID: 6939828425187075647}
 --- !u!1 &6939828424912180982

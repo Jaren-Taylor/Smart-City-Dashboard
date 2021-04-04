@@ -3595,7 +3595,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1834658437032654899, guid: f698fc6596beb894a8095ffeafcc6038, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 520.976
       objectReference: {fileID: 0}
     - target: {fileID: 1834658437032654899, guid: f698fc6596beb894a8095ffeafcc6038, type: 3}
       propertyPath: m_SizeDelta.y
@@ -3603,7 +3603,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1834658437032654899, guid: f698fc6596beb894a8095ffeafcc6038, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 260.488
       objectReference: {fileID: 0}
     - target: {fileID: 1834658437032654899, guid: f698fc6596beb894a8095ffeafcc6038, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3877,6 +3877,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7458114468960246472, guid: f698fc6596beb894a8095ffeafcc6038, type: 3}
+      propertyPath: Menu
+      value: 
+      objectReference: {fileID: 1560699105}
     - target: {fileID: 7458114468960246472, guid: f698fc6596beb894a8095ffeafcc6038, type: 3}
       propertyPath: glideMenu
       value: 
