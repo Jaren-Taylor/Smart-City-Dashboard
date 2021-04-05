@@ -12,8 +12,8 @@ public class GlideMenu : Menu
     private Rect menuBounds;
     private Vector2 closedPosition;
     private Vector2 openPosition;
-    private Vector2 destination;
-    private int glideSpeed = 25;
+    private bool isOpen;
+    private float GlideTime = 0.5f;
 
     protected override void Start()
     {
@@ -31,57 +31,28 @@ public class GlideMenu : Menu
     /// </summary>
     private void Update()
     {
-        // dont try to move if we're at our target position
-        switch (uiPosition)
-        {
-            case EUIPosition.Top:
-            case EUIPosition.Bottom:
-                if (transform.position.y != destination.y) GlideTowardsDestination();
-                break;
-            case EUIPosition.Left:
-            case EUIPosition.Right:
-                if (transform.position.x != destination.x) GlideTowardsDestination();
-                break;
-            default:
-                break;
-        }
-        // Turn off when we reach our 
+        // Turn off when we reach our destination
         if (DeactivateOnClose && BasicallyAtClosedPosition()) gameObject.SetActive(false);
-    }
-
-    /// <summary>
-    /// Glide the menu in and out of view
-    /// </summary>
-    private void GlideTowardsDestination()
-    {
-        // Move towards destination portions at a time
-        Vector3 newPosition = transform.position;
-        switch (uiPosition)
-        {
-            case EUIPosition.Top:
-            case EUIPosition.Bottom:
-                newPosition.y += YGlideAmount(newPosition.y);
-                break;
-            case EUIPosition.Left:
-            case EUIPosition.Right:
-                newPosition.x += XGlideAmount(newPosition.x);
-                break;
-        }
-        transform.position = newPosition;
     }
 
     /// <summary>
     /// Opens the menu
     /// </summary>
     public override void Open() {
-        destination = openPosition;
+        isOpen = true;
         OnOpen?.Invoke(this);
         if (!gameObject.activeSelf) gameObject.SetActive(true);
+        LeanTween.move(gameObject, openPosition, GlideTime).setEaseOutCubic();
     }
 
     public override bool IsOpen()
     {
-        return destination == openPosition;
+        return isOpen;
+    }
+
+    public bool IsVisible()
+    {
+        return transform.position.IsBasicallyEqualTo(openPosition);
     }
 
     /// <summary>
@@ -89,8 +60,22 @@ public class GlideMenu : Menu
     /// </summary>
     public override void Close()
     {
+        isOpen = false;
         OnClose?.Invoke(this);
-        destination = closedPosition;
+        LeanTween.move(gameObject, closedPosition, GlideTime).setEaseOutCubic();
+    }
+
+    public override void Toggle()
+    {
+        LeanTween.cancel(gameObject);
+        if (IsOpen())
+        {
+            Close();
+        }
+        else
+        {
+            Open();
+        }
     }
 
     /// <summary>
@@ -98,8 +83,8 @@ public class GlideMenu : Menu
     /// </summary>
     public void InstantlyClose()
     {
+        LeanTween.cancel(gameObject);
         transform.position = closedPosition;
-        destination = closedPosition;
         if (DeactivateOnClose) gameObject.SetActive(false);
     }
 
@@ -126,18 +111,4 @@ public class GlideMenu : Menu
     {
         return transform.position.IsBasicallyEqualTo(closedPosition);
     }
-
-    /// <summary>
-    /// Calculates the distance between the destination and current position, then divides by the glideSpeed
-    /// </summary>
-    /// <param name="y"></param>
-    /// <returns></returns>
-    private float YGlideAmount(float y) => (destination.y - y) / glideSpeed;
-
-    /// <summary>
-    /// Calculates the distance between the destination and current position, then divides by the glideSpeed
-    /// </summary>
-    /// <param name="x"></param>
-    /// <returns></returns>
-    private float XGlideAmount(float x) => (destination.x - x) / glideSpeed;
 }
