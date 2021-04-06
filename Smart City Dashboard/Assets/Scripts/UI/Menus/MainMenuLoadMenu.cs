@@ -51,7 +51,7 @@ public class MainMenuLoadMenu : MonoBehaviour
     /// </summary>
     public void DuplicateSelectedMap()
     {
-        if (ValidateSelection("Please select a file to rename", out string filename))
+        if (ValidateSelection("Please select a file to duplicate", out string filename))
         {
             mainMenu.ShowInputPrompt("Rename File", "Enter new filename:", filename, DuplicateSubmittedCallback);
         }
@@ -62,11 +62,7 @@ public class MainMenuLoadMenu : MonoBehaviour
     /// </summary>
     public void DeleteSelectedMap()
     {
-        if (scrollPane.SelectedCard is null)
-        {
-            mainMenu.ShowMessagePopup("Delete a file", "Please select a file");
-        }
-        else
+        if (ValidateSelection("Please select a file to delete", out string filename))
         {
             scrollPane.SelectedCard.GetCloseButton().onClick.Invoke();
             scrollPane.SelectedCard = null;
