@@ -93,6 +93,7 @@ public class SensorInfoMenu : MonoBehaviour
         ResetLights();
         var tilePosition = tileTransform.ToGridInt();
         ResetViewButton.SetActive(true);
+        GridManager.Instance.CursorEnabled = false;
         GridManager.Instance.SuspendCursor();
         if (GridManager.Instance.Grid[tilePosition] is RoadTile road && road.TrafficLight != null)
         {
@@ -195,6 +196,7 @@ public class SensorInfoMenu : MonoBehaviour
         DisableMenu();
         DisableCameraControls?.Invoke(false);
         GridManager.Instance.ResumeCursor();
+        GridManager.Instance.CursorEnabled = true;
         CameraManager.Instance.StopTrackObject();
     }
 }
