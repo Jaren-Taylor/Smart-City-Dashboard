@@ -14,7 +14,7 @@ public class SensorLogMenu : MonoBehaviour
 
     private Dictionary<ISensor, NameAndValueCard> sensorMapping = new Dictionary<ISensor, NameAndValueCard>();
     private Dictionary<UIClickable, ISensor> cardMapping = new Dictionary<UIClickable, ISensor>();
-
+    private UIClickable lastCardClicked = null;
     private SortMode currentSort = SortMode.None;
 
     public bool TryAddSensor(ISensor sensor)
@@ -38,7 +38,8 @@ public class SensorLogMenu : MonoBehaviour
             sensorInfoMenu.DisableUserInput();
             var tilePosition = sensor.GetTilePosition();
             CameraManager.Instance.OnReachedTarget += ReachedSensor;
-            CameraManager.Instance.OnReachedTarget += sensorInfoMenu.SetVisible;
+            if(lastCardClicked != card ) CameraManager.Instance.OnReachedTarget += sensorInfoMenu.SetVisible;
+            lastCardClicked = card;
             targetedSensor = sensor;
             CameraManager.Instance.TrackPosition(tilePosition.ToGridVector3(), Config.minSize, true);
         }
