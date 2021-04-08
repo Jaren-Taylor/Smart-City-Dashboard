@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
             sensorInfoMenu.DisableCameraControls += inputManager.DisableCameraZoom;
 
-            sensorInfoMenu.ToggleCursor += gridManager.ToggleCursor;
+            //sensorInfoMenu.ToggleCursor += gridManager.ToggleCursor;
         }
     }
 

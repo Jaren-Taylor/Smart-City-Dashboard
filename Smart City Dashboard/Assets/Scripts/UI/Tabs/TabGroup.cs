@@ -11,6 +11,8 @@ public class TabGroup : MonoBehaviour
     public Sprite tabIdle;
     public Sprite tabHover;
     public Sprite tabActive;
+    [Tooltip("First index is 0")]
+    [SerializeField] private int defaultTab;
     private TabButton ActiveTab;
 
     /// <summary>
@@ -24,12 +26,8 @@ public class TabGroup : MonoBehaviour
             TabButtons = new List<TabButton>();
         }
         TabButtons.Add(button);
-        if (ActiveTab == null && button.transform.GetSiblingIndex() < TabButtons.Count) 
+        if (ActiveTab == null && button.transform.GetSiblingIndex() == defaultTab) 
         { 
-            OnTabSelected(button);
-        }
-        else if(ActiveTab != null && button.transform.GetSiblingIndex() < ActiveTab.transform.GetSiblingIndex())
-        {
             OnTabSelected(button);
         }
         TabButtons.Sort(CompareIndexes);
@@ -77,11 +75,11 @@ public class TabGroup : MonoBehaviour
     /// <summary>
     /// Resets each TabButtons sprites, except the active TabButton
     /// </summary>
-    public void ResetTabs()
+    public void ResetTabs(bool hardReset = false)
     {
         foreach (TabButton button in TabButtons)
         {
-            if (ActiveTab != null && button == ActiveTab) continue;
+            if (!hardReset && ActiveTab != null && button == ActiveTab) continue;
             button.background.sprite = tabIdle;
         }
     }
@@ -92,7 +90,7 @@ public class TabGroup : MonoBehaviour
     public void NextTab()
     {
         int index = ActiveTab.transform.GetSiblingIndex();
-            if (index == Pages.Count - 1)
+        if (index == Pages.Count - 1)
         {
             OnTabSelected(TabButtons[0]);
         }
@@ -115,9 +113,14 @@ public class TabGroup : MonoBehaviour
                 if (i == index)
                 {
                     Pages[i].SetActive(true);
+                    
                     if (i < PageControls.Count)
                     {
                         activeControls = PageControls[i];
+                        if (Pages[i].TryGetComponent(out TabGroup tabGroup))
+                        {
+                            if (tabGroup.ActiveTab != null) activeControls.NumberKeyButtons[tabGroup.ActiveTab.transform.GetSiblingIndex()].onClick.Invoke();
+                        }
                     }
                     else
                     {
@@ -132,7 +135,7 @@ public class TabGroup : MonoBehaviour
         }
         else
         {
-            throw new System.Exception("Tab index out of bounds " + index);
+            throw new System.Exception(name + " Tab index out of bounds " + index + ". Make sure there are the same number of tab buttons and pages in the tab group." );
         }
     }
 

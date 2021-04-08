@@ -64,7 +64,10 @@ public class UIManager : MonoBehaviour
 
     public void ToggleMenu(Menu menu)
     {
-        if (!DashboardMode || menu == pauseMenu) menu.Toggle();
+        if (!DashboardMode || menu == pauseMenu)
+        {
+            menu.Toggle();
+        }
     }
 
     public void LoadMainMenuScene()
@@ -187,7 +190,7 @@ public static class UIBackgroundSpriteExtensions
         UIBackgroundSprite.Green => "UI/UI Elements/Buttons/green button",
         UIBackgroundSprite.Blue => "UI/UI Elements/Buttons/blue button",
         UIBackgroundSprite.Yellow => "UI/UI Elements/Buttons/yellow button",
-        UIBackgroundSprite.Orange => "UI/UI Elements/Buttons/Orange background",
+        UIBackgroundSprite.Orange => "UI/UI Elements/Buttons/Orange button",
         UIBackgroundSprite.OrangeButton => "UI/UI Elements/Buttons/Orange_button",
         UIBackgroundSprite.Purple => "UI/ UI Elements/Buttons/purple_button_inverted",
         _ => ""
