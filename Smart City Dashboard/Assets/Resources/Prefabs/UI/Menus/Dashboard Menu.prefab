@@ -120,8 +120,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiManager: {fileID: 0}
-  Key: 4
   tabGroup: {fileID: 0}
+  Key: 4
   DeactivateOnClose: 1
   uiPosition: 2
   Canvas: {fileID: 0}
@@ -425,6 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56de806df86592443b007cf82764012b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DashboardMenu: {fileID: 7458114468960246476}
   menu: {fileID: 1661313130765094946}
   sensorInfoMenu: {fileID: 0}
 --- !u!1 &6939828425255289768
