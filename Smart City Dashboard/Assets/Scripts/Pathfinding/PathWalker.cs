@@ -112,10 +112,26 @@ public class PathWalker : MonoBehaviour
             {
                 var hitVector = hitBuffer[0].collider.transform.TransformDirection(Vector3.forward);
                 var dot = Vector3.Dot(forward, hitVector);
-                if(dot > -.995)
+                if(dot > -.8)
                 {
-                    speed = 0;
-                    stopTime += timeDelta;
+                    
+                    if (TurnDelta != 0 && dot <= 0)
+                    {
+                        var cross = Vector3.Cross(forward, hitVector);
+
+                        //Cross is down when hitVector is to the left
+                        if (cross.z < 0 && TurnDelta < 0 || cross.z > 0 && TurnDelta > 0);
+                        else
+                        {
+                            speed = 0;
+                            stopTime += timeDelta;
+                        }
+                    }
+                    else
+                    {
+                        speed = 0;
+                        stopTime += timeDelta;
+                    }
                 } //Completely oppisite, just keep going
             }
             
