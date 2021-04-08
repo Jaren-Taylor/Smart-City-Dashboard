@@ -110,8 +110,13 @@ public class PathWalker : MonoBehaviour
             Vector3 forward = transform.TransformDirection(Vector3.forward);
             if (Physics.BoxCastNonAlloc(raycastSource.transform.position + forward * .01f, halfExtents, forward, hitBuffer, transform.localRotation, maxSpeed * .2f, layerMask) != 0)
             {
-                speed = 0;
-                stopTime += timeDelta;
+                var hitVector = hitBuffer[0].collider.transform.TransformDirection(Vector3.forward);
+                var dot = Vector3.Dot(forward, hitVector);
+                if(dot > -.995)
+                {
+                    speed = 0;
+                    stopTime += timeDelta;
+                } //Completely oppisite, just keep going
             }
             
             /*
