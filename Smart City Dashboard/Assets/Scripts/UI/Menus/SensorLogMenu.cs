@@ -6,6 +6,8 @@ using UnityEngine;
 public class SensorLogMenu : MonoBehaviour
 {
     [SerializeField]
+    private Menu DashboardMenu;
+    [SerializeField]
     private UICardManager menu;
     [SerializeField]
     private SensorInfoMenu sensorInfoMenu;
@@ -19,7 +21,7 @@ public class SensorLogMenu : MonoBehaviour
 
     public bool TryAddSensor(ISensor sensor)
     {
-        if (!sensorMapping.ContainsKey(sensor) && menu.isActiveAndEnabled)
+        if (!sensorMapping.ContainsKey(sensor) && menu.isActiveAndEnabled && DashboardMenu.IsOpen())
         {
             var (statusName, statusMsg, statusEnum) = sensor.Status();
             var card = menu.AddNameValueCard(statusEnum.GetColor(), sensor.ToString(), statusName, statusMsg);
