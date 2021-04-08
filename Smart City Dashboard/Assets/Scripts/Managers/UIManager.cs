@@ -72,6 +72,10 @@ public class UIManager : MonoBehaviour
 
     public void LoadMainMenuScene()
     {
+        if(CameraManager.Instance.isFollowingEntity)
+            CameraManager.Instance.StopFollowEntity();
+
+
         ObjectPoolerManager.ClearPools();
         GameSceneManager.LoadScene(SceneIndexes.TITLE, "Loading Main Menu");
     }

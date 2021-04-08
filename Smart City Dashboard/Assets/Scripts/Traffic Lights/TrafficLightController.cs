@@ -101,9 +101,10 @@ public class TrafficLightController : MonoBehaviour
                         isEastWest = false;
                         TryTurnGreen(NodeCollectionController.Direction.NorthBound);
                         TryTurnGreen(NodeCollectionController.Direction.SouthBound);
+                        TurnedGreen?.Invoke();
                         isTransitioning = false;
                         totalTime = 0;
-                        TurnedGreen?.Invoke();
+                        
                     }
 
                 }
@@ -114,9 +115,10 @@ public class TrafficLightController : MonoBehaviour
                         isEastWest = true;
                         TryTurnGreen(NodeCollectionController.Direction.EastBound);
                         TryTurnGreen(NodeCollectionController.Direction.WestBound);
+                        TurnedGreen?.Invoke();
                         isTransitioning = false;
                         totalTime = 0;
-                        TurnedGreen?.Invoke();
+                        
                     }
                 }
 

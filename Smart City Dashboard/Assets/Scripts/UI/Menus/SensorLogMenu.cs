@@ -6,6 +6,8 @@ using UnityEngine;
 public class SensorLogMenu : MonoBehaviour
 {
     [SerializeField]
+    private Menu DashboardMenu;
+    [SerializeField]
     private UICardManager menu;
     [SerializeField]
     private SensorInfoMenu sensorInfoMenu;
@@ -14,12 +16,12 @@ public class SensorLogMenu : MonoBehaviour
 
     private Dictionary<ISensor, NameAndValueCard> sensorMapping = new Dictionary<ISensor, NameAndValueCard>();
     private Dictionary<UIClickable, ISensor> cardMapping = new Dictionary<UIClickable, ISensor>();
-
+    private UIClickable lastCardClicked = null;
     private SortMode currentSort = SortMode.None;
 
     public bool TryAddSensor(ISensor sensor)
     {
-        if (!sensorMapping.ContainsKey(sensor) && menu.isActiveAndEnabled)
+        if (!sensorMapping.ContainsKey(sensor) && menu.isActiveAndEnabled && DashboardMenu.IsOpen())
         {
             var (statusName, statusMsg, statusEnum) = sensor.Status();
             var card = menu.AddNameValueCard(statusEnum.GetColor(), sensor.ToString(), statusName, statusMsg);
@@ -38,7 +40,8 @@ public class SensorLogMenu : MonoBehaviour
             sensorInfoMenu.DisableUserInput();
             var tilePosition = sensor.GetTilePosition();
             CameraManager.Instance.OnReachedTarget += ReachedSensor;
-            CameraManager.Instance.OnReachedTarget += sensorInfoMenu.SetVisible;
+            if(lastCardClicked != card ) CameraManager.Instance.OnReachedTarget += sensorInfoMenu.SetVisible;
+            lastCardClicked = card;
             targetedSensor = sensor;
             CameraManager.Instance.TrackPosition(tilePosition.ToGridVector3(), Config.minSize, true);
         }

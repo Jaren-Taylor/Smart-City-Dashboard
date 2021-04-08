@@ -29,10 +29,10 @@ public class SensorInfoMenu : MonoBehaviour
     [SerializeField]
     private GameObject ResetViewButton;
     public Action<bool> DisableCameraControls;
-    public Action ToggleCursor;
     private RoadTile currentRoad;
     private TrafficLightController currentTrafficLight;
     private bool isShowing = false;
+    private Vector3 lastTileTransform;
 
     private void Start()
     {
@@ -87,42 +87,46 @@ public class SensorInfoMenu : MonoBehaviour
 
     public void SetVisible(Vector3 tileTransform)
     {
-        if (currentTrafficLight != null)
-            currentTrafficLight.TurnedGreen -= SwapLights;
-        DisableMenu();
-        ResetLights();
-        var tilePosition = tileTransform.ToGridInt();
-        ResetViewButton.SetActive(true);
-        GridManager.Instance.SuspendCursor();
-        if (GridManager.Instance.Grid[tilePosition] is RoadTile road && road.TrafficLight != null)
-        {
-            currentRoad = road;
-            currentTrafficLight = road.TrafficLight;
-            currentTrafficLight.TurnedGreen += SwapLights;
-            switch (road.Type)
+        Debug.Log($"current: {tileTransform}, \n previous: {lastTileTransform}");
+            
+            if (currentTrafficLight != null)
+                currentTrafficLight.TurnedGreen -= SwapLights;
+            this.DisableMenu();
+            this.ResetLights();
+            var tilePosition = tileTransform.ToGridInt();
+            ResetViewButton.SetActive(true);
+            GridManager.Instance.CursorEnabled = false;
+            GridManager.Instance.SuspendCursor();
+            if (GridManager.Instance.Grid[tilePosition] is RoadTile road && road.TrafficLight != null)
             {
-                case RoadTile.TileType.Road3Way:
-                    EnableMenu();
-                    DetermineRotation(road);
-                    break;
+                currentRoad = road;
+                currentTrafficLight = road.TrafficLight;
+                currentTrafficLight.TurnedGreen += this.SwapLights;
+                switch (road.Type)
+                {
+                    case RoadTile.TileType.Road3Way:
+                        this.EnableMenu();
+                        this.DetermineRotation(road);
+                        break;
 
-                case RoadTile.TileType.Road4Way:
-                    EnableMenu();
-                    break;
-                default:
+                    case RoadTile.TileType.Road4Way:
+                        this.EnableMenu();
+                        break;
+                    default:
 
-                    break;
+                        break;
+                }
             }
-        }
-        if (IsFullyVisible())
-        {
-            //rotates the SensorInfoMenu to match the camera's rotation
-            FirstTimeUpdateView();
-            CameraManager.Instance.DisableUserInput();
-            sensorInfoMenu.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
-            //ButtonAndTextCanvas.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z - GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
-        }
-        CameraManager.Instance.OnReachedTarget += SetVisible;
+            if (this.IsFullyVisible())
+            {
+                //rotates the SensorInfoMenu to match the camera's rotation
+                this.FirstTimeUpdateView();
+                CameraManager.Instance.DisableUserInput();
+                sensorInfoMenu.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
+                //ButtonAndTextCanvas.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z - GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
+            }
+            CameraManager.Instance.OnReachedTarget += SetVisible;
+        
     }
 
     public void DisableUserInput()
@@ -195,6 +199,7 @@ public class SensorInfoMenu : MonoBehaviour
         DisableMenu();
         DisableCameraControls?.Invoke(false);
         GridManager.Instance.ResumeCursor();
+        GridManager.Instance.CursorEnabled = true;
         CameraManager.Instance.StopTrackObject();
     }
 }
