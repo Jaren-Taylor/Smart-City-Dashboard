@@ -1,0 +1,19 @@
+@startuml
+(*) --> if "Is pedestrian?" then
+        if "Is alligned with exit position" then
+        --> [alligned] "Move in exit direction"    
+        else
+            -right-> [misalligned] if "Is on left half of\n tile relative to the\n exiting direction?" then
+                --> [Is to the left] "Move to the left most node"
+                --> "Move in exit direction"
+            else
+                --> "Move to the right most node"
+                --> "Move in exit direction"
+            endif
+            
+        endif
+    else
+
+    endif
+
+@enduml

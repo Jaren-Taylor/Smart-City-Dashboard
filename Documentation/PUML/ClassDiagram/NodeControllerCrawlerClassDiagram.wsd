@@ -1,0 +1,14 @@
+@startuml
+
+class NodeControllerCrawler{
+    - row : int
+    - col : int
+    - node : NodeController
+
+    +CanMove (direction : Direction) : bool
+    +MoveIn (direction: Direction)
+    +DirectionNeededToMisallignPositionInDirection(direction: Direction, targetPosition: int) : Direction?
+    +DirectionNeededToAllignPositionInDirection(direction: Direction, targetPosition: int) : Direction?
+}
+
+@enduml
