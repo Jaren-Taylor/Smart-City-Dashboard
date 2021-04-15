@@ -146,7 +146,7 @@ public class RoadTile : Tile
         if (neighbors.top is RoadTile road3 && road3.IsPermanent) { count++; directions.Add(NodeCollectionController.Direction.SouthBound); }
         if (neighbors.bottom is RoadTile road4 && road4.IsPermanent) { count++; directions.Add(NodeCollectionController.Direction.NorthBound); }
         if (count >= 3) { TrafficLight = TrafficLightController.CreateLight(directions, managedObject.transform); }
-        //else TrafficLight = null;
+        else TrafficLight = null;
     }
 
     protected override bool IsSensorAllowed(SensorType sensor)
