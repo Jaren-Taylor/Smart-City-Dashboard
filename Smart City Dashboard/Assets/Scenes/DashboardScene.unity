@@ -1207,6 +1207,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PauseMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 3057385313480435833, guid: 84a28b38f28052543be1e7d0c7c80a41, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3452658699265312335, guid: 84a28b38f28052543be1e7d0c7c80a41, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1880,8 +1884,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7825151904632357205, guid: a62f0c4a96007fd4c9ecf3b2f0dc26e6, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 536
+      objectReference: {fileID: 0}
+    - target: {fileID: 7825151904632357205, guid: a62f0c4a96007fd4c9ecf3b2f0dc26e6, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7825151904632357205, guid: a62f0c4a96007fd4c9ecf3b2f0dc26e6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 268.00003
       objectReference: {fileID: 0}
     - target: {fileID: 7825151904714482905, guid: a62f0c4a96007fd4c9ecf3b2f0dc26e6, type: 3}
       propertyPath: m_AnchorMax.y
