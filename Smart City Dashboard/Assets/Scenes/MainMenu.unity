@@ -1647,9 +1647,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'The last thing you''d want in your Burger King burger is someone''s foot
-    fungus. But as it turns out, that might be what you get. A 4channer uploaded
-    a photo anonymously to the site showcasing his '
+  m_text: 'email: afuoco@Oakland.edu
+
+    github: github.com/a5fuoco'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
   m_sharedMaterial: {fileID: 2289601916686910481, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
@@ -6777,6 +6777,7 @@ MonoBehaviour:
   tabIdle: {fileID: 21300000, guid: a8e76a7d53a9e7f40bf1b2c53646d492, type: 3}
   tabHover: {fileID: 21300000, guid: a8e76a7d53a9e7f40bf1b2c53646d492, type: 3}
   tabActive: {fileID: 21300000, guid: a8e76a7d53a9e7f40bf1b2c53646d492, type: 3}
+  defaultTab: 0
 --- !u!114 &612060076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10729,13 +10730,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Email
+  m_text: 'Email: kennethmead784@gmail.com
 
-    kennethmead784@gmail.com
-
-    Github
-
-    github.com/Xerner'
+    Github: github.com/Xerner'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
   m_sharedMaterial: {fileID: 2289601916686910481, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
@@ -13613,7 +13610,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Email: mlabarbera98a@gmail.com'
+  m_text: 'Email: mlabarbera98a@gmail.com
+
+    Github: Github.com/MrMeik'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
   m_sharedMaterial: {fileID: 2289601916686910481, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
@@ -14805,9 +14804,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'The last thing you''d want in your Burger King burger is someone''s foot
-    fungus. But as it turns out, that might be what you get. A 4channer uploaded
-    a photo anonymously to the site showcasing his '
+  m_text: 'email: calebadwhite@gmail.com
+
+    github:github.com/windwakess'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
   m_sharedMaterial: {fileID: 2289601916686910481, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
@@ -17563,9 +17562,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'The last thing you''d want in your Burger King burger is someone''s foot
-    fungus. But as it turns out, that might be what you get. A 4channer uploaded
-    a photo anonymously to the site showcasing his '
+  m_text: 'email: dlindner@oakland.edu
+
+    github:github.com/DLidz'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
   m_sharedMaterial: {fileID: 2289601916686910481, guid: 1e5c9fc9a440f734db7b1fd833e8875e, type: 2}
