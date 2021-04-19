@@ -126,7 +126,7 @@ public class InputManager : MonoBehaviour
 
     public void OnMenuKeyPressed(CallbackContext context)
     {
-        if (UIManager.DashboardMode) return;
+        
         if (context.started)
         {
             KeyControl control = (KeyControl)context.control;
