@@ -238,6 +238,12 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (UIManager.DashboardMode)
+        {
+            if (CursorEnabled) SetCursor(false);
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.S))
         {
             SaveGame();

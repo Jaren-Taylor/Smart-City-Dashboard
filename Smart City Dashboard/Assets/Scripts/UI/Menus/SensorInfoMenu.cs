@@ -42,7 +42,6 @@ public class SensorInfoMenu : MonoBehaviour
     }
     void Update()
     {
-
         if (IsFullyVisible())
         {
             var timeRemaining = currentTrafficLight.switchDelay - currentTrafficLight.totalTime + 1;
@@ -50,7 +49,6 @@ public class SensorInfoMenu : MonoBehaviour
                 timeRemaining = 0;
             DelayText.SetText((timeRemaining).ToString("N1"));
         }
-        
     }
 
     private void FirstTimeUpdateView()

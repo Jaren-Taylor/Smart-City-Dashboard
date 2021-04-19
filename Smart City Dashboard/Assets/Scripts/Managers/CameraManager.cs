@@ -163,7 +163,6 @@ public class CameraManager : MonoBehaviour
     }
     public void StartFollowEntity(Entity entity)
     {
-
         DisableUserInput();
         isFollowingEntity = true;
         mainCamera.gameObject.SetActive(false);
@@ -219,6 +218,18 @@ public class CameraManager : MonoBehaviour
     {
         transform.position = entity.transform.position + Vector3.up * targetTrackHeight;
         entityCamera.transform.rotation = entity.transform.rotation;
+    }
+
+    public void HardSetCamera(Vector3 position, float zoomLevel, bool isTopDown)
+    {
+        HardSetPosition(position);
+        mainCamera.orthographicSize = zoomLevel;
+        trackedSize = zoomLevel;
+        if (isTopDown)
+        {
+            trackedRotation = Quaternion.Euler(90, 45, 0);
+            mainCamera.transform.localRotation = Quaternion.Euler(90, 45, 0);
+        }
     }
 
     public void TrackPosition(Vector3 position, float zoomLevel, bool isTopDown)
