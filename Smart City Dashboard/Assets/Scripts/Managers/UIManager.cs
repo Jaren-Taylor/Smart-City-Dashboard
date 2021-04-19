@@ -58,7 +58,7 @@ public class UIManager : MonoBehaviour
         } 
         else 
         {
-            Debug.Log("That key is not bound to any menu! Key: " + key.ToString());
+            //Debug.Log("That key is not bound to any menu! Key: " + key.ToString());
         }
     }
 
