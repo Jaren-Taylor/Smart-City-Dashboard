@@ -16,7 +16,7 @@ public class BuildingTile : Tile
         { StructureType.Office, "Prefabs/Structures/Office" },
         { StructureType.TestStruct, "Prefabs/Structures/TestStruct" }
     };
-
+    
     public enum StructureType
     {
         House = 0,
