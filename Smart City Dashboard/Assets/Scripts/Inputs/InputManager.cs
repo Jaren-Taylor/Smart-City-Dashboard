@@ -36,23 +36,23 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if (isMoving == true)
+        if (isMoving == true && !UIManager.DashboardMode)
         {
-
             if (!isPanDisabled && !isInTopDown) OnCameraPan.Invoke(moveBy);
-
         }
 
     }
 
     public void OnPlace(CallbackContext context)
     {
+        if (UIManager.DashboardMode) return;
         if (context.started) OnPlaceTile?.Invoke();
         else if (context.performed) OnEndPlaceTile?.Invoke();
     }
 
     public void OnMouseMovement(CallbackContext context)
     {
+        if (UIManager.DashboardMode) return;
         Vector2 mousePosition = context.ReadValue<Vector2>();
         float xUpperBound = Screen.width - Config.boundaryFraction * Screen.width;
         float xLowerBound = Config.boundaryFraction * Screen.width;
@@ -97,6 +97,7 @@ public class InputManager : MonoBehaviour
     }
     public void OnRotation(CallbackContext context)
     {
+        if (UIManager.DashboardMode) return;
         if (!isRotationDisabled)
         {
             float direciton = context.ReadValue<float>();
@@ -106,6 +107,7 @@ public class InputManager : MonoBehaviour
     }
     public void OnZoom(CallbackContext context)
     {
+        if (UIManager.DashboardMode) return;
         if (!isZoomDisabled)
         {
             Vector2 zoom = context.ReadValue<Vector2>();
@@ -115,6 +117,7 @@ public class InputManager : MonoBehaviour
 
     public void OnNumberKeyPressed(CallbackContext context)
     {
+        if (UIManager.DashboardMode) return;
         if (context.started)
         {
             OnNumberPressed?.Invoke(((KeyControl)context.control).keyCode - UnityEngine.InputSystem.Key.Digit1);
@@ -123,6 +126,7 @@ public class InputManager : MonoBehaviour
 
     public void OnMenuKeyPressed(CallbackContext context)
     {
+        
         if (context.started)
         {
             KeyControl control = (KeyControl)context.control;
@@ -132,6 +136,7 @@ public class InputManager : MonoBehaviour
 
     public void OnCKeyPressed(CallbackContext context)
     {
+        if (UIManager.DashboardMode) return;
         if (context.started)
         {
             OnCPressed?.Invoke();
@@ -139,6 +144,7 @@ public class InputManager : MonoBehaviour
     }
     public void OnTabKeyPressed(CallbackContext context)
     {
+        if (UIManager.DashboardMode) return;
         if (context.started)
         {
             OnTabPressed?.Invoke();

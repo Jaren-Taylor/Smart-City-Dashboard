@@ -6,6 +6,9 @@ using UnityEngine;
 public class SensorLogMenu : MonoBehaviour
 {
     [SerializeField]
+    private GameObject NoSensorCoverObject;
+
+    [SerializeField]
     private Menu DashboardMenu;
     [SerializeField]
     private UICardManager menu;
@@ -21,7 +24,7 @@ public class SensorLogMenu : MonoBehaviour
 
     public bool TryAddSensor(ISensor sensor)
     {
-        if (!sensorMapping.ContainsKey(sensor) && menu.isActiveAndEnabled && DashboardMenu.IsOpen())
+        if (UIManager.DashboardMode || (!sensorMapping.ContainsKey(sensor) && menu.isActiveAndEnabled && DashboardMenu.IsOpen()))
         {
             var (statusName, statusMsg, statusEnum) = sensor.Status();
             var card = menu.AddNameValueCard(statusEnum.GetColor(), sensor.ToString(), statusName, statusMsg);
@@ -35,15 +38,23 @@ public class SensorLogMenu : MonoBehaviour
 
     private void CardClicked(UIClickable card)
     {
-        if(!UIManager.DashboardMode && cardMapping.TryGetValue(card, out ISensor sensor))
+        if (cardMapping.TryGetValue(card, out ISensor sensor))
         {
-            sensorInfoMenu.DisableUserInput();
             var tilePosition = sensor.GetTilePosition();
-            CameraManager.Instance.OnReachedTarget += ReachedSensor;
-            if(lastCardClicked != card ) CameraManager.Instance.OnReachedTarget += sensorInfoMenu.SetVisible;
-            lastCardClicked = card;
-            targetedSensor = sensor;
-            CameraManager.Instance.TrackPosition(tilePosition.ToGridVector3(), Config.minSize, true);
+            if (UIManager.DashboardMode)  //In dashboard scene
+            {
+                NoSensorCoverObject.SetActive(false);
+                CameraManager.Instance.HardSetCamera(tilePosition.ToGridVector3(), Config.minSize, true);
+            }
+            else
+            {
+                sensorInfoMenu.DisableUserInput();
+                CameraManager.Instance.OnReachedTarget += ReachedSensor;
+                if (lastCardClicked != card) CameraManager.Instance.OnReachedTarget += sensorInfoMenu.SetVisible;
+                lastCardClicked = card;
+                targetedSensor = sensor;
+                CameraManager.Instance.TrackPosition(tilePosition.ToGridVector3(), Config.minSize, true);
+            }
         }
     }
 
