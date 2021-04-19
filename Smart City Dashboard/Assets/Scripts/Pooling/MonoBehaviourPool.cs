@@ -8,13 +8,15 @@ public class MonoBehaviourPool<T> where T : MonoBehaviour
     private Queue<T> pool = new Queue<T>();
     private bool deactivateOnClaim = false;
 
+    private Vector3 poolLocation = new Vector3(0, -10, 0);
+
     public HashSet<T> Loaned { get; private set; } = new HashSet<T>();
 
     public MonoBehaviourPool(string name, Transform parent, bool deactivateOnClaim = true)
     {
         poolObject.name = name;
         poolObject.transform.SetParent(parent);
-        poolObject.transform.localPosition = Vector3.zero;
+        poolObject.transform.localPosition = poolLocation;
         this.deactivateOnClaim = deactivateOnClaim;
     }
 
