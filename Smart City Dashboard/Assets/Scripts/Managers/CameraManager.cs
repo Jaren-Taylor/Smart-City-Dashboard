@@ -155,6 +155,7 @@ public class CameraManager : MonoBehaviour
     {
         GridManager.Instance.CursorEnabled = false;
         GridManager.Instance.GridSM.SuspendState(new DigitalCursor());
+        UIManager.CloseAll();
     }
     public void EnableUserInput()
     {

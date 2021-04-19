@@ -73,6 +73,7 @@ public class EntityManager : MonoBehaviour
                 DestroyEntity(vehicleEntity);
         }
     }
+
     public static void ReclaimEntity(Entity entity)
     {
         Type type = entity.GetComponentInChildren<Entity>().GetType();
@@ -213,10 +214,15 @@ public class EntityManager : MonoBehaviour
 
     private void PeriodicallySpawn()
     {
-        if (UnityEngine.Random.Range(0,2) == 0)
-            RandomlySpawnPedestrian();
-        else 
-            RandomlySpawnVehicle(GetRandomVehicleType());
+        switch (UnityEngine.Random.Range(0, 2))
+        {
+            case 0:
+                RandomlySpawnPedestrian();
+                break;
+            case 1:
+                RandomlySpawnVehicle(GetRandomVehicleType());
+                break;
+        }
     }
 
     private VehicleEntity.VehicleType GetRandomVehicleType() => (VehicleEntity.VehicleType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(VehicleEntity.VehicleType)).Length);

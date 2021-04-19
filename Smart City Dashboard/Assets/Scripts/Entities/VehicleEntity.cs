@@ -17,7 +17,7 @@ public class VehicleEntity : Entity
     {
         { VehicleType.Bus, "Prefabs/Vehicles/Bus_Base" },
         { VehicleType.Van, "Prefabs/Vehicles/Van_Base" },
-        { VehicleType.Car, "Prefabs/Vehicles/Car_Base" }
+        { VehicleType.Car, "Prefabs/Vehicles/Car_Base" },
     };
 
     public static readonly Dictionary<VehicleColor, string> ColorLookup = new Dictionary<VehicleColor, string>()

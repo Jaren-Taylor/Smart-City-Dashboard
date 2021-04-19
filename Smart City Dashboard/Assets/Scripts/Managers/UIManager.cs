@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
     public static bool DashboardMode = false;
 
     private Dictionary<Key, Menu> keyToMenuDict = new Dictionary<Key, Menu>();
-    private List<Menu> activeMenus = new List<Menu>();
+    private static List<Menu> activeMenus = new List<Menu>();
 
     public static readonly Dictionary<UIBackgroundSprite, Sprite> BackgroundSprites = new Dictionary<UIBackgroundSprite, Sprite>();
     public static UIManager Instance;
@@ -113,6 +113,14 @@ public class UIManager : MonoBehaviour
             if (menu.IsOpen()) return true;
         }
         return false;
+    }
+
+    public static void CloseAll()
+    {
+        for (int i = 0; i < activeMenus.Count; i++)
+        {
+            activeMenus[i].Close();
+        }
     }
 
     #region Tab group methods
