@@ -38,9 +38,7 @@ public class InputManager : MonoBehaviour
     {
         if (isMoving == true && !UIManager.DashboardMode)
         {
-
             if (!isPanDisabled && !isInTopDown) OnCameraPan.Invoke(moveBy);
-
         }
 
     }

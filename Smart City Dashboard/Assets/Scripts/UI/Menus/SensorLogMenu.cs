@@ -6,6 +6,9 @@ using UnityEngine;
 public class SensorLogMenu : MonoBehaviour
 {
     [SerializeField]
+    private GameObject NoSensorCoverObject;
+
+    [SerializeField]
     private Menu DashboardMenu;
     [SerializeField]
     private UICardManager menu;
@@ -40,6 +43,7 @@ public class SensorLogMenu : MonoBehaviour
             var tilePosition = sensor.GetTilePosition();
             if (UIManager.DashboardMode)  //In dashboard scene
             {
+                NoSensorCoverObject.SetActive(false);
                 CameraManager.Instance.HardSetCamera(tilePosition.ToGridVector3(), Config.minSize, true);
             }
             else

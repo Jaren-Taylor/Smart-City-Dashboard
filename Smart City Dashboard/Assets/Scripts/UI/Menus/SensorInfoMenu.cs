@@ -87,43 +87,43 @@ public class SensorInfoMenu : MonoBehaviour
     {
         Debug.Log($"current: {tileTransform}, \n previous: {lastTileTransform}");
             
-            if (currentTrafficLight != null)
-                currentTrafficLight.TurnedGreen -= SwapLights;
-            this.DisableMenu();
-            this.ResetLights();
-            var tilePosition = tileTransform.ToGridInt();
-            ResetViewButton.SetActive(true);
-            GridManager.Instance.CursorEnabled = false;
-            GridManager.Instance.SuspendCursor();
-            if (GridManager.Instance.Grid[tilePosition] is RoadTile road && road.TrafficLight != null)
+        if (currentTrafficLight != null)
+            currentTrafficLight.TurnedGreen -= SwapLights;
+        this.DisableMenu();
+        this.ResetLights();
+        var tilePosition = tileTransform.ToGridInt();
+        ResetViewButton.SetActive(true);
+        GridManager.Instance.CursorEnabled = false;
+        GridManager.Instance.SuspendCursor();
+        if (GridManager.Instance.Grid[tilePosition] is RoadTile road && road.TrafficLight != null)
+        {
+            currentRoad = road;
+            currentTrafficLight = road.TrafficLight;
+            currentTrafficLight.TurnedGreen += this.SwapLights;
+            switch (road.Type)
             {
-                currentRoad = road;
-                currentTrafficLight = road.TrafficLight;
-                currentTrafficLight.TurnedGreen += this.SwapLights;
-                switch (road.Type)
-                {
-                    case RoadTile.TileType.Road3Way:
-                        this.EnableMenu();
-                        this.DetermineRotation(road);
-                        break;
+                case RoadTile.TileType.Road3Way:
+                    this.EnableMenu();
+                    this.DetermineRotation(road);
+                    break;
 
-                    case RoadTile.TileType.Road4Way:
-                        this.EnableMenu();
-                        break;
-                    default:
+                case RoadTile.TileType.Road4Way:
+                    this.EnableMenu();
+                    break;
+                default:
 
-                        break;
-                }
+                    break;
             }
-            if (this.IsFullyVisible())
-            {
-                //rotates the SensorInfoMenu to match the camera's rotation
-                this.FirstTimeUpdateView();
-                CameraManager.Instance.DisableUserInput();
-                sensorInfoMenu.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
-                //ButtonAndTextCanvas.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z - GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
-            }
-            CameraManager.Instance.OnReachedTarget += SetVisible;
+        }
+        if (this.IsFullyVisible())
+        {
+            //rotates the SensorInfoMenu to match the camera's rotation
+            this.FirstTimeUpdateView();
+            CameraManager.Instance.DisableUserInput();
+            sensorInfoMenu.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
+            //ButtonAndTextCanvas.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z - GameObject.Find("Camera Rig").transform.rotation.eulerAngles.y);
+        }
+        CameraManager.Instance.OnReachedTarget += SetVisible;
         
     }
 
@@ -193,7 +193,6 @@ public class SensorInfoMenu : MonoBehaviour
     }
     public void OnResetClicked()
     {
-
         DisableMenu();
         DisableCameraControls?.Invoke(false);
         GridManager.Instance.ResumeCursor();
