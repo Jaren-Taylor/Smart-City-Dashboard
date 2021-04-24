@@ -6,7 +6,6 @@ public static class UIResourcePool
 {
     private static readonly Dictionary<UIBackgroundSprite, Sprite> BackgroundSprites = new Dictionary<UIBackgroundSprite, Sprite>();
 
-
     public static Sprite GetBackgroundSprite(UIBackgroundSprite backgroundSprite)
     {
         if(BackgroundSprites.TryGetValue(backgroundSprite, out var output))

@@ -23,20 +23,11 @@ public class UIManager : MonoBehaviour
     private Dictionary<Key, Menu> keyToMenuDict = new Dictionary<Key, Menu>();
     private static List<Menu> activeMenus = new List<Menu>();
 
-    public static readonly Dictionary<UIBackgroundSprite, Sprite> BackgroundSprites = new Dictionary<UIBackgroundSprite, Sprite>();
     public static UIManager Instance;
 
     private void Start()
     {
         Instance = this;
-        if (BackgroundSprites.Count == 0)
-        {
-            BackgroundSprites.Add(UIBackgroundSprite.Red,    Resources.Load<Sprite>("UI/UI Elements/Buttons/red button"));
-            BackgroundSprites.Add(UIBackgroundSprite.Green,  Resources.Load<Sprite>("UI/UI Elements/Buttons/green button"));
-            BackgroundSprites.Add(UIBackgroundSprite.Blue,   Resources.Load<Sprite>("UI/UI Elements/Buttons/blue button"));
-            BackgroundSprites.Add(UIBackgroundSprite.Yellow, Resources.Load<Sprite>("UI/UI Elements/Buttons/yellow button"));
-            BackgroundSprites.Add(UIBackgroundSprite.Orange, Resources.Load<Sprite>("UI/UI Elements/Buttons/Orange background"));
-        }
     }
 
     public void Subscribe(Menu menu)
