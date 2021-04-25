@@ -1,0 +1,49 @@
+@startpuml ObjectPoolingClassDiagram
+
+class ObjectPoolerManager { 
+    {static} + MonoBehaviorPool<PedestrianEntity> PedestrianPool
+    {static} + MonoBehaviorPool<PedestrianEntity> VehiclePool
+    {static} + ObjectPoolerManager Instance
+
+    - Start() : void
+    {static} + ClearPools() : void
+    
+}
+
+class Pool<T> {
+    - Queue<T> pool
+    + HashSet<T> Loaned
+
+    + Pool()
+    + Claim(T poolable) : void
+    + Loan() : T
+    + Clear() : void
+    + CanLoan : bool
+
+}
+
+class MonoBehaviorPool<T> {
+    - GameObject poolObject
+    - Queue<T> pool
+    - bool deactivateOnClaim
+    - Vector3 poolLocation
+    + HashSet<T> Loaned
+
+    + MonoBehaviorPool(string name, Transform parent, bool deactivateOnClaim)
+    + Claim(T item) : void
+    + Loan() : T
+    + Loan(Transform newParent)
+    + Clear(bool destroy) : void
+    + CanLoan() : bool
+
+}
+
+{abstract} class PoolablePrefab {
+    + int ModelVariantCount
+    {abstract} # LookupPrefabAddress(int modelVariantIndex) : string
+    + GetPrefabAddress(int modelVariantIndex) : string
+}
+
+ObjectPoolerManager "1" *-- "many" Pool : contains
+ObjectPoolerManager "1" *-- "many" MonoBehaviorPool : contains
+@endpuml

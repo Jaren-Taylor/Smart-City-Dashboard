@@ -1,0 +1,39 @@
+@startuml SensorInfoMenuClassDiagram
+
+class SensorInfoMenu{
+    - GameObject sensorInfoMenu
+    - GameObject NorthLight
+    - GameObject EastLight
+    - GameObject WestLight
+    - GameObject SouthLight
+    - GameObject ArrowTop
+    - GameObject ArrowBottom
+    - GameObject ButtonAndTextCanvas
+    - TextMeshProUGUI DelayText
+    - GameObject ResetViewButton
+    + Action<Bool> DisableCameraControls
+    - RoadTile currentRoad
+    - TrafficLightController CurrentTrafficLight
+    - bool isShowing
+    - Vector3 lastTileTransform
+
+    - Start() : void
+    - Update() : void
+    - FirstTimeUpdateView() : void
+    - SwapLights() : void
+    - RotateArrows() : void
+    + SetVisible(Vector3 tileTransform) : void
+    - DisableUserInput() : void
+    + IsFullyVisible() : void
+    + OnNumberKeyPress(int value) : void
+    + ToggleMenuHandler() : void
+    + EnableMenu() : void
+    + DisableMenu() : void
+    + ChangeTrafficFlow() : void
+    + DetermineRotation(RoadTile tile) : void
+    + ResetLights() : void
+    + OnResetClicked() : void
+
+
+@enduml
+}
